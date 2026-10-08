@@ -1,0 +1,115 @@
+.sv {
+  min-height: 100%;
+  padding: 32px 16px 48px;
+  font-family: var(--font-read);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.sv-page {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 28px clamp(18px, 5vw, 40px) 36px;
+  background: var(--paper);
+}
+
+.sv h1,
+.sv h2,
+.sv h3,
+.sv .btn,
+.sv .chip,
+.sv .bars {
+  font-family: var(--font-pixel);
+}
+
+.sv h1 {
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.sv h2 {
+  margin: 32px 0 12px;
+  padding: 2px 10px;
+  background: var(--c2);
+  border: var(--px) solid var(--ink);
+  font-size: 20px;
+}
+
+.sv h3 {
+  font-size: 18px;
+}
+
+.sv section > p + p {
+  margin-top: 10px;
+}
+
+.sv-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.sv-face {
+  flex: none;
+  padding: 8px;
+  background: var(--c2);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.sv-id {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 240px;
+}
+
+.sv-role {
+  font-weight: 600;
+}
+
+.sv-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.sv-back {
+  background: var(--c3);
+}
+
+.sv-bars {
+  max-width: 420px;
+  margin: 0 0 14px;
+}
+
+.sv-bars .bar-fill {
+  background-color: var(--c4);
+}
+
+.sv-list {
+  display: grid;
+  gap: 14px;
+}
+
+.sv-entry {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: var(--px) solid var(--ink);
+}
+
+.sv-entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.sv-award {
+  padding: 2px 8px;
+  background: var(--c3);
+  border: var(--px) solid var(--ink);
+}

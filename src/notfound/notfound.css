@@ -1,0 +1,32 @@
+.nf {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: 16px;
+}
+
+.nf-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px 18px;
+  align-items: center;
+  max-width: 440px;
+  padding: 22px 24px;
+  background: var(--paper);
+}
+
+.nf-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.nf-card h1 {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.nf-card .btn {
+  grid-column: 2;
+  justify-self: end;
+  margin: 0 4px 4px 0;
+}
