@@ -4,6 +4,7 @@ import { Portrait } from '../icons/Portrait'
 import { PALETTES, usePalette } from '../theme'
 import type { Bounds } from '../wm/reducer'
 import { useWM } from '../wm/store'
+import { STANDARD_URL } from './links'
 import { useOpenApp } from './openApp'
 
 interface Item {
@@ -27,8 +28,6 @@ interface Props {
   onRestartIntro: () => void
   onShutDown: () => void
 }
-
-export const STANDARD_URL = `${import.meta.env.BASE_URL}standard/`
 
 function useClock() {
   const [now, setNow] = useState(() => new Date())

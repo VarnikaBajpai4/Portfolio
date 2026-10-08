@@ -36,7 +36,7 @@ export interface AppDef {
 export const APPS: AppDef[] = [
   { id: 'about', title: 'About Varnika', icon: 'face', component: About, size: { w: 520, h: 352 }, pos: { x: 0.03, y: 0.04 }, fill: 'c1', dock: true, openOnStart: true },
   { id: 'work', title: 'Work', icon: 'work', component: Work, size: { w: 460, h: 340 }, pos: { x: 0.22, y: 0.12 }, fill: 'c4', dock: true },
-  { id: 'projects', title: 'Projects', icon: 'folder', component: Projects, size: { w: 560, h: 250 }, pos: { x: 0.06, y: 0.59 }, fill: 'c2', dock: true, openOnStart: true },
+  { id: 'projects', title: 'Projects', icon: 'folder', component: Projects, size: { w: 560, h: 230 }, pos: { x: 0.06, y: 0.59 }, fill: 'c2', dock: true, openOnStart: true },
   { id: 'achievements', title: 'Achievements', icon: 'star', component: Achievements, size: { w: 420, h: 280 }, pos: { x: 0.3, y: 0.18 }, fill: 'c3', dock: true },
   { id: 'terminal', title: 'Terminal', icon: 'terminal', component: Terminal, size: { w: 400, h: 260 }, pos: { x: 0.56, y: 0.38 }, fill: 'ink', dock: true, openOnStart: true },
   { id: 'contact', title: 'Contact', icon: 'mail', component: Contact, size: { w: 340, h: 240 }, pos: { x: 0.4, y: 0.24 }, fill: 'c1', dock: true },
