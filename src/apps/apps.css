@@ -1,0 +1,326 @@
+.app-pad {
+  padding: 14px;
+}
+
+.read {
+  font-family: var(--font-read);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+h2 {
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bullets {
+  display: grid;
+  gap: 4px;
+  padding-left: 16px;
+  list-style: square;
+}
+
+/* ---------- About ---------- */
+
+.about {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.about-face {
+  flex: none;
+  padding: 8px;
+  background: var(--c2);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.about-info {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 5px 10px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.bar {
+  display: block;
+  height: 14px;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  border-right: var(--px) solid var(--ink);
+}
+
+/* ---------- card stacks ---------- */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+
+.card {
+  display: grid;
+  flex: 1;
+  gap: 6px;
+  align-content: start;
+  min-height: 0;
+  padding: 14px;
+  overflow: auto;
+  background: var(--paper);
+}
+
+.card-period {
+  justify-self: start;
+  padding: 0 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+}
+
+.card-role {
+  margin-bottom: 4px;
+}
+
+.scrap {
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.pager {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 4px 0;
+}
+
+/* ---------- icon grids ---------- */
+
+.icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 4px;
+}
+
+.icon-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100px;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+}
+
+.icon-tile:hover .chip,
+.icon-tile:focus-visible .chip {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.list-count {
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: var(--px) solid var(--ink);
+  font-size: 13px;
+}
+
+.file-list {
+  display: grid;
+  gap: 8px;
+}
+
+.file-list li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ---------- Get Info ---------- */
+
+.info {
+  display: grid;
+  gap: 8px;
+}
+
+.info-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.info-kind {
+  font-size: 13px;
+}
+
+.info-award {
+  padding: 4px 8px;
+  background: var(--c3);
+  border: var(--px) solid var(--ink);
+}
+
+.info-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 4px 4px 4px 0;
+}
+
+/* ---------- documents ---------- */
+
+.doc {
+  display: grid;
+  gap: 8px;
+}
+
+.doc h3 {
+  margin-top: 8px;
+  padding-bottom: 2px;
+  border-bottom: var(--px) solid var(--ink);
+}
+
+.doc-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-right: 4px;
+}
+
+.doc-entry {
+  display: grid;
+  gap: 4px;
+}
+
+.doc-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  justify-content: space-between;
+}
+
+.readme-p {
+  font-size: 15px;
+}
+
+/* ---------- Contact ---------- */
+
+.contact {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* ---------- Note Pad ---------- */
+
+.notepad {
+  position: relative;
+  height: 100%;
+  min-height: 120px;
+  padding: 14px 16px 34px;
+}
+
+.notepad-text {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.notepad-corner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: linear-gradient(to top right, var(--paper) 46%, var(--ink) 46% 54%, transparent 54%);
+  border: 0;
+  border-top: var(--px) solid var(--ink);
+  border-right: var(--px) solid var(--ink);
+}
+
+.notepad-page {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  font-size: 13px;
+}
+
+/* ---------- Terminal ---------- */
+
+.term {
+  height: 100%;
+  padding: 10px 12px;
+  overflow: auto;
+  background: #111111;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: text;
+}
+
+.term p {
+  min-height: 1.5em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.term-in,
+.term-form {
+  color: #8ff5c9;
+}
+
+.term-form {
+  display: flex;
+  gap: 8px;
+}
+
+.term-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  outline: none;
+  caret-color: #8ff5c9;
+  caret-shape: block;
+  font: inherit;
+}
+
+.term-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
