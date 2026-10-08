@@ -1,0 +1,220 @@
+.desktop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ---------- menu bar ---------- */
+
+.menubar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  height: var(--menu-h);
+  padding: 0 8px;
+  background: var(--paper);
+  border-bottom: var(--px) solid var(--ink);
+  font-weight: 600;
+}
+
+.menu {
+  position: relative;
+  height: 100%;
+}
+
+.menu-button {
+  height: 100%;
+  padding: 0 12px;
+  background: none;
+  border: 0;
+  font-weight: 600;
+}
+
+.menu-face {
+  padding: 0 8px;
+}
+
+.menu-button[aria-expanded='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.menu-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 190px;
+  padding: 4px 0;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.menu-item {
+  display: flex;
+  width: 100%;
+  padding: 3px 16px 3px 6px;
+  background: none;
+  border: 0;
+  font-weight: 400;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+a.menu-item {
+  padding-left: 24px;
+}
+
+.menu-check {
+  flex: none;
+  width: 18px;
+}
+
+.menu-item:hover:not(:disabled),
+.menu-item:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+  outline: none;
+  box-shadow: none;
+}
+
+.menu-item:disabled {
+  color: #767676;
+  cursor: default;
+}
+
+.menubar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.swatches {
+  display: flex;
+  gap: 4px;
+}
+
+.swatch {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: var(--px) solid var(--ink);
+}
+
+.swatch::before {
+  content: '';
+  position: absolute;
+  inset: -8px -3px;
+}
+
+.swatch[aria-pressed='true'] {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.btn.standard-link {
+  padding: 0 12px;
+  background: var(--c3);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.clock {
+  min-width: 68px;
+  text-align: right;
+}
+
+/* ---------- desktop area ---------- */
+
+.desk-area {
+  position: absolute;
+  inset: var(--menu-h) 0 0 0;
+}
+
+.desk-icons {
+  position: absolute;
+  top: 20px;
+  right: 14px;
+  display: grid;
+  gap: 18px;
+}
+
+.desk-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 96px;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+}
+
+.desk-icon:focus .chip {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- dock ---------- */
+
+.dock {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  z-index: 100000;
+  display: flex;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+}
+
+.dock-item {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+}
+
+.dock-item:hover,
+.dock-item:focus-visible {
+  background: var(--c3);
+}
+
+.dock-item:active {
+  background: var(--ink);
+}
+
+.dock-tip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  display: none;
+  padding: 0 8px;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  font-size: 13px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.dock-item:hover .dock-tip,
+.dock-item:focus-visible .dock-tip {
+  display: block;
+}
+
+.app-pad {
+  padding: 14px;
+}
