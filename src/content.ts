@@ -1,0 +1,258 @@
+export interface Link {
+  label: string
+  href: string
+}
+
+export interface Skill {
+  name: string
+  /** 0–10 */
+  level: number
+}
+
+export interface Job {
+  id: string
+  org: string
+  role: string
+  period: string
+  points: string[]
+}
+
+export interface Project {
+  id: string
+  name: string
+  summary: string
+  stack: string[]
+  repo: string
+  award?: string
+  note?: string
+}
+
+export interface Achievement {
+  id: string
+  title: string
+  detail: string
+}
+
+export interface Content {
+  identity: { name: string; role: string; tagline: string; education: string; email: string }
+  skills: Skill[]
+  tools: string[]
+  work: Job[]
+  community: Job[]
+  projects: Project[]
+  achievements: Achievement[]
+  /** paragraphs */
+  readMe: string[]
+  /** one Note Pad page each */
+  notes: string[]
+  trash: string[]
+  links: Link[]
+  /** file name under public/, null until supplied */
+  resumePdf: string | null
+}
+
+export const content: Content = {
+  identity: {
+    name: 'Varnika Bajpai',
+    role: 'Software Engineer at Barclays',
+    tagline: 'I build things with AI, ML and a lot of Python.',
+    education:
+      'BTech in Information Technology with Honours in AI, KJ Somaiya School of Engineering, Mumbai (2022–2026)',
+    email: 'bajpaivarnika04@gmail.com',
+  },
+
+  skills: [
+    { name: 'Python', level: 8 },
+    { name: 'ML', level: 8 },
+    { name: 'C++', level: 7 },
+    { name: 'JavaScript', level: 6 },
+    { name: 'Java', level: 6 },
+  ],
+
+  tools: ['Flask', 'Django', 'React', 'Node.js', 'SQL', 'Docker', 'Grafana', 'GCP', 'AWS', 'LLMs', 'MLOps'],
+
+  work: [
+    {
+      id: 'barclays',
+      org: 'Barclays',
+      role: 'Software Engineer',
+      period: 'July 2026 – present',
+      points: [
+        'Joined the same team full time after a pre-placement offer.',
+        'Building engineering tooling and automation, and learning new tech every week.',
+      ],
+    },
+    {
+      id: 'lyb',
+      org: 'LyondellBasell',
+      role: 'Digital Technology Intern, SAP Testing',
+      period: 'January – June 2026',
+      points: [
+        'Built a backend integration pipeline for testing analytics and visualisation with Python and REST APIs.',
+        'Traversed deep parent-child hierarchies in the test management system with tree traversals.',
+        'Scaled it across enterprise projects on an AWS server with near real-time scheduled runs.',
+        'Delivered a fully automated pipeline that feeds self-refreshing dashboards with zero manual steps.',
+      ],
+    },
+    {
+      id: 'barclays-intern',
+      org: 'Barclays',
+      role: 'Technology Summer Intern',
+      period: 'May – July 2025',
+      points: [
+        'One of 19 students selected from the college.',
+        'Built an ML classifier for testing logs with Python, Flask and Grafana.',
+        'Connected an internal AI platform to Jira so that it drafts Xray test cases automatically.',
+        'Converted the internship into a pre-placement offer.',
+      ],
+    },
+    {
+      id: 'gsquare',
+      org: 'G-Square Solutions',
+      role: 'AI and Data Science Intern',
+      period: 'June – July 2024',
+      points: [
+        'Worked on BI dashboards and data pipelines for an AI/ML and BI solutions startup.',
+        'Delivered one end-to-end project to a stakeholder, from data preprocessing to dashboard.',
+      ],
+    },
+  ],
+
+  community: [
+    {
+      id: 'csi',
+      org: 'Computer Society of India, KJSSE',
+      role: 'Operations Team',
+      period: 'Second year',
+      points: [
+        'Helped coordinate hackathons, tech events and workshops.',
+        'Delivered AI/ML and data science talks to juniors in Road to Programming.',
+        'Ran PR and a weekly tech-updates series.',
+      ],
+    },
+    {
+      id: 'debsoc',
+      org: 'Somaiya Debating Society',
+      role: 'PR Representative',
+      period: 'First year',
+      points: ['Presiding officer of the Big Somaiya Debate.', 'Ran PR campaigns for the society.'],
+    },
+  ],
+
+  projects: [
+    {
+      id: 'omnicompiler',
+      name: 'OmniCompiler',
+      summary:
+        'A language-agnostic platform to run, debug, translate and analyse code across Python, JavaScript, Java, C++ and Go, with sandboxed runtimes, control-flow graphs and ML breakpoint suggestions.',
+      stack: ['React', 'FastAPI', 'Docker', 'Python', 'Gemini', 'Random Forest'],
+      repo: 'https://github.com/Pratham2994/OmniCompiler',
+      note: 'Final-year project. Journal article under review.',
+    },
+    {
+      id: 'floatchat',
+      name: 'FloatChat',
+      summary:
+        'Ask questions about Argo ocean data in plain language. A custom MCP server and RAG return answers and charts grounded in real NetCDF files.',
+      stack: ['React', 'Node.js', 'Python', 'PostgreSQL', 'MongoDB', 'Chroma', 'MCP', 'RAG'],
+      repo: 'https://github.com/VarnikaBajpai4/FloatChat_DebugDynasty_SiH',
+      note: 'Built for Smart India Hackathon.',
+    },
+    {
+      id: 'bharosa',
+      name: 'UBI Bharosa',
+      summary:
+        'An AI-powered scheduler and smart ticketing system for bank branches, with face recognition and customer prioritisation models.',
+      stack: ['PostgreSQL', 'Express', 'React', 'Node.js', 'Python', 'ArcFace', 'XGBoost'],
+      repo: 'https://github.com/AmaanSyed2004/ideahack-DebugDynasty',
+      award: '2nd runner-up among 500+ teams, Union Bank of India Idea Hackathon (national level).',
+    },
+    {
+      id: 'symbiote',
+      name: 'Symbiote',
+      summary:
+        'Matches students into balanced hackathon teams from their skills, GitHub activity and EQ traits, with real-time team chat.',
+      stack: ['React', 'Node.js', 'MongoDB', 'Python', 'FastAPI', 'Socket.io'],
+      repo: 'https://github.com/Pratham2994/Symbiote',
+    },
+    {
+      id: 'malshield',
+      name: 'MalShield',
+      summary:
+        'ML-powered malware detection that combines static and dynamic analysis with YARA rules across EXE, DOC, BAT and more.',
+      stack: ['Python', 'LightGBM', 'YARA', 'Docker'],
+      repo: 'https://github.com/VarnikaBajpai4/ctrl_alt_elite_hack8',
+    },
+  ],
+
+  achievements: [
+    {
+      id: 'silver-medal',
+      title: 'Silver Medal',
+      detail: 'Graduated second in the entire batch with a CGPA of 9.66.',
+    },
+    {
+      id: 'honours',
+      title: 'Honours in AI',
+      detail: 'Completed an Honours in Artificial Intelligence alongside the BTech.',
+    },
+    {
+      id: 'ubi',
+      title: 'UBI Idea Hackathon, 2nd Runner-up',
+      detail: 'National level, 500+ teams. Built UBI Bharosa for Union Bank of India.',
+    },
+    {
+      id: 'emun',
+      title: 'E-MUN, 2nd Best Delegate',
+      detail:
+        'Represented the Republic of India in the WTO committee on e-commerce and digital trade: navigating tariff moratoriums.',
+    },
+    {
+      id: 'barclays-ppo',
+      title: 'Barclays Internship and PPO',
+      detail: 'One of 19 students selected from the college, then offered a full-time role.',
+    },
+    {
+      id: 'gcp',
+      title: 'Google Cloud Certified',
+      detail: 'Certified on Google Cloud Platform.',
+    },
+    {
+      id: 'certificates',
+      title: 'Certificates',
+      detail:
+        'React: The Complete Guide (Udemy), Generative AI Basics and NLP (Salesforce Trailhead), Google Analytics for Beginners.',
+    },
+  ],
+
+  // DRAFT — owner to edit
+  readMe: [
+    'Hi, I am Varnika. I love building new things. Nothing makes me feel more powerful as a woman in STEM than taking an idea and turning it into something that works.',
+    'I live for AI and ML, Python, C++, data structures, MLOps and LLMs. The projects I like most are unique, a little hard, and useful to the people around me.',
+    'Away from the keyboard you will find me lifting weights, at pilates, running, swimming or on a badminton court. I also read a lot, watch football, sing, bake and paint.',
+  ],
+
+  // DRAFT — owner to edit
+  notes: [
+    'I love building new things.',
+    'Currently: shipping at Barclays, reading too many books at once, and chasing a new deadlift PR.',
+    'Unique. Creative. Challenging. Helpful. Pick at least three for every project.',
+  ],
+
+  // DRAFT — owner to edit
+  trash: [
+    'todo_app_v7_final_FINAL.zip',
+    'A blockchain for my sourdough starter',
+    'model_that_was_99_percent_accurate_on_training_data.pkl',
+    'Plan to read only one book at a time',
+    'rest_day.txt',
+  ],
+
+  links: [
+    { label: 'Email', href: 'mailto:bajpaivarnika04@gmail.com' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/varnika-bajpai-6106a2258' },
+    { label: 'GitHub', href: 'https://github.com/VarnikaBajpai4' },
+  ],
+
+  resumePdf: null,
+}
