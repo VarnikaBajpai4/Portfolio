@@ -159,7 +159,12 @@ h3 {
 .file-list li {
   display: flex;
   gap: 8px;
-  align-items: center;
+  align-items: flex-start;
+  overflow-wrap: anywhere;
+}
+
+.file-list svg {
+  flex: none;
 }
 
 /* ---------- Get Info ---------- */

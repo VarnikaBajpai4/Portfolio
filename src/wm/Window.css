@@ -7,6 +7,11 @@
   box-shadow: var(--shadow);
 }
 
+.win:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow);
+}
+
 .win-title {
   flex: none;
   display: flex;

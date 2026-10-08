@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { PointerEvent, ReactNode } from 'react'
 import type { Bounds, Win } from './reducer'
 import { useWM } from './store'
@@ -26,7 +26,14 @@ interface Gesture {
 export function Window({ win, title, fill = 'var(--paper)', bounds, children }: Props) {
   const { dispatch, topId } = useWM()
   const gesture = useRef<Gesture | null>(null)
+  const rootRef = useRef<HTMLElement>(null)
   const { id, rect } = win
+
+  // A window opened by the visitor takes focus, so keyboard users land inside it.
+  // Windows that are open at page load leave focus alone.
+  useEffect(() => {
+    if (document.activeElement && document.activeElement !== document.body) rootRef.current?.focus()
+  }, [])
 
   const begin = (mode: Gesture['mode']) => (e: PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0 || (e.target as HTMLElement).closest('button')) return
@@ -49,6 +56,8 @@ export function Window({ win, title, fill = 'var(--paper)', bounds, children }: 
 
   return (
     <section
+      ref={rootRef}
+      tabIndex={-1}
       role="dialog"
       aria-label={title}
       className={`win${topId === id ? ' win-top' : ''}`}
