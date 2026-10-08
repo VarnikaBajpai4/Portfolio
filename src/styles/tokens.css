@@ -1,0 +1,42 @@
+@import '@fontsource/pixelify-sans/latin-400.css';
+@import '@fontsource/pixelify-sans/latin-600.css';
+
+:root {
+  --ink: #000;
+  --paper: #fff;
+  --px: 2px;
+  --shadow: 4px 4px 0 var(--ink);
+  --font-pixel: 'Pixelify Sans', ui-monospace, monospace;
+  --font-read: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --menu-h: 32px;
+  --title-h: 28px;
+}
+
+:root,
+:root[data-palette='sorbet'] {
+  --desk-1: #1fa8c9;
+  --desk-2: #0b6f8f;
+  --c1: #c9a7ff;
+  --c2: #8ff5c9;
+  --c3: #fff48a;
+  --c4: #ff8a80;
+}
+
+:root[data-palette='cocoa'] {
+  --desk-1: #7a3b1d;
+  --desk-2: #2a1208;
+  --c1: #b9a5ff;
+  --c2: #e8ff8f;
+  --c3: #ffcf7a;
+  --c4: #8fe0ff;
+}
+
+:root[data-palette='blueberry'] {
+  --desk-1: #8ea2e8;
+  --desk-2: #7f93dc;
+  --c1: #ffc2dc;
+  --c2: #bfe8d2;
+  --c3: #fff1b8;
+  --c4: #c9c2ff;
+}
