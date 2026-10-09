@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import type { PointerEvent, ReactNode } from 'react'
 import type { Bounds, Win } from './reducer'
-import { useWM } from './store'
+import { useWM, WindowContext } from './store'
 import './Window.css'
 
 interface Props {
@@ -56,6 +56,11 @@ export function Window({ win, title, fill = 'var(--paper)', bounds, onClose, chi
     gesture.current = null
   }
 
+  const controls = useMemo(
+    () => ({ zoomed: win.zoomed, toggleZoom: () => dispatch({ type: 'zoom', id, bounds }) }),
+    [win.zoomed, dispatch, id, bounds],
+  )
+
   return (
     <section
       ref={rootRef}
@@ -91,7 +96,7 @@ export function Window({ win, title, fill = 'var(--paper)', bounds, onClose, chi
         />
       </div>
       <div className="win-body" style={{ background: fill }}>
-        {children}
+        <WindowContext value={controls}>{children}</WindowContext>
       </div>
       <div
         className="win-grip"

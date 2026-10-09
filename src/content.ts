@@ -27,8 +27,55 @@ export interface Achievement {
   detail: string
 }
 
+export interface FamilyMember {
+  who: string
+  note: string
+  /** a short git-style label, such as "init" */
+  tag?: string
+  /** drawn as a side branch that merges into the line */
+  branch?: boolean
+}
+
+export interface Stat {
+  value: number
+  decimals?: number
+  prefix?: string
+  suffix?: string
+  label: string
+}
+
+export type HobbyIcon =
+  | 'dumbbell'
+  | 'ring'
+  | 'shoe'
+  | 'goggles'
+  | 'shuttle'
+  | 'book'
+  | 'football'
+  | 'mic'
+  | 'whisk'
+  | 'palette'
+
 export interface Content {
-  identity: { name: string; role: string; headline: string; subline: string; education: string; email: string }
+  identity: {
+    name: string
+    role: string
+    /** typed one at a time in the About window */
+    identities: string[]
+    motto: string
+    /** identities and motto as one line */
+    headline: string
+    subline: string
+    education: string
+    email: string
+  }
+  /** oldest first */
+  family: FamilyMember[]
+  quote: { text: string; about: string }
+  stats: Stat[]
+  /** the two paragraphs told as plain text in the story */
+  story: string[]
+  hobbies: { icon: HobbyIcon; label: string }[]
   languages: string[]
   tools: string[]
   work: Job[]
@@ -47,16 +94,60 @@ export interface Content {
   resumePdf: string | null
 }
 
+const IDENTITIES = ['Former ballerina.', 'National-level swimmer.', 'Silver-medallist engineer.']
+const MOTTO = 'I pick the hard thing on purpose.'
+const FELL_FOR_CS =
+  'I always loved maths and physics. Then I started engineering and fell for computer science, a field that is different every morning.'
+const SINCE_THEN =
+  'Since then: internships, committee work, tech events, tech talks, hackathons, crackathons and research. Today I am at Barclays, where I use my development, ML and MLOps skills every day.'
+
 export const content: Content = {
   identity: {
     name: 'Varnika Bajpai',
     role: 'Software Engineer at Barclays',
-    headline: 'Former ballerina. National-level swimmer. Silver-medallist engineer. I pick the hard thing on purpose.',
+    identities: IDENTITIES,
+    motto: MOTTO,
+    headline: `${IDENTITIES.join(' ')} ${MOTTO}`,
     subline: 'At my core I am a builder. I like to build things that challenge me and help my community.',
     education:
       'BTech in Information Technology with Honours in AI, KJ Somaiya School of Engineering, Mumbai (2022–2026)',
     email: 'bajpaivarnika04@gmail.com',
   },
+
+  family: [
+    { who: 'Nanu', note: 'My grandfather. He started it.', tag: 'init' },
+    { who: 'Dad', note: 'The best engineer I know.' },
+    { who: 'My brother', note: 'Went first and laid out the path for me.' },
+    { who: 'His wife', note: 'Newly merged into the family.', tag: 'merge', branch: true },
+    { who: 'Me', note: 'I grew up knowing that the ability to build a solution is a kind of power.', tag: 'HEAD' },
+  ],
+
+  quote: {
+    text: 'She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
+    about: 'My mother, the reason I take challenges head on, the way she does.',
+  },
+
+  stats: [
+    { value: 9.66, decimals: 2, label: 'CGPA' },
+    { value: 2, prefix: '#', label: 'in my batch. Silver medal.' },
+    { value: 500, suffix: '+', label: 'teams in the national hackathon where we placed third' },
+    { value: 19, prefix: '1 of ', label: 'picked from my college for Barclays' },
+  ],
+
+  story: [FELL_FOR_CS, SINCE_THEN],
+
+  hobbies: [
+    { icon: 'dumbbell', label: 'Weights' },
+    { icon: 'ring', label: 'Pilates' },
+    { icon: 'shoe', label: 'Running' },
+    { icon: 'goggles', label: 'Swimming' },
+    { icon: 'shuttle', label: 'Badminton' },
+    { icon: 'book', label: 'Reading' },
+    { icon: 'football', label: 'Football' },
+    { icon: 'mic', label: 'Singing' },
+    { icon: 'whisk', label: 'Baking' },
+    { icon: 'palette', label: 'Painting' },
+  ],
 
   languages: ['Python', 'C++', 'JavaScript', 'Java'],
 
@@ -219,8 +310,8 @@ export const content: Content = {
   readMe: [
     'I come from a family of engineers. My grandfather, Nanu, started it. My father is the best engineer I know. My brother went first and laid out the path for me, and his wife has now joined the list. I grew up knowing that the ability to build a solution is a kind of power.',
     'My mother is why I take challenges head on, the way she does. She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
-    'I always loved maths and physics. Then I started engineering and fell for computer science, a field that is different every morning.',
-    'Since then: internships, committee work, tech events, tech talks, hackathons, crackathons and research. Today I am at Barclays, where I use my development, ML and MLOps skills every day.',
+    FELL_FOR_CS,
+    SINCE_THEN,
     'Away from the keyboard: weights, pilates, running, swimming, badminton, books, football, singing, baking and painting.',
     'This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
   ],

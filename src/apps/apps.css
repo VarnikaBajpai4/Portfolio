@@ -30,49 +30,12 @@ h3 {
   list-style: square;
 }
 
-/* ---------- About ---------- */
-
-.about {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.about-photo {
-  flex: none;
-  object-fit: cover;
-  box-shadow: 3px 3px 0 var(--ink);
-}
-
-.about-info {
-  display: grid;
-  flex: 1;
-  gap: 4px;
-  min-width: 0;
-}
-
-.about-headline {
-  margin-top: 4px;
-  font-weight: 600;
-}
+/* ---------- shared ---------- */
 
 .tags {
   display: grid;
   gap: 4px;
   margin-top: 6px;
-}
-
-.about-more {
-  margin-top: 8px;
-}
-
-.about-more summary {
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.about-more p {
-  margin-top: 8px;
 }
 
 .tags h3 {

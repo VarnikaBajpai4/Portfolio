@@ -413,6 +413,8 @@ a.menu-item {
 }
 
 .sticky-wide {
+  /* the note that ships with the desktop stays under the windows */
+  z-index: 0;
   width: 210px;
   font-size: 14px;
   font-weight: 400;
@@ -532,13 +534,13 @@ a.menu-item {
 }
 
 @media (max-width: 767px) {
-  .about {
+  .about-hero {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .about-photo {
-    align-self: center;
+  .about-side {
+    justify-self: center;
   }
 
   .icon-grid {
