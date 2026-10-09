@@ -21,7 +21,7 @@ export function ChindiCard({ onClose }: { onClose: () => void }) {
         <img className="px-border" src={photo} alt="Chindi, a white and ginger cat in a pink bow tie" width={132} height={132} />
         <div>
           <h3>Meet Chindi.</h3>
-          <p>The cat you keep seeing all over this site is real. She is mine. Or I am hers.</p>
+          <p>The cat you keep seeing all over this site is real. She is mine.</p>
           <p>If it was not clear by now: I prefer her company to most humans.</p>
         </div>
       </div>
