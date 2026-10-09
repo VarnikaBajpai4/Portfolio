@@ -7,7 +7,6 @@ import type { AppId, Bounds, Win } from '../wm/reducer'
 import { useWM } from '../wm/store'
 import { Window } from '../wm/Window'
 import { WMProvider } from '../wm/WMProvider'
-import { Closet } from './Closet'
 import { DesktopIcons } from './DesktopIcons'
 import { Dock } from './Dock'
 import { GRAVITY_EVENT } from './events'
@@ -197,7 +196,6 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
         />
         <main className="desk-area">
           <DesktopIcons />
-          <Closet />
           {windows.map((win) => {
             const app = getApp(win.id)
             const App = app.component

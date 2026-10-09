@@ -216,12 +216,12 @@ export const content: Content = {
     },
   ],
 
-  // DRAFT — owner to edit
   readMe: [
-    'Pointe shoes, then a pool lane, now a terminal. Same rule every time: show up and do the hard part.',
-    'Hi, I am Varnika. I love building new things. Nothing makes me feel more powerful as a woman in STEM than taking an idea and turning it into something that works.',
-    'I live for AI and ML, Python, C++, data structures, MLOps and LLMs. The projects I like most are unique, a little hard, and useful to the people around me.',
-    'Away from the keyboard you will find me lifting weights, at pilates, running, swimming or on a badminton court. I also read a lot, watch football, sing, bake and paint.',
+    'I come from a family of engineers. My grandfather, Nanu, started it. My father is the best engineer I know. My brother went first and cleared the path, and his wife has now joined the list. I grew up knowing that the ability to build a solution is a kind of power.',
+    'My mother is why I take challenges head on. She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
+    'I always loved maths and physics. Then I started engineering and fell for computer science, a field that is different every morning.',
+    'Since then: internships, committee work, tech events, tech talks, hackathons, crackathons and research. Today I am at Barclays, where I use my development, ML and MLOps skills every day.',
+    'Away from the keyboard: weights, pilates, running, swimming, badminton, books, football, singing, baking and painting.',
     'This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
   ],
 

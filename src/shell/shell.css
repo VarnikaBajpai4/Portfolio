@@ -393,21 +393,6 @@ a.menu-item {
   transform: translateX(-50%);
 }
 
-/* ---------- closet ---------- */
-
-.closet {
-  position: absolute;
-  bottom: 12px;
-  left: calc(50% + 196px);
-  display: flex;
-  gap: 6px;
-  align-items: flex-end;
-  /* a thin paper edge, so the black leather reads on a dark desktop too */
-  filter: drop-shadow(1px 0 0 var(--paper)) drop-shadow(-1px 0 0 var(--paper)) drop-shadow(0 1px 0 var(--paper))
-    drop-shadow(0 -1px 0 var(--paper));
-  pointer-events: none;
-}
-
 /* ---------- sticky notes ---------- */
 
 .sticky {
