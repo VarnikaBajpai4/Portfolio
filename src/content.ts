@@ -217,8 +217,8 @@ export const content: Content = {
   ],
 
   readMe: [
-    'I come from a family of engineers. My grandfather, Nanu, started it. My father is the best engineer I know. My brother went first and cleared the path, and his wife has now joined the list. I grew up knowing that the ability to build a solution is a kind of power.',
-    'My mother is why I take challenges head on. She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
+    'I come from a family of engineers. My grandfather, Nanu, started it. My father is the best engineer I know. My brother went first and laid out the path for me, and his wife has now joined the list. I grew up knowing that the ability to build a solution is a kind of power.',
+    'My mother is why I take challenges head on, the way she does. She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
     'I always loved maths and physics. Then I started engineering and fell for computer science, a field that is different every morning.',
     'Since then: internships, committee work, tech events, tech talks, hackathons, crackathons and research. Today I am at Barclays, where I use my development, ML and MLOps skills every day.',
     'Away from the keyboard: weights, pilates, running, swimming, badminton, books, football, singing, baking and painting.',
