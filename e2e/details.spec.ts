@@ -96,7 +96,11 @@ test('Open my story turns About into the full story', async ({ page }) => {
   // the grade counts up beside its bar
   await expect(about.locator('.stat-number')).toHaveText('9.66', { timeout: 4000 })
   await expect(about.locator('.sys')).toContainText('#2')
-  await expect(about.locator('.key', { hasText: 'Python' })).toBeVisible()
+  // pressing a key types what the skill is for
+  await expect(about.locator('.keys-display')).toContainText('Press a key.')
+  await about.getByRole('button', { name: 'Docker', exact: true }).click()
+  await expect(about.locator('.keys-display')).toContainText('Docker: Sandboxed runtimes')
+  await expect(about.getByRole('button', { name: 'Docker', exact: true })).toHaveAttribute('aria-pressed', 'true')
 
   await about.getByText('Football', { exact: true }).scrollIntoViewIfNeeded()
   await expect(about.locator('.hobby')).toHaveCount(10)

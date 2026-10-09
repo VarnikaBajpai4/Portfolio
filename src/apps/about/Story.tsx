@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent, ReactNode } from 'react'
 import { content } from '../../content'
 import type { HobbyIcon } from '../../content'
+import { prefersReducedMotion } from '../../motion'
 import { Sticker } from '../../icons/Sticker'
 import { useInView } from './useInView'
 
@@ -51,28 +52,80 @@ function Family() {
   )
 }
 
-/** Skills as keys on a keyboard, after the old Key Caps desk accessory. One row per group. */
+/** Types a line out, one letter at a time. Give it a new `key` to start again. */
+function Typed({ text }: { text: string }) {
+  const [length, setLength] = useState(() => (prefersReducedMotion() ? text.length : 0))
+  useEffect(() => {
+    if (length >= text.length) return
+    const timer = window.setTimeout(() => setLength((n) => n + 1), 16)
+    return () => window.clearTimeout(timer)
+  }, [length, text.length])
+  return <>{text.slice(0, length)}</>
+}
+
+type Key = { skill: string } | { blank: string; wide?: boolean }
+
+/**
+ * Skills as a keyboard, after the old Key Caps desk accessory: press a key and the
+ * strip above the keys types out what I use it for.
+ */
 function KeyCaps() {
-  const { languages, tools } = content
+  const { languages, tools, skillNotes } = content
+  const [active, setActive] = useState<string | null>(null)
   const half = Math.ceil(tools.length / 2)
-  const rows = [languages, tools.slice(0, half), tools.slice(half)]
+  const skills = (list: string[]): Key[] => list.map((skill) => ({ skill }))
+  const rows: Key[][] = [
+    [{ blank: 'esc' }, ...skills(languages), { blank: 'del' }],
+    [{ blank: 'tab', wide: true }, ...skills(tools.slice(0, half))],
+    [{ blank: 'caps', wide: true }, ...skills(tools.slice(half)), { blank: 'return', wide: true }],
+  ]
+  const line = active ? `${active}: ${skillNotes[active]}` : 'Press a key.'
   let order = 0
+
   return (
     <Tile className="tile-keys">
       {() => (
         <>
           <h3>Key Caps</h3>
-          <div className="keys">
+          <div className="keyboard px-border">
+            <output className="keys-display px-border">
+              <Typed key={line} text={line} />
+              <span className="typed-caret" aria-hidden="true" />
+            </output>
             {rows.map((row, r) => (
-              <ul key={row[0]} className={`keys-row keys-row-${r}`} aria-label={r === 0 ? 'Languages' : 'Works with'}>
-                {row.map((label) => (
-                  <li key={label} className="key" style={{ '--order': order++ } as CSSProperties}>
-                    {label}
-                  </li>
-                ))}
-              </ul>
+              <div key={r} className="keys-row">
+                {row.map((key) =>
+                  'skill' in key ? (
+                    <button
+                      key={key.skill}
+                      type="button"
+                      className={`key${r === 0 ? ' key-language' : ''}`}
+                      style={{ '--order': order++ } as CSSProperties}
+                      aria-pressed={active === key.skill}
+                      onClick={() => setActive(key.skill)}
+                      onPointerEnter={() => setActive(key.skill)}
+                      onFocus={() => setActive(key.skill)}
+                    >
+                      {key.skill}
+                    </button>
+                  ) : (
+                    <span
+                      key={key.blank}
+                      className={`key key-blank${key.wide ? ' key-wide' : ''}`}
+                      style={{ '--order': order++ } as CSSProperties}
+                      aria-hidden="true"
+                    >
+                      {key.blank}
+                    </span>
+                  ),
+                )}
+              </div>
             ))}
-            <div className="key key-space" style={{ '--order': order } as CSSProperties} aria-hidden="true" />
+            <div className="keys-row" aria-hidden="true">
+              <span className="key key-blank key-wide">shift</span>
+              <span className="key key-blank key-space" />
+              <span className="key key-blank key-wide">shift</span>
+            </div>
           </div>
         </>
       )}
@@ -112,7 +165,7 @@ function Hobby({ icon, label, index }: { icon: HobbyIcon; label: string; index: 
     >
       {/* a new key restarts the wobble each time it is dropped */}
       <span key={drops} className={`hobby-art px-border${drops ? ' is-dropped' : ''}`}>
-        <Sticker name={icon} size={48} fill={STICKER_FILLS[index % STICKER_FILLS.length]} />
+        <Sticker name={icon} size={44} fill={STICKER_FILLS[index % STICKER_FILLS.length]} />
       </span>
       <span className="hobby-label">{label}</span>
     </li>

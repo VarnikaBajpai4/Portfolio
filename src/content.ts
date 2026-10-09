@@ -76,6 +76,8 @@ export interface Content {
   /** the two paragraphs told as plain text in the story */
   story: string[]
   hobbies: { icon: HobbyIcon; label: string }[]
+  /** one short line for each language and tool, shown when its key is pressed */
+  skillNotes: Record<string, string>
   languages: string[]
   tools: string[]
   work: Job[]
@@ -146,6 +148,23 @@ export const content: Content = {
     { icon: 'whisk', label: 'Baking' },
     { icon: 'palette', label: 'Painting' },
   ],
+
+  skillNotes: {
+    Python: 'ML models, Flask services and automation pipelines. My daily driver.',
+    'C++': 'Data structures, algorithms and anything that has to be fast.',
+    JavaScript: 'React on the front, Node.js on the back.',
+    Java: 'Object-oriented design, and one of the five languages OmniCompiler runs.',
+    ML: 'Classifiers, recommendations and face recognition.',
+    LLMs: 'RAG, MCP servers and LLM-powered tools.',
+    MLOps: 'Getting models out of notebooks and keeping them alive. My work at Barclays.',
+    Flask: 'The service behind my test-log classifier.',
+    Django: 'ML endpoints from my first internship.',
+    Grafana: 'Dashboards that refresh themselves.',
+    Docker: 'Sandboxed runtimes for OmniCompiler and MalShield.',
+    SQL: 'Views, pipelines and PostgreSQL.',
+    AWS: 'Where my LyondellBasell pipeline runs on a schedule.',
+    GCP: 'Google Cloud certified.',
+  },
 
   languages: ['Python', 'C++', 'JavaScript', 'Java'],
 

@@ -207,10 +207,15 @@
 }
 
 .story-col {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
-  align-content: start;
   min-width: 0;
+}
+
+/* the last tile of each column takes up any slack, so the two columns end level */
+.story-col > :last-child {
+  flex: 1;
 }
 
 @container (min-width: 720px) {
@@ -220,6 +225,11 @@
 
   .story {
     grid-template-columns: 5fr 7fr;
+  }
+
+  /* all ten in one row */
+  .story .hobbies {
+    grid-template-columns: repeat(10, 1fr);
   }
 }
 
@@ -390,77 +400,104 @@
 
 /* ---------- key caps ---------- */
 
-.keys {
+.keyboard {
   display: grid;
-  gap: 10px;
-  padding-bottom: 4px;
+  gap: 9px;
+  padding: 12px 12px 16px;
+  background: var(--c2);
+  border-radius: 10px;
+  box-shadow: inset 0 -6px 0 #00000026;
+}
+
+/* the strip that shows what a key is for */
+.keys-display {
+  display: block;
+  min-height: 46px;
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  background: var(--paper);
+  font-family: var(--font-read);
+  font-size: 13.5px;
+  line-height: 1.3;
 }
 
 .keys-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* each row starts a little further in, like a keyboard */
-.keys-row-1 {
-  padding-left: 16px;
-}
-
-.keys-row-2 {
-  padding-left: 32px;
+  gap: 7px;
 }
 
 .key {
-  flex: 1 0 auto;
-  min-width: 58px;
-  max-width: 130px;
-  height: 40px;
-  padding: 4px 9px 0;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 42px;
+  padding: 4px 8px 0;
+  overflow: hidden;
   background: var(--paper);
   border: 2px solid var(--ink);
-  border-radius: 5px;
-  box-shadow: 0 4px 0 var(--ink);
+  border-radius: 6px;
+  /* a shaded lower lip, then the depth of the key */
+  box-shadow:
+    inset 0 -6px 0 #0000001f,
+    0 4px 0 var(--ink);
+  font-family: var(--font-pixel);
   font-size: 13px;
   line-height: 1.2;
-  cursor: default;
+  text-align: left;
+  white-space: nowrap;
   user-select: none;
 }
 
-.keys-row-0 .key {
+.key-language {
   background: var(--c3);
 }
 
-.key-space {
-  flex: none;
-  width: min(60%, 340px);
-  max-width: none;
-  height: 30px;
-  margin-left: 64px;
+button.key:hover,
+.key[aria-pressed='true'] {
+  box-shadow: inset 0 -2px 0 #0000001f;
+  transform: translateY(4px);
 }
 
-.key:hover {
-  box-shadow: none;
-  transform: translateY(4px);
+.key[aria-pressed='true'] {
+  background: var(--c4);
+}
+
+.key-blank {
+  flex: 0.55 1 0;
+  background-color: #e4e4e4;
+  background-image: conic-gradient(#0000001a 25%, transparent 0 50%, #0000001a 0 75%, transparent 0);
+  background-size: 4px 4px;
+  color: #444444;
+  font-size: 11px;
+}
+
+.key-wide {
+  flex-grow: 0.85;
+}
+
+.key-space {
+  flex-grow: 5;
 }
 
 /* ---------- hobbies ---------- */
 
 .tile-hobbies {
+  display: flex;
+  flex-direction: column;
   background: var(--c1);
 }
 
 .hobbies {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 6px;
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 14px 4px;
+  align-content: space-evenly;
 }
 
 .hobby {
   display: grid;
-  gap: 4px;
+  gap: 5px;
   justify-items: center;
-  width: 70px;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -533,8 +570,14 @@
 
   /* one key after the other is pressed, once */
   .is-in .key {
-    animation: key-press 260ms ease-out both;
-    animation-delay: calc(var(--order) * 55ms + 250ms);
+    animation: key-press 240ms ease-out both;
+    animation-delay: calc(var(--order) * 45ms + 250ms);
+  }
+
+  .key {
+    transition:
+      transform 60ms,
+      box-shadow 60ms;
   }
 
   .hobby-art.is-dropped {
@@ -555,7 +598,7 @@
 
 @keyframes key-press {
   40% {
-    box-shadow: none;
+    box-shadow: inset 0 -2px 0 #0000001f;
     transform: translateY(4px);
   }
 }
