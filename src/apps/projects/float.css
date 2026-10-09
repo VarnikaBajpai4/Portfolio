@@ -1,0 +1,396 @@
+/* The FloatChat page: its colours, and a chat demo that shows each step behind an answer. */
+
+.show.show-float {
+  --wash: var(--c1);
+  /* a band of small waves */
+  --band-pattern: radial-gradient(circle at 50% 0, transparent 8px, #00000030 8px 10px, transparent 10px) 0 0 / 22px 13px;
+}
+
+.float-demo {
+  display: grid;
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.float-demo > section {
+  min-width: 0;
+}
+
+@container (min-width: 860px) {
+  .float-demo {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+
+  .float-trace {
+    border-left: var(--px) solid var(--ink);
+  }
+}
+
+@container (max-width: 859px) {
+  .float-trace {
+    border-top: var(--px) solid var(--ink);
+  }
+}
+
+/* ---------- chat ---------- */
+
+.float-chat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 430px;
+  overflow: hidden;
+  background: linear-gradient(#0b2545, #0f3460 70%, #13427a);
+  color: #ffffff;
+  -webkit-font-smoothing: auto;
+}
+
+.float-thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px 12px;
+}
+
+.float-bot,
+.float-user {
+  max-width: 85%;
+  padding: 8px 12px;
+  border: 2px solid #000000;
+  font-family: var(--font-read);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.float-bot {
+  align-self: flex-start;
+  background: #ffffff;
+  border-radius: 2px 12px 12px 12px;
+  color: #000000;
+}
+
+.float-user {
+  align-self: flex-end;
+  background: var(--c3);
+  border-radius: 12px 2px 12px 12px;
+  color: #000000;
+}
+
+.float-answer {
+  display: grid;
+  gap: 10px;
+  width: min(340px, 85%);
+}
+
+.float-asks {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 20px 34px;
+}
+
+.float-ask {
+  padding: 4px 12px;
+  background: #ffffff1a;
+  border: 1px solid #ffffff99;
+  border-radius: 14px;
+  color: #ffffff;
+  font-family: var(--font-read);
+  font-size: 13px;
+  text-align: left;
+}
+
+.float-ask:hover,
+.float-ask[aria-pressed='true'] {
+  background: #ffffff;
+  color: #000000;
+}
+
+.float-ask:focus-visible {
+  outline: 2px solid var(--c3);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* waves along the bottom edge */
+.float-sea {
+  position: absolute;
+  right: -22px;
+  bottom: 0;
+  left: 0;
+  height: 22px;
+  background: radial-gradient(circle at 50% 100%, #5aa2e0 9px, #ffffff 9px 11px, transparent 11px) 0 0 / 22px 22px
+    repeat-x;
+  opacity: 0.55;
+}
+
+/* ---------- the figures ---------- */
+
+.float-chart text {
+  fill: #000000;
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+
+.float-grid {
+  stroke: #00000026;
+  stroke-width: 1;
+}
+
+.float-line {
+  fill: none;
+  stroke: #1d5fa8;
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+}
+
+.float-dot {
+  fill: #ffffff;
+  stroke: #000000;
+  stroke-width: 1.5;
+}
+
+.float-map {
+  position: relative;
+  width: 264px;
+  max-width: 100%;
+  background: #1d5fa8;
+  border: 2px solid #000000;
+  line-height: 0;
+}
+
+.float-map svg {
+  width: 100%;
+  height: auto;
+}
+
+.float-pin {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4px 0 0 -4px;
+  background: #ffe45c;
+  border: 2px solid #000000;
+  border-radius: 50%;
+}
+
+.float-cells {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  padding: 2px;
+  background: #000000;
+}
+
+.float-cells span {
+  aspect-ratio: 1.4;
+}
+
+.float-legend {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.float-legend span {
+  padding: 0 6px;
+}
+
+.float-legend i {
+  width: 18px;
+  height: 10px;
+  border-block: 1px solid #000000;
+}
+
+/* ---------- trace ---------- */
+
+.float-trace {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 20px;
+  background: color-mix(in srgb, var(--c3) 30%, var(--paper));
+}
+
+.float-trace ol {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0 0 0 30px;
+  list-style: none;
+}
+
+/* the line the question travels down */
+.float-trace ol::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 8px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.float-trace li {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  min-height: 38px;
+  align-content: start;
+}
+
+.float-trace li::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: -30px;
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.float-trace .is-done::before {
+  background: var(--c2);
+}
+
+.float-trace .is-now::before {
+  background: var(--c4);
+}
+
+.float-trace .is-stopped::before {
+  background: #b3261e;
+  border-radius: 2px;
+}
+
+.float-trace .is-todo {
+  opacity: 0.45;
+}
+
+.float-stage {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.float-trace code {
+  padding: 3px 7px;
+  background: #0d1117;
+  color: #7ee787;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-font-smoothing: auto;
+}
+
+.float-trace .is-stopped code {
+  color: #ff938a;
+}
+
+.float-foot {
+  margin-top: auto;
+  font-family: var(--font-read);
+  font-size: 13px;
+}
+
+/* ---------- motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .float-user,
+  .float-answer,
+  .float-trace code {
+    animation: float-in 260ms ease-out both;
+  }
+
+  .float-thinking::after {
+    content: '...';
+    display: inline-block;
+    width: 1.2em;
+    overflow: hidden;
+    vertical-align: bottom;
+    animation: float-dots 900ms steps(4) infinite;
+  }
+
+  .float-trace .is-now::before {
+    animation: float-pulse 700ms steps(2) infinite;
+  }
+
+  .float-sea {
+    animation: float-drift 2600ms linear infinite;
+  }
+
+  /* the line is drawn from January to December, then the points drop on */
+  .float-line {
+    animation: float-draw 1100ms ease-out both;
+  }
+
+  .float-dot,
+  .float-pin,
+  .float-cells span {
+    animation: float-pop 240ms ease-out both;
+    animation-delay: calc(var(--n) * 55ms + 250ms);
+  }
+
+  .float-pin {
+    animation:
+      float-pop 240ms ease-out both,
+      float-bob 1800ms ease-in-out infinite;
+    animation-delay:
+      calc(var(--n) * 90ms + 200ms),
+      calc(var(--n) * 200ms);
+  }
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes float-dots {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes float-pulse {
+  50% {
+    transform: scale(1.35);
+  }
+}
+
+@keyframes float-drift {
+  to {
+    transform: translateX(-22px);
+  }
+}
+
+@keyframes float-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes float-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes float-bob {
+  50% {
+    margin-top: -7px;
+  }
+}

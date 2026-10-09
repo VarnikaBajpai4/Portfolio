@@ -1,8 +1,16 @@
 import { useState } from 'react'
+import type { ComponentType } from 'react'
 import { content } from '../content'
+import type { Project } from '../content'
 import { Icon } from '../icons/Icon'
+import { FloatChat } from './projects/FloatChat'
 import { OmniCompiler } from './projects/OmniCompiler'
 import { ProjectFolder } from './projects/ProjectFolder'
+
+const PAGES: Record<string, ComponentType<{ project: Project; onBack: () => void }>> = {
+  omnicompiler: OmniCompiler,
+  floatchat: FloatChat,
+}
 
 export function Projects({ param }: { param?: string }) {
   const [selected, setSelected] = useState<string | null>(param ?? null)
@@ -29,7 +37,9 @@ export function Projects({ param }: { param?: string }) {
     )
   }
 
-  if (project.id === 'omnicompiler') return <OmniCompiler project={project} onBack={() => setSelected(null)} />
+  // projects with a full page of their own; the rest use the short Get Info view below
+  const Page = PAGES[project.id]
+  if (Page) return <Page project={project} onBack={() => setSelected(null)} />
 
   return (
     <article className="info app-pad">

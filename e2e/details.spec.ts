@@ -143,10 +143,31 @@ test('making the window small again returns from a project to the folder', async
   const projects = page.getByRole('dialog', { name: 'Projects' })
   await projects.getByRole('button', { name: 'OmniCompiler' }).click()
   await expect(projects.getByRole('heading', { name: 'OmniCompiler' })).toBeVisible()
+  // let the window finish growing, as a person would see before reaching for the zoom box
+  await expect.poll(async () => (await projects.boundingBox())!.width).toBeGreaterThan(1000)
+  await expect(projects.locator('.show-reveal').first()).toHaveCSS('opacity', '1')
 
   await page.getByRole('button', { name: 'Zoom Projects' }).click()
   await expect(projects.getByRole('heading', { name: 'OmniCompiler' })).toHaveCount(0)
   for (const name of ['OmniCompiler', 'FloatChat', 'UBI Bharosa', 'Symbiote', 'MalShield']) {
     await expect(projects.getByRole('button', { name })).toBeVisible()
   }
+})
+
+test('FloatChat shows what happens to a question', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  await projects.getByRole('button', { name: 'FloatChat' }).click()
+  await expect(projects.getByRole('heading', { name: 'FloatChat' })).toBeVisible()
+  await expect(projects.locator('.show-stack').getByText('FastMCP', { exact: true })).toBeVisible()
+
+  await projects.getByRole('button', { name: 'Where are the floats near India?' }).click()
+  await expect(projects.locator('.float-trace')).toContainText('generate_map_points_tool', { timeout: 6000 })
+  await expect(projects.locator('.float-answer')).toContainText('Nine floats are reporting')
+  await expect(projects.locator('.float-pin')).toHaveCount(9)
+
+  // an off-topic question is stopped before any tool runs
+  await projects.getByRole('button', { name: 'Write a poem about my cat.' }).click()
+  await expect(projects.locator('.float-trace')).toContainText('irrelevant')
+  await expect(projects.locator('.float-answer')).toContainText('I only answer questions about Argo ocean data.')
+  await expect(projects.locator('.float-trace')).not.toContainText('generate_')
 })
