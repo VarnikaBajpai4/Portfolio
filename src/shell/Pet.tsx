@@ -3,13 +3,8 @@ import { Chindi } from '../icons/Chindi'
 import type { ChindiPose } from '../icons/Chindi'
 import { prefersReducedMotion } from '../motion'
 import type { AppId, Bounds, Win } from '../wm/reducer'
-
-/** Other parts of the site can talk to the cat: window.dispatchEvent(new CustomEvent(PET_EVENT, { detail })) */
-export const PET_EVENT = 'vb:pet'
-export interface PetRequest {
-  say?: string
-  goto?: AppId
-}
+import { PET_EVENT } from './events'
+import type { PetRequest } from './events'
 
 const BOX_W = 44
 const BOX_H = 32

@@ -366,3 +366,16 @@ h3 {
   outline: none;
   box-shadow: none;
 }
+
+.term-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 4px 0;
+}
+
+.term-card svg {
+  flex: none;
+  background: #8ff5c9;
+  border: 2px solid #ffffff;
+}

@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { APPS, fillColor, getApp, rectFor } from '../apps/registry'
+import { prefersReducedMotion } from '../motion'
+import { TITLE_H } from '../wm/reducer'
 import type { AppId, Bounds, Rect, Win } from '../wm/reducer'
 import { useWM } from '../wm/store'
 import { Window } from '../wm/Window'
 import { WMProvider } from '../wm/WMProvider'
 import { DesktopIcons } from './DesktopIcons'
 import { Dock } from './Dock'
+import { GRAVITY_EVENT } from './events'
 import { MenuBar } from './MenuBar'
 import { OpenAppContext } from './openApp'
 import { Pet } from './Pet'
@@ -91,6 +94,56 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
     )
     return () => timers.forEach((timer) => window.clearTimeout(timer))
   }, [entrance, dispatch, openFrom])
+
+  // `rm -rf /` in the terminal: every window drops to the floor, then the desktop is restored.
+  useEffect(() => {
+    let frame = 0
+    let restore = 0
+    const onGravity = () => {
+      const { windows: saved, bounds: b } = live.current
+      if (saved.length === 0 || frame || prefersReducedMotion()) return
+      const bodies = saved.map((win, i) => ({
+        win,
+        y: win.rect.y,
+        speed: 0,
+        delay: i * 5,
+        floor: Math.max(win.rect.y, b.h + DOCK_RESERVE - win.rect.h - 4),
+        resting: false,
+      }))
+      frame = window.setInterval(() => {
+        for (const body of bodies) {
+          if (body.resting || body.delay-- > 0) continue
+          body.speed += 2.4
+          body.y += body.speed
+          if (body.y >= body.floor) {
+            body.y = body.floor
+            if (body.speed > 8) body.speed *= -0.35
+            else body.resting = true
+          }
+          dispatch({
+            type: 'move',
+            id: body.win.id,
+            x: body.win.rect.x,
+            y: body.y,
+            bounds: { w: b.w, h: body.floor + TITLE_H },
+          })
+        }
+        if (bodies.every((body) => body.resting)) {
+          window.clearInterval(frame)
+          restore = window.setTimeout(() => {
+            frame = 0
+            dispatch({ type: 'reset', windows: saved })
+          }, 1300)
+        }
+      }, 16)
+    }
+    window.addEventListener(GRAVITY_EVENT, onGravity)
+    return () => {
+      window.removeEventListener(GRAVITY_EVENT, onGravity)
+      window.clearInterval(frame)
+      window.clearTimeout(restore)
+    }
+  }, [dispatch])
 
   const addSticky = useCallback((text: string, x: number, y: number) => {
     setStickies((list) => [...list, { id: nextSticky.current++, text, x: x - 70, y: y - MENU_H - 20 }])

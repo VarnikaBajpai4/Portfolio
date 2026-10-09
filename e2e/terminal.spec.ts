@@ -64,3 +64,45 @@ test('history and clear', async ({ page }) => {
   await run(page, 'clear')
   await expect(terminal(page).getByRole('log').locator('p')).toHaveCount(0)
 })
+
+test('neofetch, git log and top print their reports', async ({ page }) => {
+  await run(page, 'neofetch')
+  await expect(terminal(page)).toContainText('varnika@portfolio')
+  await expect(terminal(page)).toContainText('Cat:     Chindi')
+  await run(page, 'git log')
+  await expect(terminal(page)).toContainText('init: ballet shoes')
+  await run(page, 'top')
+  await expect(terminal(page)).toContainText('chindi           99.9')
+})
+
+test('Tab completes commands and arguments', async ({ page }) => {
+  const input = page.getByLabel('Terminal input')
+  await input.fill('neo')
+  await input.press('Tab')
+  await expect(input).toHaveValue('neofetch')
+  await input.fill('open omni')
+  await input.press('Tab')
+  await expect(input).toHaveValue('open omnicompiler')
+  await input.fill('c')
+  await input.press('Tab')
+  await expect(terminal(page)).toContainText('contact  cat  catsay  clear')
+})
+
+test('catsay makes Chindi speak', async ({ page }) => {
+  await run(page, 'catsay Hello There')
+  await expect(page.locator('.pet-bubble')).toHaveText('Hello There')
+})
+
+test('cat readme.txt prints the read me', async ({ page }) => {
+  await run(page, 'cat readme.txt')
+  await expect(terminal(page)).toContainText('homage to my Mac')
+})
+
+test('rm -rf / drops the windows and then restores them', async ({ page }) => {
+  const about = page.getByRole('dialog', { name: 'About Varnika' })
+  const before = (await about.boundingBox())!
+  await run(page, 'rm -rf /')
+  await expect(terminal(page)).toContainText('Just kidding.')
+  await expect.poll(async () => (await about.boundingBox())!.y).toBeGreaterThan(before.y + 100)
+  await expect.poll(async () => (await about.boundingBox())!.y, { timeout: 8000 }).toBe(before.y)
+})
