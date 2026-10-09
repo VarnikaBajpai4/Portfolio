@@ -115,23 +115,21 @@ export const content: Content = {
   },
 
   family: [
-    { who: 'Nanu', note: 'My grandfather. He started it.', tag: 'init' },
+    { who: 'Nanu', note: 'My grandfather. Started it.', tag: 'init' },
     { who: 'Dad', note: 'The best engineer I know.' },
-    { who: 'My brother', note: 'Went first and laid out the path for me.' },
-    { who: 'His wife', note: 'Newly merged into the family.', tag: 'merge', branch: true },
-    { who: 'Me', note: 'I grew up knowing that the ability to build a solution is a kind of power.', tag: 'HEAD' },
+    { who: 'My brother', note: 'Laid out the path.' },
+    { who: 'His wife', note: 'Newly merged in.', tag: 'merge', branch: true },
+    { who: 'Me', note: 'Building is a kind of power.', tag: 'HEAD' },
   ],
 
   quote: {
     text: 'She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
-    about: 'My mother, the reason I take challenges head on, the way she does.',
+    about: 'My mother. I take challenges head on, the way she does.',
   },
 
   stats: [
     { value: 9.66, decimals: 2, label: 'CGPA' },
     { value: 2, prefix: '#', label: 'in my batch. Silver medal.' },
-    { value: 500, suffix: '+', label: 'teams in the national hackathon where we placed third' },
-    { value: 19, prefix: '1 of ', label: 'picked from my college for Barclays' },
   ],
 
   story: [FELL_FOR_CS, SINCE_THEN],

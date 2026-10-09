@@ -17,43 +17,31 @@ function Tile({ className, children }: { className: string; children: (seen: boo
   )
 }
 
-function Family() {
-  // newest on top, the way a commit log reads
-  const members = [...content.family].reverse()
+/** Where it comes from: the family as a small commit line, and one line about my mother. */
+function Roots() {
   return (
-    <Tile className="tile-family">
+    <Tile className="tile-roots">
       {() => (
         <>
           <h3>A family of engineers</h3>
-          <ol className="graph">
-            {members.map((member, i) => (
+          <ol className="lineage">
+            {content.family.map((member, i) => (
               <li
                 key={member.who}
-                className={member.branch ? 'graph-branch' : undefined}
-                style={{ '--order': members.length - i } as CSSProperties}
+                className={member.branch ? 'lineage-branch' : undefined}
+                style={{ '--order': i } as CSSProperties}
               >
-                <span className="graph-who">
-                  {member.who}
-                  {member.tag && <span className="graph-tag">{member.tag}</span>}
-                </span>
-                <span className="graph-note">{member.note}</span>
+                <span className="lineage-who">{member.who}</span>
+                {member.tag && <span className="lineage-tag">{member.tag}</span>}
+                <span className="lineage-note">{member.note}</span>
               </li>
             ))}
           </ol>
+          <figure className="roots-quote">
+            <blockquote>{content.quote.text}</blockquote>
+            <figcaption>{content.quote.about}</figcaption>
+          </figure>
         </>
-      )}
-    </Tile>
-  )
-}
-
-function Quote() {
-  return (
-    <Tile className="tile-quote">
-      {() => (
-        <figure>
-          <blockquote>{content.quote.text}</blockquote>
-          <figcaption>{content.quote.about}</figcaption>
-        </figure>
       )}
     </Tile>
   )
@@ -68,7 +56,7 @@ function Stats() {
             <>
               {i === 1 && (
                 <span className="stat-medal" aria-hidden="true">
-                  <Sticker name="medal" size={40} fill="var(--c4)" />
+                  <Sticker name="medal" size={48} fill="var(--c2)" />
                 </span>
               )}
               <CountUp stat={stat} active={seen} />
@@ -81,22 +69,28 @@ function Stats() {
   )
 }
 
-function Ticker() {
-  const items = [...content.languages, ...content.tools]
+/** Skills as keys on a keyboard, after the old Key Caps desk accessory. One row per group. */
+function KeyCaps() {
+  const { languages, tools } = content
+  const half = Math.ceil(tools.length / 2)
+  const rows = [languages, tools.slice(0, half), tools.slice(half)]
+  let order = 0
   return (
-    <Tile className="tile-ticker">
+    <Tile className="tile-keys">
       {() => (
         <>
-          <h3 className="sr-only">Skills</h3>
-          <div className="ticker">
-            {/* the list twice, so the loop has no seam; the copy is hidden from screen readers */}
-            {[false, true].map((copy) => (
-              <ul key={String(copy)} aria-hidden={copy || undefined}>
-                {items.map((item) => (
-                  <li key={item}>{item}</li>
+          <h3>Key Caps</h3>
+          <div className="keys">
+            {rows.map((row, r) => (
+              <ul key={row[0]} className={`keys-row keys-row-${r}`} aria-label={r === 0 ? 'Languages' : 'Works with'}>
+                {row.map((label) => (
+                  <li key={label} className="key" style={{ '--order': order++ } as CSSProperties}>
+                    {label}
+                  </li>
                 ))}
               </ul>
             ))}
+            <div className="key key-space" style={{ '--order': order } as CSSProperties} aria-hidden="true" />
           </div>
         </>
       )}
@@ -163,10 +157,9 @@ function Hobbies() {
 export function Story() {
   return (
     <div className="story">
-      <Family />
-      <Quote />
+      <Roots />
       <Stats />
-      <Ticker />
+      <KeyCaps />
       <Tile className="tile-text">
         {() => (
           <>

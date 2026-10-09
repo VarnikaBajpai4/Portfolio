@@ -87,9 +87,11 @@ test('Open my story turns About into the full story', async ({ page }) => {
 
   await expect(about.getByRole('heading', { name: 'A family of engineers' })).toBeVisible()
   for (const who of ['Nanu', 'Dad', 'My brother', 'His wife', 'Me']) {
-    await expect(about.locator('.graph-who', { hasText: who }).first()).toBeVisible()
+    await expect(about.locator('.lineage-who', { hasText: who }).first()).toBeVisible()
   }
-  await expect(about.locator('.graph li').first()).toContainText('HEAD')
+  await expect(about.locator('.lineage li').last()).toContainText('HEAD')
+  await expect(about.locator('.stat-number')).toHaveCount(2)
+  await expect(about.locator('.key', { hasText: 'Python' })).toBeVisible()
   await expect(about.getByText('I have never corrected her.')).toBeVisible()
 
   // the numbers count up when they scroll into view

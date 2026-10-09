@@ -158,21 +158,16 @@
     grid-template-columns: repeat(12, 1fr);
   }
 
-  .tile-family {
-    grid-column: span 7;
-  }
-
-  .tile-quote {
-    grid-column: span 5;
+  .tile-roots {
+    grid-column: span 8;
   }
 
   .tile-stat {
-    grid-column: span 3;
+    grid-column: span 2;
   }
 
-  .tile-ticker,
-  .tile-homage {
-    grid-column: 1 / -1;
+  .tile-keys {
+    grid-column: span 7;
   }
 
   .tile-text {
@@ -180,143 +175,128 @@
   }
 
   .tile-hobbies {
-    grid-column: span 7;
+    grid-column: span 8;
+  }
+
+  .tile-homage {
+    grid-column: span 4;
   }
 }
 
-/* ---------- family graph ---------- */
+/* ---------- family line ---------- */
 
-.tile-family {
-  background: #111111;
-  color: #ffffff;
-}
-
-.graph {
+.lineage {
   position: relative;
   display: grid;
-  gap: 14px;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 10px;
   margin: 0;
-  padding: 0 0 0 34px;
+  padding: 26px 0 0;
   list-style: none;
 }
 
 /* the main line */
-.graph::before {
+.lineage::before {
   content: '';
   position: absolute;
-  top: 8px;
-  bottom: 8px;
-  left: 8px;
-  width: 4px;
-  background: var(--c2);
+  top: 6px;
+  /* stop at the last dot: five equal columns, so the last one starts near 80% */
+  right: calc(20% - 12px);
+  left: 6px;
+  height: 2px;
+  background: var(--ink);
 }
 
-.graph li {
+.lineage li {
   position: relative;
   display: grid;
   gap: 1px;
+  align-content: start;
+  justify-items: start;
+  min-width: 0;
 }
 
 /* the commit dot */
-.graph li::before {
+.lineage li::before {
   content: '';
   position: absolute;
-  top: 2px;
-  left: -34px;
-  width: 20px;
-  height: 20px;
-  background: #111111;
-  border: 4px solid var(--c2);
+  top: -26px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
   border-radius: 50%;
 }
 
-.graph li:first-child::before {
+.lineage li:last-child::before {
+  background: var(--c4);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink);
+}
+
+/* a side branch: the dot hangs under the line, joined by a short elbow */
+.lineage .lineage-branch::before {
+  top: -14px;
+  left: 10px;
   background: var(--c3);
-  border-color: var(--c3);
-  box-shadow: 0 0 0 4px #ffffff40;
 }
 
-/* a side branch: the dot sits to the right and an elbow joins it to the line */
-.graph-branch {
-  margin-left: 30px;
-}
-
-.graph .graph-branch::before {
-  border-color: var(--c4);
-}
-
-.graph-branch::after {
+.lineage-branch::after {
   content: '';
   position: absolute;
-  top: 12px;
-  left: -56px;
-  width: 24px;
-  height: 30px;
-  border-top: 4px solid var(--c4);
-  border-left: 4px solid var(--c4);
-  border-top-left-radius: 14px;
+  top: -20px;
+  left: -2px;
+  width: 12px;
+  height: 12px;
+  border-bottom: 2px solid var(--ink);
+  border-left: 2px solid var(--ink);
+  border-bottom-left-radius: 10px;
 }
 
-.graph-who {
-  font-size: 17px;
+.lineage-branch .lineage-who {
+  margin-top: 10px;
+}
+
+.lineage-who {
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.2;
 }
 
-.graph-tag {
-  margin-left: 10px;
-  padding: 0 6px;
-  background: var(--c3);
-  color: #000000;
+.lineage-tag {
+  padding: 0 5px;
+  border: 1px solid var(--ink);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.lineage-note {
+  font-family: var(--font-read);
   font-size: 12px;
-  font-weight: 400;
-  vertical-align: middle;
+  line-height: 1.3;
+  opacity: 0.75;
 }
 
-.graph-note {
-  color: #d8d8d8;
+.roots-quote {
+  margin: 16px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--ink);
+}
+
+.roots-quote blockquote {
+  margin: 0;
   font-family: var(--font-read);
   font-size: 14px;
+  font-style: italic;
+  line-height: 1.4;
 }
 
-/* ---------- quote ---------- */
-
-.tile-quote {
-  position: relative;
-  display: grid;
-  align-content: center;
-  background: var(--c3);
-  border-radius: 18px;
-}
-
-/* the balloon's tail */
-.tile-quote::after {
-  content: '';
-  position: absolute;
-  bottom: -16px;
-  left: 36px;
-  width: 22px;
-  height: 22px;
-  background: var(--c3);
-  border-right: var(--px) solid var(--ink);
-  border-bottom: var(--px) solid var(--ink);
-  transform: skewX(20deg) rotate(45deg);
-}
-
-.tile-quote figure {
-  margin: 0;
-}
-
-.tile-quote blockquote {
-  margin: 0;
-  font-size: clamp(18px, 2.4cqi, 24px);
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.tile-quote figcaption {
-  margin-top: 12px;
+.roots-quote figcaption {
+  margin-top: 2px;
   font-family: var(--font-read);
-  font-size: 14px;
+  font-size: 12px;
+  opacity: 0.75;
 }
 
 /* ---------- numbers ---------- */
@@ -336,16 +316,8 @@
   background: var(--c4);
 }
 
-.tile-stat-2 {
-  background: var(--c1);
-}
-
-.tile-stat-3 {
-  background: var(--c3);
-}
-
 .stat-number {
-  font-size: clamp(30px, 5cqi, 46px);
+  font-size: clamp(28px, 3.6cqi, 40px);
   font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -359,38 +331,60 @@
 
 .stat-medal {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  right: 8px;
+  bottom: 8px;
 }
 
-/* ---------- skills ticker ---------- */
+/* ---------- key caps ---------- */
 
-.tile-ticker {
-  padding: 10px 0;
-  overflow: hidden;
-  background: var(--ink);
-  color: var(--paper);
+.keys {
+  display: grid;
+  gap: 10px;
+  padding-bottom: 4px;
 }
 
-.ticker {
+.keys-row {
   display: flex;
-  width: max-content;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.ticker ul {
-  display: flex;
-  flex: none;
-  gap: 36px;
-  padding-right: 36px;
-  font-size: 18px;
-  font-weight: 600;
-  white-space: nowrap;
+/* each row starts a little further in, like a keyboard */
+.keys-row-1 {
+  padding-left: 16px;
 }
 
-.ticker li::after {
-  content: '✦';
-  margin-left: 36px;
-  color: var(--c3);
+.keys-row-2 {
+  padding-left: 32px;
+}
+
+.key {
+  min-width: 58px;
+  height: 40px;
+  padding: 4px 9px 0;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  box-shadow: 0 4px 0 var(--ink);
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: default;
+  user-select: none;
+}
+
+.keys-row-0 .key {
+  background: var(--c3);
+}
+
+.key-space {
+  width: min(62%, 320px);
+  height: 30px;
+  margin-left: 56px;
+}
+
+.key:hover {
+  box-shadow: none;
+  transform: translateY(4px);
 }
 
 /* ---------- hobbies ---------- */
@@ -434,9 +428,13 @@
 
 .tile-homage {
   display: flex;
-  gap: 16px;
+  gap: 14px;
   align-items: center;
   background: var(--c2);
+}
+
+.tile-homage p {
+  font-size: 14px;
 }
 
 .tile-homage svg {
@@ -468,35 +466,33 @@
   }
 
   /* the family lights up from the first engineer to the newest */
-  .graph li {
-    opacity: 0.15;
+  .lineage li {
+    opacity: 0.2;
   }
 
-  .is-in .graph li {
-    animation: commit-in 300ms steps(3) both;
-    animation-delay: calc(var(--order) * 260ms);
+  .is-in .lineage li {
+    animation: commit-in 280ms steps(3) both;
+    animation-delay: calc(var(--order) * 200ms + 150ms);
   }
 
-  .graph::before {
-    transform: scaleY(0);
-    transform-origin: bottom;
+  .lineage::before {
+    transform: scaleX(0);
+    transform-origin: left;
   }
 
-  .is-in .graph::before {
+  .is-in .lineage::before {
     transform: none;
-    transition: transform 1500ms steps(12) 200ms;
+    transition: transform 1000ms steps(10) 150ms;
   }
 
-  .ticker {
-    animation: ticker 26s linear infinite;
-  }
-
-  .tile-ticker:hover .ticker {
-    animation-play-state: paused;
+  /* one key after the other is pressed, once */
+  .is-in .key {
+    animation: key-press 260ms ease-out both;
+    animation-delay: calc(var(--order) * 55ms + 250ms);
   }
 
   .stat-medal {
-    animation: medal-turn 2200ms steps(8) infinite;
+    animation: medal-bob 1600ms steps(4) infinite;
   }
 
   .hobby-art.is-dropped {
@@ -506,8 +502,8 @@
 
 @keyframes commit-in {
   from {
-    opacity: 0.15;
-    transform: translateX(-8px);
+    opacity: 0.2;
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -515,15 +511,16 @@
   }
 }
 
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
+@keyframes key-press {
+  40% {
+    box-shadow: none;
+    transform: translateY(4px);
   }
 }
 
-@keyframes medal-turn {
+@keyframes medal-bob {
   50% {
-    transform: scaleX(-1);
+    transform: translateY(-4px) rotate(-6deg);
   }
 }
 
