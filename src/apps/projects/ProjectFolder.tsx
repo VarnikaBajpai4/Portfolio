@@ -21,7 +21,7 @@ const EMBLEMS: Record<string, { rows: string[]; fill: string; motion: string }> 
       '..KK..KK..KK..KK.',
       'KK..KK..KK..KK..K',
     ],
-    fill: 'var(--c1)',
+    fill: '#8ecbf7',
     motion: 'drift',
   },
   // a bank

@@ -1,0 +1,176 @@
+/* Symbiote: pick a teammate and watch the pair get scored. */
+
+.show.show-symbiote {
+  --wash: var(--c3);
+  /* dots joined in a grid */
+  --band-pattern:
+    radial-gradient(#00000040 2px, transparent 2.5px) 0 0 / 22px 22px,
+    linear-gradient(#00000012 1px, transparent 1px) 0 0 / 22px 22px;
+}
+
+.sy-people {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  padding: 0 4px 4px 0;
+}
+
+.sy-person {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: 10px 12px;
+  background: var(--paper);
+  box-shadow: 3px 3px 0 var(--ink);
+  text-align: left;
+}
+
+.sy-person[aria-pressed='true'] {
+  background: var(--c3);
+  box-shadow: none;
+  transform: translate(3px, 3px);
+}
+
+.sy-name {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.sy-note {
+  margin-bottom: 4px;
+  font-family: var(--font-read);
+  font-size: 12.5px;
+}
+
+.sy-chip {
+  flex: none;
+  padding: 0 6px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sy-chip.is-best {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.sy-bars {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+.sy-bars div {
+  display: grid;
+  grid-template-columns: 66px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.sy-bars dt {
+  font-size: 12px;
+}
+
+.sy-bars dd {
+  display: grid;
+  grid-template-columns: 1fr 26px;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.sy-bars i {
+  display: block;
+  height: 10px;
+  background: linear-gradient(90deg, var(--tone, var(--c2)) var(--level), var(--paper) 0);
+  border: 1px solid var(--ink);
+}
+
+/* the two halves of a link, which close when a pair is made */
+.sy-link {
+  position: relative;
+  height: 26px;
+}
+
+.sy-link::before,
+.sy-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 16px;
+  height: 14px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+}
+
+.sy-link::before {
+  top: -4px;
+  margin-left: -8px;
+}
+
+.sy-link::after {
+  bottom: -4px;
+  margin-left: -8px;
+}
+
+.sy-link.is-joined::before {
+  top: 2px;
+}
+
+.sy-link.is-joined::after {
+  bottom: 2px;
+}
+
+.sy-sum {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.sy-score {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sy-score small {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sy-bars i {
+    transition: background 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .sy-link::before,
+  .sy-link::after {
+    transition:
+      top 260ms cubic-bezier(0.2, 0.9, 0.3, 1.5),
+      bottom 260ms cubic-bezier(0.2, 0.9, 0.3, 1.5);
+  }
+
+  .sy-score {
+    animation: sy-pop 360ms cubic-bezier(0.2, 0.9, 0.3, 1.5) both;
+  }
+}
+
+@keyframes sy-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}

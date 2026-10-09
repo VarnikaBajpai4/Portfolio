@@ -97,6 +97,17 @@ h3 {
   gap: 10px 4px;
 }
 
+/* the project folders share the row evenly, so they fit whatever the window's width */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 10px 4px;
+}
+
+.project-grid .icon-tile {
+  width: 100%;
+}
+
 .icon-tile {
   display: flex;
   flex-direction: column;

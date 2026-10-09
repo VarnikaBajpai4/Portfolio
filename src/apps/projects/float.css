@@ -1,7 +1,8 @@
 /* The FloatChat page: its colours, and a chat demo that shows each step behind an answer. */
 
 .show.show-float {
-  --wash: var(--c1);
+  /* sea blue, whatever the desktop palette is */
+  --wash: #8ecbf7;
   /* a band of small waves */
   --band-pattern: radial-gradient(circle at 50% 0, transparent 8px, #00000030 8px 10px, transparent 10px) 0 0 / 22px 13px;
 }

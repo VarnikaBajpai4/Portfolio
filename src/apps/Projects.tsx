@@ -3,13 +3,19 @@ import type { ComponentType } from 'react'
 import { content } from '../content'
 import type { Project } from '../content'
 import { Icon } from '../icons/Icon'
+import { Bharosa } from './projects/Bharosa'
 import { FloatChat } from './projects/FloatChat'
+import { MalShield } from './projects/MalShield'
 import { OmniCompiler } from './projects/OmniCompiler'
 import { ProjectFolder } from './projects/ProjectFolder'
+import { Symbiote } from './projects/Symbiote'
 
 const PAGES: Record<string, ComponentType<{ project: Project; onBack: () => void }>> = {
   omnicompiler: OmniCompiler,
   floatchat: FloatChat,
+  bharosa: Bharosa,
+  symbiote: Symbiote,
+  malshield: MalShield,
 }
 
 export function Projects({ param }: { param?: string }) {
@@ -24,7 +30,7 @@ export function Projects({ param }: { param?: string }) {
 
   if (!project) {
     return (
-      <ul className="icon-grid app-pad">
+      <ul className="project-grid app-pad">
         {content.projects.map((p) => (
           <li key={p.id}>
             <button type="button" className="icon-tile" onClick={() => setSelected(p.id)}>

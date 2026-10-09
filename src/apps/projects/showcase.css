@@ -291,3 +291,46 @@
     transform: translateY(8px);
   }
 }
+
+/* ---------- a two-pane demo frame, shared by several projects ---------- */
+
+.show-demo {
+  display: grid;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.show-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px 20px;
+}
+
+.show-pane-tint {
+  background: color-mix(in srgb, var(--c3) 30%, var(--paper));
+}
+
+@container (min-width: 860px) {
+  .show-demo {
+    grid-template-columns: var(--cols, minmax(0, 1.3fr) minmax(0, 1fr));
+  }
+
+  .show-pane + .show-pane {
+    border-left: var(--px) solid var(--ink);
+  }
+}
+
+@container (max-width: 859px) {
+  .show-pane + .show-pane {
+    border-top: var(--px) solid var(--ink);
+  }
+}
+
+.show-note {
+  margin-top: auto;
+  font-family: var(--font-read);
+  font-size: 13px;
+}

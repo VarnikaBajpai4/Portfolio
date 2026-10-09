@@ -171,3 +171,58 @@ test('FloatChat shows what happens to a question', async ({ page }) => {
   await expect(projects.locator('.float-answer')).toContainText('I only answer questions about Argo ocean data.')
   await expect(projects.locator('.float-trace')).not.toContainText('generate_')
 })
+
+test('UBI Bharosa puts an urgent ticket at the front of the queue', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  await projects.getByRole('button', { name: 'UBI Bharosa' }).click()
+  await expect(projects.getByRole('heading', { name: 'UBI Bharosa' })).toBeVisible()
+  await expect(projects.locator('.bh-ticket').first()).toContainText('A-101')
+
+  await projects.getByRole('button', { name: /My loan instalment was taken twice/ }).click()
+  await expect(projects.locator('.bh-ticket')).toHaveCount(4, { timeout: 6000 })
+  await expect(projects.locator('.bh-ticket').first()).toContainText('A-104')
+
+  await projects.getByRole('button', { name: 'Serve next' }).click()
+  await expect(projects.getByText('Now serving A-104')).toBeVisible()
+  await expect(projects.locator('.bh-ticket').first()).toContainText('A-101')
+})
+
+test('Symbiote scores a pairing and rewards a complementary teammate', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  await projects.getByRole('button', { name: 'Symbiote' }).click()
+  await expect(projects.getByRole('heading', { name: 'Symbiote' })).toBeVisible()
+
+  const score = async (name: RegExp) => {
+    await projects.getByRole('button', { name }).click()
+    return Number((await projects.locator('.sy-score').innerText()).replace(/\D+/g, ''))
+  }
+  const twin = await score(/The frontend twin/)
+  const backend = await score(/The backend specialist/)
+  expect(backend).toBeGreaterThan(twin)
+  await score(/The all-rounder/)
+  await score(/The beginner/)
+  await expect(projects.locator('.sy-chip.is-best')).toHaveCount(1)
+})
+
+test('MalShield gives a verdict with its reasons', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  await projects.getByRole('button', { name: 'MalShield' }).click()
+  await expect(projects.getByRole('heading', { name: 'MalShield' })).toBeVisible()
+
+  await projects.getByRole('button', { name: 'free_game_setup.exe' }).click()
+  await expect(projects.locator('.ms-verdict')).toHaveText('Malicious', { timeout: 6000 })
+  await expect(projects.locator('.ms-report')).toContainText('Trojan family')
+  await expect(projects.locator('.ms-report')).toContainText('WriteProcessMemory')
+
+  await projects.getByRole('button', { name: 'invoice_march.docx' }).click()
+  await expect(projects.locator('.ms-verdict')).toHaveText('Clean', { timeout: 6000 })
+})
+
+test('all five project folders fit on one row', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  const tops = new Set<number>()
+  for (const name of ['OmniCompiler', 'FloatChat', 'UBI Bharosa', 'Symbiote', 'MalShield']) {
+    tops.add(Math.round((await projects.getByRole('button', { name }).boundingBox())!.y))
+  }
+  expect(tops.size).toBe(1)
+})
