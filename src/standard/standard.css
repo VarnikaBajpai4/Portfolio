@@ -17,8 +17,7 @@
 .sv h2,
 .sv h3,
 .sv .btn,
-.sv .chip,
-.sv .bars {
+.sv .chip {
   font-family: var(--font-pixel);
 }
 
@@ -79,13 +78,19 @@
   background: var(--c3);
 }
 
-.sv-bars {
-  max-width: 420px;
-  margin: 0 0 14px;
+.sv section > h3 {
+  margin: 12px 0 6px;
 }
 
-.sv-bars .bar-fill {
-  background-color: var(--c4);
+.sv-headline {
+  font-weight: 600;
+}
+
+.sv-footer {
+  margin-top: 32px;
+  padding-top: 14px;
+  border-top: var(--px) solid var(--ink);
+  font-style: italic;
 }
 
 .sv-list {

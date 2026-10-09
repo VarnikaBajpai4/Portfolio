@@ -57,15 +57,10 @@ export function runCommand(input: string): TermResult {
     case 'help':
       return { lines: HELP }
     case 'whoami':
-      return { lines: [`${content.identity.name}: ${content.identity.role}`, content.identity.tagline] }
+      return { lines: [`${content.identity.name}: ${content.identity.role}`, content.identity.headline] }
     case 'skills':
       return {
-        lines: [
-          ...content.skills.map(
-            (s) => `${s.name.padEnd(11)}${'#'.repeat(s.level)}${'.'.repeat(10 - s.level)} ${s.level}/10`,
-          ),
-          `also: ${content.tools.join(', ')}`,
-        ],
+        lines: [`languages:  ${content.languages.join(', ')}`, `works with: ${content.tools.join(', ')}`],
       }
     case 'experience':
       return { lines: content.work.map((job) => `${job.org}, ${job.role} (${job.period})`) }

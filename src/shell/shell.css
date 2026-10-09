@@ -216,7 +216,7 @@ a.menu-item {
 }
 
 
-/* ---------- intro and shut down ---------- */
+/* ---------- loading and shut down ---------- */
 
 .overlay {
   position: fixed;
@@ -245,42 +245,195 @@ a.menu-item {
   font-weight: 600;
 }
 
-.intro {
+.loader {
   cursor: pointer;
 }
 
-.intro-tiles {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
+.loader .overlay-card {
   gap: 10px;
+  width: min(380px, 100%);
 }
 
-.intro-tile {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  background: var(--paper);
-  box-shadow: 3px 3px 0 var(--ink);
-  font-size: 13px;
-  font-weight: 600;
+.loader-name {
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.loader-lane {
+  position: relative;
+  width: 100%;
+  margin-top: 52px;
+}
+
+.loader-track {
+  height: 20px;
+  overflow: hidden;
+}
+
+.loader-fill {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 4px, var(--c2) 4px 8px);
+}
+
+.loader-runner {
+  position: absolute;
+  bottom: 100%;
+  left: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  transform: translateX(-100%);
+}
+
+.loader-pointer {
+  margin-bottom: 4px;
+}
+
+.loader-text {
+  min-height: 1.4em;
+  font-size: 14px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .intro-tile {
-    animation: tile-in 1ms steps(1) both;
+  .loader-fill {
+    animation: load-fill 2400ms steps(24) both;
+  }
+
+  .loader-runner {
+    animation: load-run 2400ms steps(24) both;
   }
 }
 
-@keyframes tile-in {
+@keyframes load-fill {
   from {
-    visibility: hidden;
+    width: 0;
   }
-  to {
-    visibility: visible;
+}
+
+@keyframes load-run {
+  from {
+    left: 22%;
   }
+}
+
+/* ---------- entrance ---------- */
+
+.zoom-outline {
+  position: fixed;
+  z-index: 150000;
+  border: 2px dotted var(--ink);
+  outline: 1px dotted var(--paper);
+  pointer-events: none;
+}
+
+.entrance-wait .menubar {
+  transform: translateY(-100%);
+}
+
+.entrance-wait .dock {
+  bottom: -90px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menubar {
+    transition: transform 320ms steps(6);
+  }
+
+  .dock {
+    transition: bottom 320ms steps(6);
+  }
+}
+
+/* ---------- Chindi ---------- */
+
+.pet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 44px;
+  height: 32px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pet {
+    transition: transform 120ms linear;
+  }
+
+  .pet-hop {
+    transition: transform 520ms cubic-bezier(0.3, -0.5, 0.5, 1);
+  }
+}
+
+.pet-cat {
+  position: relative;
+  padding: 0;
+  background: none;
+  border: 0;
+  pointer-events: auto;
+}
+
+.pet-flip {
+  display: block;
+  transform: scaleX(-1);
+}
+
+.pet-zzz {
+  position: absolute;
+  bottom: 100%;
+  left: 60%;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.pet-bubble {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  padding: 2px 10px;
+  background: var(--paper);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  font-size: 13px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+/* ---------- sticky notes ---------- */
+
+.sticky {
+  position: absolute;
+  z-index: 98000;
+  width: 160px;
+  min-height: 110px;
+  padding: 22px 12px 12px;
+  background: var(--c3);
+  box-shadow: 4px 4px 0 #0006;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: grab;
+  transform: rotate(-2deg);
+  touch-action: none;
+  user-select: none;
+}
+
+.sticky-x {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26px;
+  height: 24px;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: 18px;
+  line-height: 1;
 }
 
 /* ---------- phone ---------- */

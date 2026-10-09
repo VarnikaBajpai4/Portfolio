@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test.use({ viewport: { width: 375, height: 812 } })
 
 test('phone layout: grid, open an app, go back', async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('vb.introSeen', '1'))
+  await page.addInitScript(() => sessionStorage.setItem('vb.introSeen', '1'))
   await page.goto('./')
 
   const main = page.getByRole('main')

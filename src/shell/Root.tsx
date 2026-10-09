@@ -1,24 +1,32 @@
 import { useCallback, useState } from 'react'
-import { readStored, writeStored } from '../storage'
+import { prefersReducedMotion } from '../motion'
+import { readSession, writeSession } from '../storage'
 import { Desktop } from './Desktop'
-import { Intro } from './Intro'
+import { Loader } from './Loader'
 import { MobileShell } from './MobileShell'
 import { ShutDown } from './ShutDown'
 import { useIsMobile } from './useIsMobile'
 
+// once per browser session, so a reload does not replay it
 const INTRO_KEY = 'vb.introSeen'
 
 function wantsIntro() {
-  return !readStored(INTRO_KEY) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return !readSession(INTRO_KEY) && !prefersReducedMotion()
 }
 
 export function Root() {
   const mobile = useIsMobile()
   const [intro, setIntro] = useState(wantsIntro)
+  const [played, setPlayed] = useState(intro)
   const [off, setOff] = useState(false)
 
+  const startIntro = () => {
+    setPlayed(true)
+    setIntro(true)
+  }
+
   const endIntro = useCallback(() => {
-    writeStored(INTRO_KEY, '1')
+    writeSession(INTRO_KEY, '1')
     setIntro(false)
   }, [])
 
@@ -28,15 +36,19 @@ export function Root() {
         {mobile ? (
           <MobileShell />
         ) : (
-          <Desktop onRestartIntro={() => setIntro(true)} onShutDown={() => setOff(true)} />
+          <Desktop
+            entrance={!played ? 'none' : intro ? 'wait' : 'go'}
+            onRestartIntro={startIntro}
+            onShutDown={() => setOff(true)}
+          />
         )}
       </div>
-      {intro && <Intro onDone={endIntro} />}
+      {intro && <Loader onDone={endIntro} />}
       {off && (
         <ShutDown
           onRestart={() => {
             setOff(false)
-            setIntro(true)
+            startIntro()
           }}
         />
       )}

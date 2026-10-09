@@ -15,7 +15,7 @@ async function tabTo(page: Page, name: string) {
 }
 
 test('the desktop works with the keyboard alone', async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('vb.introSeen', '1'))
+  await page.addInitScript(() => sessionStorage.setItem('vb.introSeen', '1'))
   await page.goto('./')
 
   await tabTo(page, 'Work')

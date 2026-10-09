@@ -12,6 +12,7 @@ export function Dock() {
           type="button"
           className="dock-item"
           aria-label={app.title}
+          data-app={app.id}
           onClick={() => openApp(app.id)}
         >
           <Icon name={app.icon} size={32} fill={iconFill(app)} />

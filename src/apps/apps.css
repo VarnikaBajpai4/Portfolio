@@ -52,25 +52,20 @@ h3 {
   min-width: 0;
 }
 
-.bars {
+.about-headline {
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.tags {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 5px 10px;
-  align-items: center;
-  margin: 8px 0;
+  gap: 4px;
+  margin-top: 6px;
 }
 
-.bar {
-  display: block;
-  height: 14px;
-  background: var(--paper);
-  border: var(--px) solid var(--ink);
-}
-
-.bar-fill {
-  display: block;
-  height: 100%;
-  border-right: var(--px) solid var(--ink);
+.tags h3 {
+  font-size: 13px;
+  font-weight: 400;
 }
 
 /* ---------- card stacks ---------- */
@@ -254,26 +249,68 @@ h3 {
   position: relative;
   height: 100%;
   min-height: 120px;
-  padding: 14px 16px 34px;
+  overflow: hidden;
+  /* the page underneath, a shade darker */
+  background-image: conic-gradient(#0002 25%, transparent 0 50%, #0002 0 75%, transparent 0);
+  background-size: 4px 4px;
 }
 
 .notepad-text {
+  padding: 14px 16px 34px;
   font-size: 19px;
   font-weight: 600;
   line-height: 1.3;
+}
+
+.notepad-under {
+  position: absolute;
+  inset: 0;
+}
+
+.notepad-sheet {
+  position: absolute;
+  inset: 0;
+  background: var(--c3);
 }
 
 .notepad-corner {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 30px;
-  height: 30px;
   padding: 0;
-  background: linear-gradient(to top right, var(--paper) 46%, var(--ink) 46% 54%, transparent 54%);
+  background: none;
   border: 0;
-  border-top: var(--px) solid var(--ink);
-  border-right: var(--px) solid var(--ink);
+  cursor: grab;
+  filter: drop-shadow(3px -3px 0 #0003);
+  touch-action: none;
+}
+
+.notepad-corner:active {
+  cursor: grabbing;
+}
+
+.notepad-corner svg {
+  width: 100%;
+  height: 100%;
+}
+
+.notepad-corner polygon {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .is-settling .notepad-sheet {
+    transition: clip-path 220ms steps(6);
+  }
+
+  .is-settling .notepad-corner {
+    transition:
+      width 220ms steps(6),
+      height 220ms steps(6);
+  }
 }
 
 .notepad-page {

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test.use({ viewport: { width: 1440, height: 900 } })
 
 test('windows stay reachable when the viewport shrinks', async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('vb.introSeen', '1'))
+  await page.addInitScript(() => sessionStorage.setItem('vb.introSeen', '1'))
   await page.goto('./')
   const dock = page.getByRole('navigation', { name: 'Dock' })
   await dock.getByRole('button', { name: 'Work', exact: true }).click()

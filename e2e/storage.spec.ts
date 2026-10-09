@@ -12,7 +12,7 @@ test('the site works when localStorage is blocked', async ({ page }) => {
   })
 
   await page.goto('./')
-  await expect(page.getByText("Welcome to Varnika's profile.")).toBeVisible()
+  await expect(page.getByRole('progressbar', { name: 'Loading' })).toBeVisible()
   await page.mouse.click(640, 400)
   await expect(page.getByRole('dialog', { name: 'About Varnika' })).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'sorbet')

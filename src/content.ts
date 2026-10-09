@@ -3,12 +3,6 @@ export interface Link {
   href: string
 }
 
-export interface Skill {
-  name: string
-  /** 0–10 */
-  level: number
-}
-
 export interface Job {
   id: string
   org: string
@@ -34,8 +28,8 @@ export interface Achievement {
 }
 
 export interface Content {
-  identity: { name: string; role: string; tagline: string; education: string; email: string }
-  skills: Skill[]
+  identity: { name: string; role: string; headline: string; subline: string; education: string; email: string }
+  languages: string[]
   tools: string[]
   work: Job[]
   community: Job[]
@@ -55,21 +49,16 @@ export const content: Content = {
   identity: {
     name: 'Varnika Bajpai',
     role: 'Software Engineer at Barclays',
-    tagline: 'I build things with AI, ML and a lot of Python.',
+    headline: 'Former ballerina. National-level swimmer. Silver-medallist engineer. I pick the hard thing on purpose.',
+    subline: 'At my core I am a builder. I like to build things that challenge me and help my community.',
     education:
       'BTech in Information Technology with Honours in AI, KJ Somaiya School of Engineering, Mumbai (2022–2026)',
     email: 'bajpaivarnika04@gmail.com',
   },
 
-  skills: [
-    { name: 'Python', level: 8 },
-    { name: 'ML', level: 8 },
-    { name: 'C++', level: 7 },
-    { name: 'JavaScript', level: 6 },
-    { name: 'Java', level: 6 },
-  ],
+  languages: ['Python', 'C++', 'JavaScript', 'Java'],
 
-  tools: ['Flask', 'Django', 'React', 'Node.js', 'SQL', 'Docker', 'Grafana', 'GCP', 'AWS', 'LLMs', 'MLOps'],
+  tools: ['ML', 'LLMs', 'MLOps', 'Flask', 'Django', 'Grafana', 'Docker', 'SQL', 'AWS', 'GCP'],
 
   work: [
     {
@@ -227,9 +216,11 @@ export const content: Content = {
 
   // DRAFT — owner to edit
   readMe: [
+    'Pointe shoes, then a pool lane, now a terminal. Same rule every time: show up and do the hard part.',
     'Hi, I am Varnika. I love building new things. Nothing makes me feel more powerful as a woman in STEM than taking an idea and turning it into something that works.',
     'I live for AI and ML, Python, C++, data structures, MLOps and LLMs. The projects I like most are unique, a little hard, and useful to the people around me.',
     'Away from the keyboard you will find me lifting weights, at pilates, running, swimming or on a badminton court. I also read a lot, watch football, sing, bake and paint.',
+    'If you had not noticed: this whole site is a homage to my Mac. I got it when I started engineering and it has been my best friend ever since. Plenty of people do not love Macs for coding. I do.',
   ],
 
   // DRAFT — owner to edit

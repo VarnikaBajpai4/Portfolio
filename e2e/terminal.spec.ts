@@ -10,7 +10,7 @@ async function run(page: Page, command: string) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem('vb.introSeen', '1'))
+  await page.addInitScript(() => sessionStorage.setItem('vb.introSeen', '1'))
   await page.goto('./')
 })
 

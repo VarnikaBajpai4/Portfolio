@@ -12,6 +12,7 @@ export function DesktopIcons() {
           type="button"
           className="desk-icon"
           title="Double-click to open"
+          data-app={app.id}
           onDoubleClick={() => openApp(app.id)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {

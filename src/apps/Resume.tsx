@@ -1,7 +1,7 @@
 import { content } from '../content'
 
 export function Resume() {
-  const { identity, skills, tools, work, projects, achievements, resumePdf } = content
+  const { identity, languages, tools, work, projects, achievements, resumePdf } = content
   return (
     <article className="doc app-pad">
       <header className="doc-head">
@@ -24,7 +24,7 @@ export function Resume() {
       <p className="read">{identity.education}. Silver medal, rank 2 in the batch, CGPA 9.66.</p>
 
       <h3>Skills</h3>
-      <p className="read">{[...skills.map((s) => s.name), ...tools].join(' · ')}</p>
+      <p className="read">{[...languages, ...tools].join(' · ')}</p>
 
       <h3>Experience</h3>
       {work.map((job) => (

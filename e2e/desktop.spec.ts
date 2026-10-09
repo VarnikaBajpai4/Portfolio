@@ -24,12 +24,7 @@ async function dragTitle(page: Page, name: string, dx: number, dy: number) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    if (!sessionStorage.getItem('e2e.init')) {
-      sessionStorage.setItem('e2e.init', '1')
-      localStorage.setItem('vb.introSeen', '1')
-    }
-  })
+  await page.addInitScript(() => sessionStorage.setItem('vb.introSeen', '1'))
   await page.goto('./')
 })
 

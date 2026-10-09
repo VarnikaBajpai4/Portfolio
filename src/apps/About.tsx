@@ -1,11 +1,23 @@
-import { Fragment } from 'react'
 import { content } from '../content'
 import { Portrait } from '../icons/Portrait'
 
-const BAR_FILLS = ['var(--c4)', 'var(--c3)', 'var(--c2)']
+function Tags({ label, items }: { label: string; items: string[] }) {
+  return (
+    <div className="tags">
+      <h3>{label}</h3>
+      <ul className="chips">
+        {items.map((item) => (
+          <li key={item} className="chip">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 export function About() {
-  const { identity, skills, tools } = content
+  const { identity, languages, tools } = content
   return (
     <div className="about app-pad">
       <div className="about-face px-border">
@@ -14,28 +26,10 @@ export function About() {
       <div className="about-info">
         <h2>{identity.name}</h2>
         <p>{identity.role}</p>
-        <p className="read">{identity.tagline}</p>
-        <div className="bars">
-          {skills.map((skill, i) => (
-            <Fragment key={skill.name}>
-              <span>{skill.name}</span>
-              <span className="bar">
-                <span
-                  className="bar-fill dither"
-                  style={{ width: `${skill.level * 10}%`, backgroundColor: BAR_FILLS[i % BAR_FILLS.length] }}
-                />
-              </span>
-              <span>{skill.level}/10</span>
-            </Fragment>
-          ))}
-        </div>
-        <ul className="chips" aria-label="Tools">
-          {tools.map((tool) => (
-            <li key={tool} className="chip">
-              {tool}
-            </li>
-          ))}
-        </ul>
+        <p className="read about-headline">{identity.headline}</p>
+        <p className="read">{identity.subline}</p>
+        <Tags label="Languages" items={languages} />
+        <Tags label="Works with" items={tools} />
       </div>
     </div>
   )

@@ -10,6 +10,8 @@ interface Props {
   /** CSS colour of the window body */
   fill?: string
   bounds: Bounds
+  /** Defaults to closing the window with no effect. */
+  onClose?: () => void
   children: ReactNode
 }
 
@@ -23,7 +25,7 @@ interface Gesture {
   h: number
 }
 
-export function Window({ win, title, fill = 'var(--paper)', bounds, children }: Props) {
+export function Window({ win, title, fill = 'var(--paper)', bounds, onClose, children }: Props) {
   const { dispatch, topId } = useWM()
   const gesture = useRef<Gesture | null>(null)
   const rootRef = useRef<HTMLElement>(null)
@@ -75,7 +77,7 @@ export function Window({ win, title, fill = 'var(--paper)', bounds, children }: 
           type="button"
           className="win-box"
           aria-label={`Close ${title}`}
-          onClick={() => dispatch({ type: 'close', id })}
+          onClick={onClose ?? (() => dispatch({ type: 'close', id }))}
         />
         <span className="win-stripes" />
         <span className="win-name">{title}</span>

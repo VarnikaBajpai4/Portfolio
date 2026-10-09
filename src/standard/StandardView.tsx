@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import { content } from '../content'
 import type { Job } from '../content'
 import { Portrait } from '../icons/Portrait'
@@ -30,7 +29,7 @@ function Jobs({ jobs }: { jobs: Job[] }) {
 }
 
 export function StandardView() {
-  const { identity, skills, tools, work, community, projects, achievements, readMe, links } = content
+  const { identity, languages, tools, work, community, projects, achievements, readMe, links } = content
   return (
     <div className="sv checker">
       <div className="sv-page px-border px-shadow">
@@ -41,7 +40,8 @@ export function StandardView() {
           <div className="sv-id">
             <h1>{identity.name}</h1>
             <p className="sv-role">{identity.role}</p>
-            <p>{identity.tagline}</p>
+            <p className="sv-headline">{identity.headline}</p>
+            <p>{identity.subline}</p>
             <nav className="sv-links" aria-label="Links">
               {links.map((link) => (
                 <a key={link.label} className="btn" href={link.href} {...external(link.href)}>
@@ -58,7 +58,7 @@ export function StandardView() {
         <main>
           <section aria-labelledby="sv-about">
             <h2 id="sv-about">About</h2>
-            {readMe.map((paragraph) => (
+            {readMe.slice(0, -1).map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
             <p>{identity.education}. Silver medal, rank 2 in the batch, CGPA 9.66.</p>
@@ -66,18 +66,16 @@ export function StandardView() {
 
           <section aria-labelledby="sv-skills">
             <h2 id="sv-skills">Skills</h2>
-            <div className="bars sv-bars">
-              {skills.map((skill) => (
-                <Fragment key={skill.name}>
-                  <span>{skill.name}</span>
-                  <span className="bar">
-                    <span className="bar-fill dither" style={{ width: `${skill.level * 10}%` }} />
-                  </span>
-                  <span>{skill.level}/10</span>
-                </Fragment>
+            <h3>Languages</h3>
+            <ul className="chips">
+              {languages.map((language) => (
+                <li key={language} className="chip">
+                  {language}
+                </li>
               ))}
-            </div>
-            <ul className="chips" aria-label="Tools">
+            </ul>
+            <h3>Works with</h3>
+            <ul className="chips">
               {tools.map((tool) => (
                 <li key={tool} className="chip">
                   {tool}
@@ -140,6 +138,8 @@ export function StandardView() {
             </p>
           </section>
         </main>
+
+        <footer className="sv-footer">{readMe[readMe.length - 1]}</footer>
       </div>
     </div>
   )
