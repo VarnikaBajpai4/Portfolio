@@ -59,6 +59,15 @@ function keyOf(perch: Perch, windows: Win[]): string {
   return win ? `${win.rect.x},${win.rect.y},${win.rect.w}` : ''
 }
 
+/** True when a window in front of her perch covers the spot, so she would seem to float on it. */
+function isCovered(x: number, y: number, perch: Perch, windows: Win[]): boolean {
+  const perchZ = windows.find((w) => w.id === perch)?.z ?? -1
+  return windows.some(
+    ({ z, rect }) =>
+      z > perchZ && x < rect.x + rect.w && x + BOX_W > rect.x && y < rect.y + rect.h && y + BOX_H > rect.y,
+  )
+}
+
 function between(lo: number, hi: number) {
   return lo + Math.random() * Math.max(0, hi - lo)
 }
@@ -115,7 +124,13 @@ export function Pet({ windows, bounds, areaH }: Props) {
       const { windows, bounds, areaH } = world.current
       const span = spanOf(perch, windows, bounds, areaH)
       if (!span) return false
-      const x = between(span.x0, span.x1)
+      // look for a spot on this perch that no other window hides
+      let x: number | null = null
+      for (let attempt = 0; attempt < 8 && x === null; attempt++) {
+        const candidate = between(span.x0, span.x1)
+        if (!isCovered(candidate, span.y, perch, windows)) x = candidate
+      }
+      if (x === null) return false
       Object.assign(s, {
         perch,
         mode: 'hop',
@@ -126,6 +141,13 @@ export function Pet({ windows, bounds, areaH }: Props) {
         perchKey: keyOf(perch, windows),
       })
       return true
+    }
+
+    /** Leave a spot that a window has covered: the floor first, then any window that is in view. */
+    const escape = () => {
+      const { windows } = world.current
+      const inFront = [...windows].sort((a, b) => b.z - a.z).map((w) => w.id)
+      return (['ground', ...inFront] as Perch[]).some(hopTo)
     }
 
     const onRequest = (e: Event) => {
@@ -149,6 +171,8 @@ export function Pet({ windows, bounds, areaH }: Props) {
           Object.assign(s, { perch: 'ground', mode: 'sit', wait: 12, perchKey: '' })
           s.x = Math.min(Math.max(s.x, 4), bounds.w - BOX_W - 4)
         }
+      } else if (s.mode !== 'hop' && isCovered(s.x, s.y, s.perch, windows)) {
+        if (!escape()) s.wait = 10
       } else if (s.perch !== 'ground' && keyOf(s.perch, windows) !== s.perchKey) {
         // the window under her moved, resized or closed
         s.mode = 'fall'

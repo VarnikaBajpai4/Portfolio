@@ -54,3 +54,22 @@ test('Chindi answers when clicked', async ({ page }) => {
   await page.getByRole('button', { name: 'Chindi the cat' }).click()
   await expect(page.locator('.pet-bubble')).toBeVisible()
 })
+
+test('Chindi never sits in front of a window that covers her', async ({ page }) => {
+  const cat = page.getByRole('button', { name: 'Chindi the cat' })
+  const overlaps = async () => {
+    const c = (await cat.boundingBox())!
+    for (const win of await page.getByRole('dialog').all()) {
+      const w = (await win.boundingBox())!
+      const inside = c.x + c.width > w.x + 4 && c.x < w.x + w.width - 4 && c.y + c.height > w.y + 4 && c.y < w.y + w.height
+      if (inside) return true
+    }
+    return false
+  }
+  // a full-size window covers every other window's top edge
+  await page.getByRole('button', { name: 'Zoom About Varnika' }).click()
+  for (let i = 0; i < 12; i++) {
+    await page.waitForTimeout(700)
+    expect(await overlaps(), `check ${i}`).toBe(false)
+  }
+})
