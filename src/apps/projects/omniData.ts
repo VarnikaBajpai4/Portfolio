@@ -175,11 +175,24 @@ export const EDGES: { d: string; back?: boolean }[] = [
 /** Decision points plus one. */
 export const COMPLEXITY = GRAPH.filter((node) => node.test).length + 1
 
+export const OVERVIEW = [
+  'Every language comes with its own compiler, its own debugger and its own way of telling you what went wrong. OmniCompiler puts five of them behind one editor.',
+  'Paste a snippet in Python, JavaScript, Java, C++ or Go. It works out which language it is, runs it in a sandbox, lets you step through it line by line, draws its control flow, and translates it into any of the other four.',
+]
+
 export const PIPELINE = [
   { name: 'Detect', text: 'Regex fingerprints name the language, or decline to guess.' },
   { name: 'Sandbox', text: 'Each language runs in its own Docker container.' },
   { name: 'Debug', text: 'One JSON protocol in front of bdb, gdb, jdb, the JS Inspector and Delve.' },
   { name: 'Graph', text: 'A control-flow graph with cyclomatic complexity.' },
-  { name: 'Suggest', text: 'Random Forest models pick lines worth a breakpoint.' },
+  { name: 'Suggest', text: 'Random Forest models pick the lines worth a breakpoint.' },
   { name: 'Translate', text: 'Gemini rewrites the code, anchored by that graph.' },
+]
+
+/** The tech stack, top layer first. */
+export const STACK = [
+  { layer: 'Interface', parts: ['React', 'Vite', 'Tailwind CSS', 'Monaco Editor', 'Framer Motion'] },
+  { layer: 'Server', parts: ['FastAPI', 'WebSockets', 'Python'] },
+  { layer: 'Runtimes', parts: ['Docker', 'bdb', 'gdb', 'jdb', 'JS Inspector', 'Delve'] },
+  { layer: 'Intelligence', parts: ['Gemini', 'scikit-learn', 'Random Forest', 'Pygments'] },
 ]

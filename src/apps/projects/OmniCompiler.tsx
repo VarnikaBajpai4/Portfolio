@@ -2,7 +2,19 @@ import { useEffect, useRef, useState } from 'react'
 import type { Project } from '../../content'
 import { prefersReducedMotion } from '../../motion'
 import { useWindowControls } from '../../wm/store'
-import { ARRAY, COMPLEXITY, EDGES, GRAPH, LANGUAGES, PIPELINE, SUGGESTED, TARGET, TRACE } from './omniData'
+import {
+  ARRAY,
+  COMPLEXITY,
+  EDGES,
+  GRAPH,
+  LANGUAGES,
+  OVERVIEW,
+  PIPELINE,
+  STACK,
+  SUGGESTED,
+  TARGET,
+  TRACE,
+} from './omniData'
 import type { Language } from './omniData'
 import './omni.css'
 
@@ -42,7 +54,6 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
   const [languageId, setLanguageId] = useState(LANGUAGES[0].id)
   const [stepIndex, setStepIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
-  const [stage, setStage] = useState(0)
 
   const language = LANGUAGES.find((l) => l.id === languageId)!
   const code = useMorph(language)
@@ -106,153 +117,166 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
         </div>
       </header>
 
-      <div className="omni-ide px-border">
-        {/* ----- code ----- */}
-        <section className="omni-code" aria-label="Code">
-          <div className="omni-tabs" role="tablist" aria-label="Language">
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.id}
-                type="button"
-                role="tab"
-                aria-selected={l.id === languageId}
-                className="omni-tab"
-                onClick={() => setLanguageId(l.id)}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-          <ol className="omni-lines">
-            {language.lines.map((l, i) => (
-              <li
-                key={i}
-                className={l.node === step.node ? 'is-current' : undefined}
-                aria-current={l.node === step.node ? 'step' : undefined}
-              >
-                <span className="omni-gutter" aria-hidden="true">
-                  {l.node && SUGGESTED.includes(l.node) ? '✦' : ''}
-                </span>
-                <code>{code[i]}</code>
+      {/* ----- what it is, and what it is built with ----- */}
+      <div className="omni-intro">
+        <section className="omni-about" aria-labelledby="omni-about">
+          <h3 id="omni-about">What it is</h3>
+          {OVERVIEW.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+          <p className="omni-meta">Final-year project. Journal article under review.</p>
+        </section>
+
+        <section aria-labelledby="omni-stack">
+          <h3 id="omni-stack">Tech stack</h3>
+          <ol className="omni-stack">
+            {STACK.map((item) => (
+              <li key={item.layer}>
+                <span className="omni-layer">{item.layer}</span>
+                <ul>
+                  {item.parts.map((part) => (
+                    <li key={part}>{part}</li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ol>
-          <p className="omni-codefoot">
-            <span>✦ suggested breakpoint</span>
-            <span>debugger: {language.debugger}</span>
-          </p>
-        </section>
-
-        {/* ----- control-flow graph ----- */}
-        <section className="omni-graph" aria-label="Control-flow graph">
-          <svg viewBox="0 0 300 350" role="img" aria-label={`Control-flow graph. Now at: ${step.node}`}>
-            {EDGES.map((edge) => (
-              <path key={edge.d} d={edge.d} className={edge.back ? 'omni-edge is-back' : 'omni-edge'} />
-            ))}
-            {GRAPH.map((node) => (
-              <g
-                key={node.id}
-                className={`omni-node${node.test ? ' is-test' : ''}${visited.has(node.id) ? ' is-visited' : ''}${
-                  node.id === step.node ? ' is-current' : ''
-                }`}
-              >
-                <rect x={node.x - 42} y={node.y - 15} width={84} height={30} rx={node.test ? 15 : 3} />
-                <text x={node.x} y={node.y + 4}>
-                  {node.label}
-                </text>
-              </g>
-            ))}
-          </svg>
-          <p className="omni-badge">cyclomatic complexity {COMPLEXITY}</p>
-        </section>
-
-        {/* ----- debugger ----- */}
-        <section className="omni-debug" aria-label="Debugger">
-          <div className="omni-buttons">
-            <button type="button" className="btn" onClick={() => setStepIndex((i) => i + 1)} disabled={done || playing}>
-              Step
-            </button>
-            <button type="button" className="btn" onClick={() => setPlaying((p) => !p)} disabled={done}>
-              {playing ? 'Pause' : 'Play'}
-            </button>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => {
-                setPlaying(false)
-                setStepIndex(0)
-              }}
-              disabled={stepIndex === 0}
-            >
-              Restart
-            </button>
-          </div>
-
-          <p className="omni-call">
-            binary_search(arr, <strong>{TARGET}</strong>)
-          </p>
-          <ol className="omni-array" aria-label="The array being searched">
-            {ARRAY.map((value, i) => {
-              const inRange = i >= step.lo && i <= step.hi
-              const marks = [i === step.lo && 'lo', i === step.mid && 'mid', i === step.hi && 'hi'].filter(Boolean)
-              return (
-                <li
-                  key={value}
-                  className={`${inRange ? 'in-range' : ''}${i === step.mid ? ' is-mid' : ''}${
-                    done && i === step.mid ? ' is-found' : ''
-                  }`}
-                >
-                  <span className="omni-cell">{value}</span>
-                  <span className="omni-marks">{marks.join(' ')}</span>
-                </li>
-              )
-            })}
-          </ol>
-
-          <dl className="omni-vars">
-            <dt>lo</dt>
-            <dd>{step.lo}</dd>
-            <dt>hi</dt>
-            <dd>{step.hi}</dd>
-            <dt>mid</dt>
-            <dd>{step.mid ?? '-'}</dd>
-          </dl>
-          <p className={`omni-note${done ? ' is-done' : ''}`} role="status">
-            {step.note}
-          </p>
-          <ol className="omni-events" ref={eventsRef} aria-label="Debugger events">
-            {events.map((event, i) => (
-              <li key={i}>{event}</li>
-            ))}
-          </ol>
-          <p className="omni-count">
-            step {stepIndex + 1} of {TRACE.length}
-          </p>
         </section>
       </div>
 
-      {/* ----- how it works ----- */}
-      <section className="omni-pipeline" aria-label="How it works">
-        <ol>
+      <section aria-labelledby="omni-how">
+        <h3 id="omni-how">How it works</h3>
+        <ol className="omni-steps">
           {PIPELINE.map((item, i) => (
             <li key={item.name}>
-              <button
-                type="button"
-                className="omni-stage"
-                aria-pressed={i === stage}
-                onClick={() => setStage(i)}
-                onPointerEnter={() => setStage(i)}
-                onFocus={() => setStage(i)}
-              >
-                <span className="omni-stage-n">{i + 1}</span>
-                {item.name}
-              </button>
+              <span className="omni-step-n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <strong>{item.name}</strong>
+              <span>{item.text}</span>
             </li>
           ))}
         </ol>
-        <p className="omni-stage-text" role="status">
-          {PIPELINE[stage].text}
-        </p>
+      </section>
+
+      {/* ----- the demo ----- */}
+      <section aria-labelledby="omni-demo">
+        <h3 id="omni-demo">Try the debugger</h3>
+        <p className="omni-hint">Step through one binary search. Change the language at any time.</p>
+
+        <div className="omni-ide px-border">
+          <div className="omni-bar">
+            <div className="omni-tabs" role="tablist" aria-label="Language">
+              {LANGUAGES.map((l) => (
+                <button
+                  key={l.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={l.id === languageId}
+                  className="omni-tab"
+                  onClick={() => setLanguageId(l.id)}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
+            <div className="omni-buttons">
+              <span className="omni-count">
+                step {stepIndex + 1} of {TRACE.length}
+              </span>
+              <button type="button" onClick={() => setStepIndex((i) => i + 1)} disabled={done || playing}>
+                Step
+              </button>
+              <button type="button" onClick={() => setPlaying((p) => !p)} disabled={done}>
+                {playing ? 'Pause' : 'Play'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPlaying(false)
+                  setStepIndex(0)
+                }}
+                disabled={stepIndex === 0}
+              >
+                Restart
+              </button>
+            </div>
+          </div>
+
+          <section className="omni-code" aria-label="Code">
+            <ol className="omni-lines">
+              {language.lines.map((l, i) => (
+                <li
+                  key={i}
+                  className={l.node === step.node ? 'is-current' : undefined}
+                  aria-current={l.node === step.node ? 'step' : undefined}
+                >
+                  <span className="omni-gutter" aria-hidden="true">
+                    {l.node && SUGGESTED.includes(l.node) ? '✦' : ''}
+                  </span>
+                  <code>{code[i]}</code>
+                </li>
+              ))}
+            </ol>
+            <p className="omni-codefoot">
+              <span>✦ suggested breakpoint</span>
+              <span>debugger: {language.debugger}</span>
+            </p>
+          </section>
+
+          <section className="omni-graph" aria-label="Control-flow graph">
+            <h4>Control flow</h4>
+            <svg viewBox="0 0 300 350" role="img" aria-label={`Control-flow graph. Now at: ${step.node}`}>
+              {EDGES.map((edge) => (
+                <path key={edge.d} d={edge.d} className={edge.back ? 'omni-edge is-back' : 'omni-edge'} />
+              ))}
+              {GRAPH.map((node) => (
+                <g
+                  key={node.id}
+                  className={`omni-node${node.test ? ' is-test' : ''}${visited.has(node.id) ? ' is-visited' : ''}${
+                    node.id === step.node ? ' is-current' : ''
+                  }`}
+                >
+                  <rect x={node.x - 42} y={node.y - 15} width={84} height={30} rx={node.test ? 15 : 3} />
+                  <text x={node.x} y={node.y + 4}>
+                    {node.label}
+                  </text>
+                </g>
+              ))}
+            </svg>
+            <p className="omni-caption">cyclomatic complexity {COMPLEXITY}</p>
+          </section>
+
+          <section className="omni-debug" aria-label="Debugger">
+            <h4>Searching for {TARGET}</h4>
+            <ol className="omni-array" aria-label="The array being searched">
+              {ARRAY.map((value, i) => {
+                const inRange = i >= step.lo && i <= step.hi
+                const marks = [i === step.lo && 'lo', i === step.mid && 'mid', i === step.hi && 'hi'].filter(Boolean)
+                return (
+                  <li
+                    key={value}
+                    className={`${inRange ? 'in-range' : ''}${i === step.mid ? ' is-mid' : ''}${
+                      done && i === step.mid ? ' is-found' : ''
+                    }`}
+                  >
+                    <span className="omni-cell">{value}</span>
+                    <span className="omni-marks">{marks.join(' ')}</span>
+                  </li>
+                )
+              })}
+            </ol>
+            <p className={`omni-note${done ? ' is-done' : ''}`} role="status">
+              {step.note}
+            </p>
+            <h4>Debugger events</h4>
+            <ol className="omni-events" ref={eventsRef} aria-label="Debugger events">
+              {events.map((event, i) => (
+                <li key={i}>{event}</li>
+              ))}
+            </ol>
+          </section>
+        </div>
       </section>
     </article>
   )

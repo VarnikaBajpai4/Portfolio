@@ -115,6 +115,14 @@ test('OmniCompiler opens as a steppable showcase', async ({ page }) => {
   // the window grows to make room
   await expect.poll(async () => (await projects.boundingBox())!.width).toBeGreaterThan(small.width + 200)
 
+  // the explanation and the stack come before the demo
+  await expect(projects.getByRole('heading', { name: 'What it is' })).toBeVisible()
+  await expect(projects.getByRole('heading', { name: 'Tech stack' })).toBeVisible()
+  for (const part of ['FastAPI', 'Docker', 'Monaco Editor', 'Gemini']) {
+    await expect(projects.locator('.omni-stack').getByText(part, { exact: true })).toBeVisible()
+  }
+  await expect(projects.locator('.omni-steps li')).toHaveCount(6)
+
   await projects.getByRole('tab', { name: 'Go', exact: true }).click()
   await expect(projects.locator('.omni-lines')).toContainText('func binarySearch(arr []int, target int) int {')
 
