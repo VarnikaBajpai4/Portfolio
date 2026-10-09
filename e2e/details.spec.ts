@@ -106,3 +106,26 @@ test('Open my story turns About into the full story', async ({ page }) => {
   await expect(about.locator('.hobby')).toHaveCount(10)
   await expect(about.locator('.sys')).toContainText('homage to the retro Mac')
 })
+
+test('OmniCompiler opens as a steppable showcase', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  const small = (await projects.boundingBox())!
+  await projects.getByRole('button', { name: 'OmniCompiler' }).click()
+  await expect(projects.getByRole('heading', { name: 'OmniCompiler' })).toBeVisible()
+  // the window grows to make room
+  await expect.poll(async () => (await projects.boundingBox())!.width).toBeGreaterThan(small.width + 200)
+
+  await projects.getByRole('tab', { name: 'Go', exact: true }).click()
+  await expect(projects.locator('.omni-lines')).toContainText('func binarySearch(arr []int, target int) int {')
+
+  await expect(projects.locator('.omni-count')).toHaveText('step 1 of 10')
+  const step = projects.getByRole('button', { name: 'Step', exact: true })
+  for (let i = 0; i < 9; i++) await step.click()
+  await expect(projects.locator('.omni-note')).toHaveText('Found 23 at index 5.')
+  await expect(step).toBeDisabled()
+  await expect(projects.locator('.omni-node.is-current')).toContainText('return mid')
+
+  await projects.getByRole('button', { name: 'Back to Projects' }).click()
+  await expect(projects.getByRole('button', { name: 'FloatChat' })).toBeVisible()
+  await expect.poll(async () => (await projects.boundingBox())!.width).toBe(small.width)
+})

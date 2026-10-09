@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { content } from '../content'
 import { Icon } from '../icons/Icon'
+import { OmniCompiler } from './projects/OmniCompiler'
 
 const FOLDER_FILLS = ['var(--c3)', 'var(--c1)', 'var(--c4)', 'var(--paper)', 'var(--c3)']
 
@@ -28,6 +29,8 @@ export function Projects({ param }: { param?: string }) {
       </ul>
     )
   }
+
+  if (project.id === 'omnicompiler') return <OmniCompiler project={project} onBack={() => setSelected(null)} />
 
   return (
     <article className="info app-pad">
