@@ -1,0 +1,293 @@
+.show {
+  /* each project sets its own wash, band and accent */
+  --wash: var(--c2);
+  container-type: inline-size;
+  display: grid;
+  gap: 32px;
+  min-height: 100%;
+  padding: 0 26px 32px;
+  /* a wash of the palette's own colour, so the page changes with the theme */
+  background: color-mix(in srgb, var(--wash) 30%, var(--paper));
+}
+
+.show h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.show h3::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 10px;
+  background: var(--mark, var(--c4));
+  border: var(--px) solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+#show-stack {
+  --mark: var(--c1);
+}
+
+#show-how {
+  --mark: var(--c3);
+}
+
+#show-demo {
+  --mark: var(--c2);
+}
+
+.show h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- header ---------- */
+
+.show-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  /* a full-width band with a fine dot pattern */
+  margin: 0 -26px;
+  padding: 24px 26px 22px;
+  background:
+    var(--band-pattern, radial-gradient(#00000022 1px, transparent 1.5px) 0 0 / 8px 8px),
+    var(--wash);
+  border-bottom: var(--px) solid var(--ink);
+}
+
+.show-head h2 {
+  font-size: clamp(28px, 4.4cqi, 46px);
+  line-height: 1;
+}
+
+.show-tagline {
+  margin-top: 8px;
+  font-family: var(--font-read);
+  font-size: 15px;
+}
+
+/* a rubber stamp */
+.show-stamp {
+  padding: 2px 10px;
+  background: var(--paper);
+  border: 3px double #b3261e;
+  border-radius: 4px;
+  color: #b3261e;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+}
+
+.show-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+  padding-right: 4px;
+}
+
+/* ---------- what it is + stack ---------- */
+
+.show-intro {
+  display: grid;
+  gap: 32px 48px;
+}
+
+@container (min-width: 860px) {
+  .show-intro {
+    grid-template-columns: 6fr 5fr;
+  }
+}
+
+.show-about p {
+  max-width: 62ch;
+  font-family: var(--font-read);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+/* the first sentence carries the idea, so it reads larger */
+.show-about p:first-of-type {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.show-about p + p {
+  margin-top: 12px;
+}
+
+.show-about .show-meta {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* layers, drawn as a stack: each one sits a step to the right of the one above */
+.show-stack {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0 calc(var(--count, 4) * 6px) 0 0;
+  list-style: none;
+}
+
+.show-stack > li {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin: -2px calc(var(--n) * -6px) 0 calc(var(--n) * 6px);
+  padding: 10px 12px;
+  background: var(--c1);
+  border: var(--px) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.show-stack > li:nth-child(4n + 2) {
+  background: var(--c2);
+}
+
+.show-stack > li:nth-child(4n + 3) {
+  background: var(--c3);
+}
+
+.show-stack > li:nth-child(4n + 4) {
+  background: var(--c4);
+}
+
+.show-layer {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.show-stack ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.show-stack ul li {
+  padding: 0 7px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-size: 12.5px;
+}
+
+/* ---------- how it works ---------- */
+
+.show-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border-top: var(--px) solid var(--ink);
+  list-style: none;
+}
+
+.show-steps li {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  padding: 12px 16px 4px 0;
+}
+
+.show-steps li + li {
+  padding-left: 16px;
+  border-left: 1px solid var(--ink);
+}
+
+.show-step-n {
+  justify-self: start;
+  padding: 3px 7px;
+  background: var(--c1);
+  border: var(--px) solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.show-steps li:nth-child(4n + 2) .show-step-n {
+  background: var(--c3);
+}
+
+.show-steps li:nth-child(4n + 3) .show-step-n {
+  background: var(--c4);
+}
+
+.show-steps li:nth-child(4n + 4) .show-step-n {
+  background: var(--c2);
+}
+
+.show-steps strong {
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.show-steps li > span:last-child {
+  font-family: var(--font-read);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.show-hint {
+  margin: -6px 0 14px;
+  font-family: var(--font-read);
+  font-size: 14px;
+}
+
+/* ---------- motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* sections ease in as they are reached */
+  .show-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .show-reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 500ms ease-out,
+      transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* the stack is built from the bottom layer up */
+  .is-in .show-stack > li {
+    animation: layer-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+    animation-delay: calc((var(--count) - var(--n)) * 110ms + 100ms);
+  }
+
+  .is-in .show-steps li {
+    animation: step-in 380ms ease-out both;
+    animation-delay: calc(var(--n) * 70ms + 100ms);
+  }
+}
+
+@keyframes layer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-22px);
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

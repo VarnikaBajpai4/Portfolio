@@ -117,12 +117,12 @@ test('OmniCompiler opens as a steppable showcase', async ({ page }) => {
 
   // the explanation and the stack come before the demo, and they fade in without a scroll
   await expect(projects.getByRole('heading', { name: 'What it is' })).toBeVisible()
-  await expect(projects.locator('.omni-reveal').first()).toHaveCSS('opacity', '1')
+  await expect(projects.locator('.show-reveal').first()).toHaveCSS('opacity', '1')
   await expect(projects.getByRole('heading', { name: 'Tech stack' })).toBeVisible()
   for (const part of ['FastAPI', 'Docker', 'Monaco Editor', 'Gemini']) {
-    await expect(projects.locator('.omni-stack').getByText(part, { exact: true })).toBeVisible()
+    await expect(projects.locator('.show-stack').getByText(part, { exact: true })).toBeVisible()
   }
-  await expect(projects.locator('.omni-steps li')).toHaveCount(6)
+  await expect(projects.locator('.show-steps li')).toHaveCount(6)
 
   await projects.getByRole('tab', { name: 'Go', exact: true }).click()
   await expect(projects.locator('.omni-lines')).toContainText('func binarySearch(arr []int, target int) int {')
