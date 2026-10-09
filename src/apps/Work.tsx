@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { PointerEvent } from 'react'
+import type { CSSProperties, PointerEvent } from 'react'
 import { content } from '../content'
 import type { Job } from '../content'
 import { prefersReducedMotion } from '../motion'
@@ -26,6 +26,60 @@ function Floppy({ label, tone }: { label: string; tone: number }) {
   )
 }
 
+const MONTHS = [...'JFMAMJJASOND']
+
+/** Months since year 0, from YYYY-MM. */
+function monthCount(yearMonth: string): number {
+  const [year, month] = yearMonth.split('-').map(Number)
+  return year * 12 + month - 1
+}
+
+/** One job on continuous printer paper. The lines print one after the other. */
+function Printout({ job, now }: { job: Job; now: number }) {
+  const first = monthCount(job.start!)
+  const last = job.end ? monthCount(job.end) : now
+  const january = Math.floor(first / 12) * 12
+  let n = 0
+  const line = () => ({ '--n': n++ }) as CSSProperties
+  return (
+    <article className="work-paper work-detail" aria-live="polite">
+      <h3 style={line()}>{job.org}</h3>
+      <p className="work-role" style={line()}>
+        {job.role}
+      </p>
+      <p className="work-period" style={line()}>
+        {job.period}
+      </p>
+      {/* the months of that year, with the months of this job filled */}
+      <p className="work-months" style={line()} aria-hidden="true">
+        {MONTHS.map((letter, i) => (
+          <span key={i} className={january + i >= first && january + i <= last ? 'is-on' : ''}>
+            {letter}
+          </span>
+        ))}
+        <b>{Math.floor(first / 12)}</b>
+      </p>
+      <ul className="work-points">
+        {job.points.map((point) => (
+          <li key={point} style={line()}>
+            {point}
+          </li>
+        ))}
+      </ul>
+      {job.tools && (
+        <ul className="work-tools" aria-label="Tools" style={line()}>
+          {job.tools.map((tool) => (
+            <li key={tool}>{tool}</li>
+          ))}
+        </ul>
+      )}
+      <p className="work-end" style={line()} aria-hidden="true">
+        end of disk
+      </p>
+    </article>
+  )
+}
+
 /** Each job is a floppy disk. Put one in the drive and the Mac shows the work. */
 export function Work() {
   const [loadedId, setLoadedId] = useState<string | null>(CURRENT.id)
@@ -36,6 +90,11 @@ export function Work() {
   const drag = useRef<{ x: number; y: number; dx: number; dy: number; moved: boolean } | null>(null)
   const skipClick = useRef(false)
   const readTimer = useRef(0)
+  // the current month, read once when the window opens
+  const [now] = useState(() => {
+    const today = new Date()
+    return today.getFullYear() * 12 + today.getMonth()
+  })
 
   useEffect(() => () => window.clearTimeout(readTimer.current), [])
 
@@ -111,89 +170,79 @@ export function Work() {
     }
   }
 
+  const disks = (
+    <ol className="work-box" aria-label="Disk box">
+      {JOBS.map((job, i) => (
+        <li key={job.id} className="work-bay">
+          {job.id === loadedId ? (
+            <span className="work-gone">in the drive</span>
+          ) : (
+            <button
+              type="button"
+              className="work-disk"
+              aria-label={`Insert disk: ${job.org}, ${job.role}, ${job.period}`}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={(e) => onPointerUp(e, job)}
+              onPointerCancel={(e) => onPointerUp(e, job)}
+              onClick={(e) => {
+                if (skipClick.current) return
+                void insert(job, e.currentTarget)
+              }}
+            >
+              <Floppy label={job.disk ?? job.org} tone={i} />
+            </button>
+          )}
+          <span className="work-year">{job.end ? job.start!.slice(0, 4) : 'now'}</span>
+        </li>
+      ))}
+    </ol>
+  )
+
   return (
     <div className="work">
-      <div className={`work-mac${over ? ' is-over' : ''}`} ref={macRef}>
-        <div className="work-screen">
-          {!loaded && (
-            <div className="work-idle">
-              <span className="work-ask" aria-hidden="true">
-                <Floppy label="?" tone={3} />
-              </span>
-              <p>No disk in the drive.</p>
-              <p className="read">Drag a disk from the box into this Mac, or click one.</p>
-            </div>
-          )}
-          {loaded && reading && (
-            <div className="work-idle" role="status">
-              <p>Reading “{loaded.disk}”</p>
-              <span className="work-progress" aria-hidden="true" />
-            </div>
-          )}
-          {loaded && !reading && (
-            <div className="work-loaded" key={loaded.id}>
-              <JobMachine id={loaded.id} tone={JOBS.indexOf(loaded)} />
-              <article className="work-detail" aria-live="polite">
-                <header>
-                  <h3>{loaded.org}</h3>
-                  <span className="work-period">{loaded.period}</span>
-                </header>
-                <p className="work-role">{loaded.role}</p>
-                <ul className="read bullets">
-                  {loaded.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-                {loaded.tools && (
-                  <ul className="chips" aria-label="Tools">
-                    {loaded.tools.map((tool) => (
-                      <li key={tool} className="chip">
-                        {tool}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            </div>
-          )}
+      <div className="work-left">
+        <div className={`work-mac${over ? ' is-over' : ''}`} ref={macRef}>
+          <div className="work-screen">
+            {!loaded && (
+              <div className="work-idle">
+                <span className="work-ask" aria-hidden="true">
+                  <Floppy label="?" tone={3} />
+                </span>
+                <p>No disk in the drive.</p>
+              </div>
+            )}
+            {loaded && reading && (
+              <div className="work-idle" role="status">
+                <p>Reading “{loaded.disk}”</p>
+                <span className="work-progress" aria-hidden="true" />
+              </div>
+            )}
+            {loaded && !reading && <JobMachine key={loaded.id} id={loaded.id} />}
+          </div>
+          <div className="work-chin">
+            <span className={`work-led${reading ? ' is-busy' : loaded ? ' is-on' : ''}`} aria-hidden="true" />
+            <span className="work-slot" ref={slotRef} aria-hidden="true" />
+            <button type="button" className="btn work-eject" onClick={eject} disabled={!loaded}>
+              Eject
+            </button>
+          </div>
         </div>
-
-        <div className="work-chin">
-          <span className="work-hint">{JOBS.length} disks. Drag one into the drive, or click it.</span>
-          <span className={`work-led${reading ? ' is-busy' : loaded ? ' is-on' : ''}`} aria-hidden="true" />
-          <span className="work-slot" ref={slotRef} aria-hidden="true" />
-          <button type="button" className="btn work-eject" onClick={eject} disabled={!loaded}>
-            Eject
-          </button>
-        </div>
+        <p className="work-hint">Drag a disk into the drive, or click it.</p>
+        {disks}
       </div>
 
-      <ol className="work-box" aria-label="Disk box">
-        {JOBS.map((job, i) => (
-          <li key={job.id} className="work-bay">
-            {job.id === loadedId ? (
-              <span className="work-gone">in the drive</span>
-            ) : (
-              <button
-                type="button"
-                className="work-disk"
-                aria-label={`Insert disk: ${job.org}, ${job.role}, ${job.period}`}
-                onPointerDown={onPointerDown}
-                onPointerMove={onPointerMove}
-                onPointerUp={(e) => onPointerUp(e, job)}
-                onPointerCancel={(e) => onPointerUp(e, job)}
-                onClick={(e) => {
-                  if (skipClick.current) return
-                  void insert(job, e.currentTarget)
-                }}
-              >
-                <Floppy label={job.disk ?? job.org} tone={i} />
-              </button>
-            )}
-            <span className="work-year">{job.end ? job.start!.slice(0, 4) : 'now'}</span>
-          </li>
-        ))}
-      </ol>
+      {/* the printer: it prints the job that is on the disk */}
+      <div className="work-printer">
+        <span className="work-feed" aria-hidden="true" />
+        {loaded && !reading ? (
+          <Printout key={loaded.id} job={loaded} now={now} />
+        ) : (
+          <div className="work-paper work-paper-blank">
+            <p>{loaded ? 'Printing…' : 'Put a disk in the drive and the job prints here.'}</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

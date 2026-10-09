@@ -174,11 +174,11 @@ const MACHINES: Record<string, { caption: string; Machine: ComponentType }> = {
 }
 
 /** The small working model of one job, by job id. */
-export function JobMachine({ id, tone }: { id: string; tone: number }) {
+export function JobMachine({ id }: { id: string }) {
   const entry = MACHINES[id]
   if (!entry) return null
   return (
-    <figure className={`work-machine work-machine-${tone % 3}`}>
+    <figure className="work-machine">
       <entry.Machine />
       <figcaption>{entry.caption}</figcaption>
     </figure>

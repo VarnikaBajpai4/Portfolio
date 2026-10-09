@@ -263,6 +263,8 @@ test('Work loads a job from a floppy disk and ejects it again', async ({ page })
   await expect(detail).toContainText('SAP Testing')
   await expect(detail.getByText('AWS', { exact: true })).toBeVisible()
   await expect(work.locator('.work-machine')).toContainText('Walk the test tree')
+  // the printer prints the same job
+  await expect(work.locator('.work-paper')).toContainText('end of disk')
 
   // a drag onto the Mac does the same
   const disk = work.getByRole('button', { name: /Insert disk: G-Square/ })
@@ -276,6 +278,7 @@ test('Work loads a job from a floppy disk and ejects it again', async ({ page })
 
   await work.getByRole('button', { name: 'Eject' }).click()
   await expect(work.getByText('No disk in the drive.')).toBeVisible()
+  await expect(work.locator('.work-paper')).toContainText('Put a disk in the drive')
   await expect(work.locator('.work-disk')).toHaveCount(4)
 
   // the box is in time order
