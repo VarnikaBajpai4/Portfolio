@@ -7,6 +7,7 @@ import type { AppId, Bounds, Win } from '../wm/reducer'
 import { useWM } from '../wm/store'
 import { Window } from '../wm/Window'
 import { WMProvider } from '../wm/WMProvider'
+import { Closet } from './Closet'
 import { DesktopIcons } from './DesktopIcons'
 import { Dock } from './Dock'
 import { GRAVITY_EVENT } from './events'
@@ -90,7 +91,11 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
     [dispatch],
   )
 
-  const openApp = useCallback((id: AppId, param?: string) => openFrom(id, homeOf(id), param), [openFrom])
+  const openApp = useCallback(
+    (id: AppId, param?: string, origin?: Element) =>
+      openFrom(id, origin?.getBoundingClientRect() ?? homeOf(id), param),
+    [openFrom],
+  )
 
   // a window that was just opened grows out of its icon
   useLayoutEffect(() => {
@@ -192,6 +197,7 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
         />
         <main className="desk-area">
           <DesktopIcons />
+          <Closet />
           {windows.map((win) => {
             const app = getApp(win.id)
             const App = app.component

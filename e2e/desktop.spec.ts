@@ -53,10 +53,14 @@ test('every dock item opens its app', async ({ page }) => {
 })
 
 test('desktop icons open on double-click and on Enter', async ({ page }) => {
-  for (const name of ['Varnika HD', 'Read Me']) {
-    await desk(page).getByRole('button', { name, exact: true }).dblclick()
-    await expect(dialog(page, name)).toBeVisible()
-  }
+  await desk(page).getByRole('button', { name: 'Varnika HD', exact: true }).dblclick()
+  await expect(dialog(page, 'Varnika HD')).toBeVisible()
+
+  // Read Me is a shortcut to the About window
+  await page.getByRole('button', { name: 'Close About Varnika' }).click()
+  await expect(dialog(page, 'About Varnika')).toHaveCount(0)
+  await desk(page).getByRole('button', { name: 'Read Me', exact: true }).dblclick()
+  await expect(dialog(page, 'About Varnika')).toBeVisible()
   for (const name of ['Resume', 'Trash']) {
     await desk(page).getByRole('button', { name, exact: true }).focus()
     await page.keyboard.press('Enter')

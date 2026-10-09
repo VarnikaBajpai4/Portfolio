@@ -1,12 +1,13 @@
 import { useSyncExternalStore } from 'react'
 import { readStored, writeStored } from './storage'
 
-export type PaletteId = 'sorbet' | 'cocoa' | 'blueberry'
+export type PaletteId = 'sorbet' | 'cocoa' | 'blueberry' | 'noir'
 
 export const PALETTES: { id: PaletteId; label: string; swatch: string }[] = [
   { id: 'sorbet', label: 'Sorbet', swatch: '#1fa8c9' },
   { id: 'cocoa', label: 'Cocoa', swatch: '#7a3b1d' },
   { id: 'blueberry', label: 'Blueberry', swatch: '#8ea2e8' },
+  { id: 'noir', label: 'Noir', swatch: '#1c1c1c' },
 ]
 
 const KEY = 'vb.palette'

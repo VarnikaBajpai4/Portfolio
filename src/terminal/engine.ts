@@ -33,7 +33,7 @@ const HELP = [
   'open <name>      open an app or a project',
   'python           a real Python prompt',
   'catsay <text>    make Chindi say it',
-  'theme <name>     sorbet, cocoa or blueberry',
+  'theme <name>     sorbet, cocoa, blueberry or noir',
   'clear            clear the screen',
   '',
   'Tab completes. Some commands are not on this list.',
@@ -61,7 +61,8 @@ const TOP = [
   '  5  football          6.5',
   '  6  baking            5.0',
   '  7  painting          4.0',
-  '  8  chindi           99.9  (always)',
+  '  8  window-shopping   3.0',
+  '  9  chindi           99.9  (always)',
 ]
 
 const FILES = ['readme.txt']
@@ -186,7 +187,7 @@ export function runCommand(input: string): TermResult {
     case 'catsay': {
       const text = raw.slice(cmd.length).trim()
       if (!text) return { lines: ['usage: catsay <text>'] }
-      return { lines: [`Chindi says: ${text}`], action: { type: 'pet', say: text.slice(0, 60) } }
+      return { lines: [], action: { type: 'pet', goto: 'terminal', say: text.slice(0, 80) } }
     }
     case 'open':
       return open(arg)

@@ -6,7 +6,6 @@ export const APP_IDS = [
   'community',
   'resume',
   'contact',
-  'readme',
   'notepad',
   'terminal',
   'trash',

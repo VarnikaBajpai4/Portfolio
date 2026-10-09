@@ -17,7 +17,7 @@ function Tags({ label, items }: { label: string; items: string[] }) {
 }
 
 export function About() {
-  const { identity, languages, tools } = content
+  const { identity, languages, tools, readMe } = content
   return (
     <div className="about app-pad">
       <img className="about-photo px-border" src={photo} alt="Varnika Bajpai" width={132} height={132} />
@@ -28,6 +28,14 @@ export function About() {
         <p className="read">{identity.subline}</p>
         <Tags label="Languages" items={languages} />
         <Tags label="Works with" items={tools} />
+        <details className="about-more">
+          <summary>More about me</summary>
+          {readMe.map((paragraph) => (
+            <p key={paragraph} className="read">
+              {paragraph}
+            </p>
+          ))}
+        </details>
       </div>
     </div>
   )

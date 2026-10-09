@@ -1,91 +1,139 @@
-import { useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { content } from '../content'
+import { prefersReducedMotion } from '../motion'
 import { useAddSticky } from '../shell/stickies'
+import { foldCorner, fullyTurned } from './fold'
+import type { Pt } from './fold'
 
-const CORNER = 30
-const SETTLE_MS = 460
+/** how far the resting dog-ear is folded in */
+const REST = 26
+const TURN_MS = 620
+const RETURN_MS = 380
+
+const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)
+const points = (poly: Pt[]) => poly.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
 
 export function NotePad() {
   const pages = content.notes
   const addSticky = useAddSticky()
-  const [page, setPage] = useState(0)
-  const [peel, setPeel] = useState(CORNER)
-  const [settling, setSettling] = useState(false)
+  const gradientId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
-  const drag = useRef<{ x: number; y: number; moved: boolean } | null>(null)
+  const [size, setSize] = useState({ w: 300, h: 150 })
+  const [page, setPage] = useState(0)
+  /** where the corner is right now; null means resting as a dog-ear */
+  const [corner, setCorner] = useState<Pt | null>(null)
+  const drag = useRef<{ moved: boolean } | null>(null)
+  const frame = useRef(0)
   const next = (page + 1) % pages.length
 
-  const fullPeel = () => {
+  useLayoutEffect(() => {
     const el = rootRef.current
-    return el ? Math.min(el.clientWidth, el.clientHeight) : CORNER
-  }
+    if (!el) return
+    const observer = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight }))
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), [])
+
+  const rest = { x: REST, y: size.h - REST }
+  const at = corner ?? rest
+  const fold = foldCorner(size.w, size.h, at)
 
   const turnPage = () => {
     setPage(next)
-    setPeel(CORNER)
+    setCorner(null)
   }
 
-  const settle = (to: number, then?: () => void) => {
-    setSettling(true)
-    setPeel(to)
-    window.setTimeout(() => {
-      setSettling(false)
-      then?.()
-    }, SETTLE_MS)
+  const glide = (from: Pt, to: Pt, ms: number, then: () => void) => {
+    cancelAnimationFrame(frame.current)
+    if (prefersReducedMotion()) return then()
+    const start = performance.now()
+    const step = (now: number) => {
+      const t = Math.min((now - start) / ms, 1)
+      const k = ease(t)
+      setCorner({ x: from.x + (to.x - from.x) * k, y: from.y + (to.y - from.y) * k })
+      if (t < 1) frame.current = requestAnimationFrame(step)
+      else then()
+    }
+    frame.current = requestAnimationFrame(step)
+  }
+
+  const finishTurn = (from: Pt) => glide(from, fullyTurned(size.w, size.h), TURN_MS, turnPage)
+
+  const local = (e: PointerEvent): Pt => {
+    const box = rootRef.current!.getBoundingClientRect()
+    return { x: e.clientX - box.left, y: e.clientY - box.top }
   }
 
   const onDown = (e: PointerEvent<HTMLButtonElement>) => {
+    cancelAnimationFrame(frame.current)
     e.currentTarget.setPointerCapture(e.pointerId)
-    drag.current = { x: e.clientX, y: e.clientY, moved: false }
+    drag.current = { moved: false }
   }
 
   const onMove = (e: PointerEvent<HTMLButtonElement>) => {
-    const d = drag.current
-    if (!d) return
-    // the corner sits bottom-left, so pulling right or up peels the page
-    const pull = Math.max(e.clientX - d.x, d.y - e.clientY)
-    if (Math.abs(pull) > 4) d.moved = true
-    setPeel(Math.min(Math.max(CORNER + pull, CORNER), fullPeel()))
+    if (!drag.current) return
+    const p = local(e)
+    if (Math.hypot(p.x - rest.x, p.y - rest.y) > 5) drag.current.moved = true
+    if (drag.current.moved) setCorner(p)
   }
 
   const onUp = (e: PointerEvent<HTMLButtonElement>) => {
     const d = drag.current
     drag.current = null
     if (!d) return
-    if (!d.moved) return settle(fullPeel(), turnPage)
+    if (!d.moved) return finishTurn(rest)
 
-    const box = rootRef.current?.getBoundingClientRect()
-    const outside =
-      box && (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom)
+    const p = local(e)
+    const outside = p.x < 0 || p.y < 0 || p.x > size.w || p.y > size.h
     if (outside && addSticky) {
-      // pulled right off the pad: it becomes a sticky note on the desktop
+      // pulled right off the pad: the page becomes a sticky note on the desktop
       addSticky(pages[page], e.clientX, e.clientY)
       turnPage()
-    } else if (peel > fullPeel() / 2) {
-      settle(fullPeel(), turnPage)
+    } else if (Math.hypot(p.x, p.y - size.h) > 0.55 * Math.hypot(size.w, size.h)) {
+      finishTurn(p)
     } else {
-      settle(CORNER)
+      glide(p, rest, RETURN_MS, () => setCorner(null))
     }
   }
 
-  const sheetCut = `polygon(0 0, 100% 0, 100% 100%, ${peel}px 100%, 0 calc(100% - ${peel}px))`
-
   return (
-    <div className={`notepad${settling ? ' is-settling' : ''}`} ref={rootRef}>
+    <div className="notepad" ref={rootRef}>
       <p className="notepad-text notepad-under" aria-hidden="true">
         {pages[next]}
       </p>
-      <div className="notepad-sheet" style={{ clipPath: sheetCut }}>
+      <div
+        className="notepad-sheet"
+        style={{ clipPath: `polygon(${fold.sheet.map((p) => `${p.x.toFixed(1)}px ${p.y.toFixed(1)}px`).join(', ')})` }}
+      >
         <p className="notepad-text" aria-live="polite">
           {pages[page]}
         </p>
         <span className="notepad-page">{page + 1}</span>
       </div>
+      <svg className="notepad-fold" width={size.w} height={size.h} aria-hidden="true">
+        <defs>
+          <linearGradient
+            id={gradientId}
+            gradientUnits="userSpaceOnUse"
+            x1={fold.crease.x}
+            y1={fold.crease.y}
+            x2={fold.tip.x}
+            y2={fold.tip.y}
+          >
+            <stop offset="0" stopColor="#c9c9c9" />
+            <stop offset="0.18" stopColor="#f2f2f2" />
+            <stop offset="0.5" stopColor="#ffffff" />
+            <stop offset="1" stopColor="#ededed" />
+          </linearGradient>
+        </defs>
+        {fold.flap.length > 2 && <polygon className="notepad-flap" points={points(fold.flap)} fill={`url(#${gradientId})`} />}
+      </svg>
       <button
         type="button"
         className="notepad-corner"
-        style={{ width: peel, height: peel }}
         aria-label="Next page"
         title="Click to turn. Drag to peel. Pull it off the pad to keep it."
         onPointerDown={onDown}
@@ -93,24 +141,13 @@ export function NotePad() {
         onPointerUp={onUp}
         onPointerCancel={() => {
           drag.current = null
-          settle(CORNER)
+          setCorner(null)
         }}
         onClick={(e) => {
           // keyboard activation; pointer clicks are handled above
-          if (e.detail === 0) settle(fullPeel(), turnPage)
+          if (e.detail === 0) finishTurn(rest)
         }}
-      >
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="notepad-fold" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0.5" stopColor="#d9d9d9" />
-              <stop offset="0.62" stopColor="#ffffff" />
-              <stop offset="1" stopColor="#f4f4f4" />
-            </linearGradient>
-          </defs>
-          <polygon className="notepad-flap" points="0,0 100,0 100,100" fill="url(#notepad-fold)" />
-        </svg>
-      </button>
+      />
     </div>
   )
 }

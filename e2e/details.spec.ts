@@ -42,7 +42,7 @@ test('a page pulled off the Note Pad becomes a sticky note', async ({ page }) =>
 })
 
 test('the homage note is on the desktop and About shows the photo', async ({ page }) => {
-  await expect(page.locator('.sticky', { hasText: 'homage to my Mac' })).toBeVisible()
+  await expect(page.locator('.sticky', { hasText: 'homage to the retro Mac, System 1 to 7' })).toBeVisible()
   const photo = page.getByRole('dialog', { name: 'About Varnika' }).getByRole('img', { name: 'Varnika Bajpai' })
   await expect(photo).toBeVisible()
   expect(await photo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0)

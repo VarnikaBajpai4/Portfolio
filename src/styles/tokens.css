@@ -40,3 +40,12 @@
   --c3: #fff1b8;
   --c4: #c9c2ff;
 }
+
+:root[data-palette='noir'] {
+  --desk-1: #262626;
+  --desk-2: #101010;
+  --c1: #f3d3d3;
+  --c2: #f4ecd8;
+  --c3: #ecd08a;
+  --c4: #dcdcdc;
+}

@@ -95,7 +95,7 @@ test('catsay makes Chindi speak', async ({ page }) => {
 
 test('cat readme.txt prints the read me', async ({ page }) => {
   await run(page, 'cat readme.txt')
-  await expect(terminal(page)).toContainText('homage to my Mac')
+  await expect(terminal(page)).toContainText('homage to the retro Mac')
 })
 
 test('rm -rf / drops the windows and then restores them', async ({ page }) => {

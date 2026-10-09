@@ -12,6 +12,7 @@ const TICK_MS = 120
 const STEP = 4
 const FALL = 16
 const BUBBLE_MS = 2600
+const BUBBLE_MS_PER_LETTER = 70
 
 const LINES = [
   'Mrrp.',
@@ -99,7 +100,7 @@ export function Pet({ windows, bounds, areaH }: Props) {
   const say = (text: string) => {
     window.clearTimeout(bubbleTimer.current)
     setBubble(text)
-    bubbleTimer.current = window.setTimeout(() => setBubble(null), BUBBLE_MS)
+    bubbleTimer.current = window.setTimeout(() => setBubble(null), BUBBLE_MS + text.length * BUBBLE_MS_PER_LETTER)
   }
 
   useEffect(() => {

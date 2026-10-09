@@ -222,7 +222,7 @@ export const content: Content = {
     'Hi, I am Varnika. I love building new things. Nothing makes me feel more powerful as a woman in STEM than taking an idea and turning it into something that works.',
     'I live for AI and ML, Python, C++, data structures, MLOps and LLMs. The projects I like most are unique, a little hard, and useful to the people around me.',
     'Away from the keyboard you will find me lifting weights, at pilates, running, swimming or on a badminton court. I also read a lot, watch football, sing, bake and paint.',
-    'If you had not noticed: this whole site is a homage to my Mac. I got it when I started engineering and it has been my best friend ever since. Plenty of people do not love Macs for coding. I do.',
+    'This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
   ],
 
   // DRAFT — owner to edit
@@ -239,10 +239,11 @@ export const content: Content = {
     'model_that_was_99_percent_accurate_on_training_data.pkl',
     'Plan to read only one book at a time',
     'rest_day.txt',
+    'receipt_do_not_open.pdf',
   ],
 
   homage:
-    'P.S. This whole site is a homage to my Mac. I got it when I started engineering and it has been my best friend ever since. Many people do not love Macs for coding. I do.',
+    'P.S. This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
 
   links: [
     { label: 'Email', href: 'mailto:bajpaivarnika04@gmail.com' },

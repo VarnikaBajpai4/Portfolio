@@ -9,7 +9,6 @@ import { Contact } from './Contact'
 import { HardDisk } from './HardDisk'
 import { NotePad } from './NotePad'
 import { Projects } from './Projects'
-import { ReadMe } from './ReadMe'
 import { Resume } from './Resume'
 import { Terminal } from './Terminal'
 import { Trash } from './Trash'
@@ -28,11 +27,10 @@ export interface AppDef {
   pos: { x: number; y: number }
   fill: Fill
   dock?: boolean
-  desktop?: boolean
   openOnStart?: boolean
 }
 
-// Dock and desktop icons follow the order of this list.
+// The dock follows the order of this list.
 export const APPS: AppDef[] = [
   { id: 'about', title: 'About Varnika', icon: 'face', component: About, size: { w: 520, h: 352 }, pos: { x: 0.03, y: 0.04 }, fill: 'c1', dock: true, openOnStart: true },
   { id: 'work', title: 'Work', icon: 'work', component: Work, size: { w: 460, h: 340 }, pos: { x: 0.22, y: 0.12 }, fill: 'c4', dock: true },
@@ -40,10 +38,9 @@ export const APPS: AppDef[] = [
   { id: 'achievements', title: 'Achievements', icon: 'star', component: Achievements, size: { w: 420, h: 280 }, pos: { x: 0.3, y: 0.18 }, fill: 'c3', dock: true },
   { id: 'terminal', title: 'Terminal', icon: 'terminal', component: Terminal, size: { w: 400, h: 260 }, pos: { x: 0.56, y: 0.38 }, fill: 'ink', dock: true, openOnStart: true },
   { id: 'contact', title: 'Contact', icon: 'mail', component: Contact, size: { w: 340, h: 240 }, pos: { x: 0.4, y: 0.24 }, fill: 'c1', dock: true },
-  { id: 'hd', title: 'Varnika HD', icon: 'hd', component: HardDisk, size: { w: 480, h: 320 }, pos: { x: 0.2, y: 0.2 }, fill: 'c4', desktop: true },
-  { id: 'readme', title: 'Read Me', icon: 'doc', component: ReadMe, size: { w: 460, h: 360 }, pos: { x: 0.28, y: 0.1 }, fill: 'paper', desktop: true },
-  { id: 'resume', title: 'Resume', icon: 'doc', component: Resume, size: { w: 540, h: 520 }, pos: { x: 0.34, y: 0.06 }, fill: 'paper', desktop: true },
-  { id: 'trash', title: 'Trash', icon: 'trash', component: Trash, size: { w: 400, h: 260 }, pos: { x: 0.36, y: 0.3 }, fill: 'paper', desktop: true },
+  { id: 'hd', title: 'Varnika HD', icon: 'hd', component: HardDisk, size: { w: 480, h: 320 }, pos: { x: 0.2, y: 0.2 }, fill: 'c4' },
+  { id: 'resume', title: 'Resume', icon: 'doc', component: Resume, size: { w: 540, h: 520 }, pos: { x: 0.34, y: 0.06 }, fill: 'paper' },
+  { id: 'trash', title: 'Trash', icon: 'trash', component: Trash, size: { w: 400, h: 260 }, pos: { x: 0.36, y: 0.3 }, fill: 'paper' },
   { id: 'notepad', title: 'Note Pad', icon: 'note', component: NotePad, size: { w: 300, h: 180 }, pos: { x: 0.5, y: 0.08 }, fill: 'c3', openOnStart: true },
   { id: 'community', title: 'Community', icon: 'people', component: Community, size: { w: 460, h: 300 }, pos: { x: 0.26, y: 0.16 }, fill: 'c2' },
 ]
@@ -71,3 +68,11 @@ export function rectFor(app: AppDef, bounds: Bounds): Rect {
     bounds,
   )
 }
+
+/** Icons on the desktop, top to bottom. A shortcut may open an app under another name. */
+export const DESKTOP_ICONS: { app: AppId; label?: string; icon?: IconName; fill?: string }[] = [
+  { app: 'hd' },
+  { app: 'about', label: 'Read Me', icon: 'doc', fill: 'var(--paper)' },
+  { app: 'resume' },
+  { app: 'trash' },
+]
