@@ -7,6 +7,7 @@ import type { AppId, Bounds, Win } from '../wm/reducer'
 import { useWM } from '../wm/store'
 import { Window } from '../wm/Window'
 import { WMProvider } from '../wm/WMProvider'
+import { ChindiCard } from './ChindiCard'
 import { DesktopIcons } from './DesktopIcons'
 import { Dock } from './Dock'
 import { GRAVITY_EVENT } from './events'
@@ -68,6 +69,8 @@ interface Props {
 function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & { bounds: Bounds }) {
   const { windows, dispatch } = useWM()
   const [stickies, setStickies] = useState<StickyNote[]>(() => [homageNote(bounds)])
+  const [meeting, setMeeting] = useState(false)
+  const endMeeting = useCallback(() => setMeeting(false), [])
   const arriving = useRef(new Map<AppId, Box>())
   const leaving = useRef(new Set<AppId>())
   const live = useRef({ windows, bounds })
@@ -219,7 +222,10 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
               onRemove={() => setStickies((list) => list.filter((n) => n.id !== note.id))}
             />
           ))}
-          {entrance !== 'wait' && <Pet windows={windows} bounds={bounds} areaH={bounds.h + DOCK_RESERVE} />}
+          {entrance !== 'wait' && (
+            <Pet windows={windows} bounds={bounds} areaH={bounds.h + DOCK_RESERVE} onMeet={() => setMeeting(true)} />
+          )}
+          {meeting && <ChindiCard onClose={endMeeting} />}
         </main>
         <Dock />
       </StickyContext>

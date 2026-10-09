@@ -248,3 +248,34 @@ test('all five project folders fit on one row', async ({ page }) => {
   }
   expect(tops.size).toBe(1)
 })
+
+test('Work shows a timeline and the details of the chosen role', async ({ page }) => {
+  await page.getByRole('navigation', { name: 'Dock' }).getByRole('button', { name: 'Work', exact: true }).click()
+  const work = page.getByRole('dialog', { name: 'Work', exact: true })
+  const detail = work.locator('.work-detail')
+  await expect(work.locator('.work-bar')).toHaveCount(4)
+  // the current job is shown first
+  await expect(detail).toContainText('Software Engineer')
+  await expect(detail).toContainText('July 2026 – present')
+
+  await work.getByRole('button', { name: /LyondellBasell/ }).click()
+  await expect(detail).toContainText('SAP Testing')
+  await expect(detail.getByText('AWS', { exact: true })).toBeVisible()
+
+  // earlier roles sit further left
+  const x = async (name: RegExp) => (await work.getByRole('button', { name }).boundingBox())!.x
+  expect(await x(/G-Square/)).toBeLessThan(await x(/Technology Summer Intern/))
+  expect(await x(/Technology Summer Intern/)).toBeLessThan(await x(/LyondellBasell/))
+  expect(await x(/LyondellBasell/)).toBeLessThan(await x(/Barclays, Software Engineer/))
+})
+
+test('double-clicking Chindi introduces her, then the note leaves', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.reload()
+  await page.getByRole('button', { name: 'Chindi the cat' }).dblclick()
+  const card = page.locator('.chindi')
+  await expect(card).toContainText('Meet Chindi.')
+  await expect(card).toContainText('I prefer her company to most humans.')
+  await expect(card.getByRole('img')).toBeVisible()
+  await expect(card).toHaveCount(0, { timeout: 9000 })
+})

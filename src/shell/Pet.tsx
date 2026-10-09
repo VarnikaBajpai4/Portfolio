@@ -77,6 +77,8 @@ interface Props {
   bounds: Bounds
   /** full height of the desktop area, dock zone included */
   areaH: number
+  /** a double-click asks to be introduced */
+  onMeet: () => void
 }
 
 function startSim(windows: Win[], bounds: Bounds, areaH: number): Sim {
@@ -94,7 +96,7 @@ function startSim(windows: Win[], bounds: Bounds, areaH: number): Sim {
   }
 }
 
-export function Pet({ windows, bounds, areaH }: Props) {
+export function Pet({ windows, bounds, areaH, onMeet }: Props) {
   const world = useRef({ windows, bounds, areaH })
   // the simulation mutates `sim`; `view` is the copy React draws
   const sim = useRef<Sim | null>(null)
@@ -227,6 +229,11 @@ export function Pet({ windows, bounds, areaH }: Props) {
         className="pet-cat"
         aria-label="Chindi the cat"
         onClick={() => say(LINES[Math.floor(Math.random() * LINES.length)])}
+        onDoubleClick={() => {
+          window.clearTimeout(bubbleTimer.current)
+          setBubble(null)
+          onMeet()
+        }}
       >
         <span className={s.dir === -1 && pose !== 'sit' ? 'pet-flip' : undefined}>
           <Chindi pose={pose} />

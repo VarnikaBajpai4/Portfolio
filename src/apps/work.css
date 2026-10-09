@@ -1,0 +1,188 @@
+/* Work: a small Gantt chart of roles, with the details of the selected one below. */
+
+.work {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  min-height: 100%;
+  padding: 16px 18px 18px;
+}
+
+.work-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  align-items: baseline;
+}
+
+.work-head p {
+  font-family: var(--font-read);
+  font-size: 14px;
+}
+
+/* ---------- chart ---------- */
+
+.work-chart {
+  display: grid;
+  gap: 0;
+  padding: 6px 14px 12px 12px;
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.work-row {
+  display: grid;
+  grid-template-columns: clamp(78px, 22%, 124px) 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.work-org {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.work-track {
+  position: relative;
+  height: 40px;
+  /* a faint line for each year */
+  background: repeating-linear-gradient(90deg, #00000033 0 1px, transparent 1px calc(100% / var(--years, 3)));
+  border-right: 1px solid #00000033;
+}
+
+.work-years .work-track {
+  height: 22px;
+  background: none;
+  border: 0;
+}
+
+.work-year {
+  position: absolute;
+  top: 2px;
+  padding-left: 4px;
+  font-size: 12px;
+}
+
+.work-bar {
+  position: absolute;
+  top: 8px;
+  min-width: 14px;
+  height: 24px;
+  padding: 0;
+  background: var(--c4);
+  border: var(--px) solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.work-bar-1 {
+  background: var(--c2);
+}
+
+.work-bar-2 {
+  background: var(--c1);
+}
+
+/* the current role runs on past "now" */
+.work-bar.is-current {
+  border-right-style: dashed;
+}
+
+.work-bar[aria-pressed='true'] {
+  top: 5px;
+  height: 30px;
+  background-image: conic-gradient(#0000002e 25%, transparent 0 50%, #0000002e 0 75%, transparent 0);
+  background-size: 4px 4px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.work-link {
+  position: absolute;
+  top: 19px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 4px, transparent 4px 8px);
+  /* the word sits just above the dotted line */
+  font-size: 11px;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  /* lift the word clear of the line */
+  padding-bottom: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform: translateY(-13px);
+  background-position: 0 100%;
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  height: 15px;
+}
+
+.work-now {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #b3261e;
+}
+
+/* ---------- detail ---------- */
+
+.work-detail {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.work-detail header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.work-detail h3 {
+  font-size: 20px;
+}
+
+.work-period {
+  padding: 0 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+}
+
+.work-role {
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .work-bar {
+    transform-origin: left;
+    animation: work-grow 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--n) * 110ms + 120ms);
+    transition:
+      top 120ms,
+      height 120ms;
+  }
+
+  .work-detail {
+    animation: work-in 260ms ease-out both;
+  }
+}
+
+@keyframes work-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes work-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

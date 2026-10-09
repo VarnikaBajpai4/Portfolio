@@ -9,6 +9,10 @@ export interface Job {
   role: string
   period: string
   points: string[]
+  /** first and last month as YYYY-MM, for the timeline; no end means it is the current job */
+  start?: string
+  end?: string
+  tools?: string[]
 }
 
 export interface Project {
@@ -186,6 +190,8 @@ export const content: Content = {
       org: 'Barclays',
       role: 'Software Engineer',
       period: 'July 2026 – present',
+      start: '2026-07',
+      tools: ['Python', 'ML', 'MLOps'],
       points: [
         'Joined the same team full time after a pre-placement offer.',
         'Building engineering tooling and automation, and learning new tech every week.',
@@ -196,6 +202,9 @@ export const content: Content = {
       org: 'LyondellBasell',
       role: 'Digital Technology Intern, SAP Testing',
       period: 'January – June 2026',
+      start: '2026-01',
+      end: '2026-06',
+      tools: ['Python', 'REST APIs', 'AWS', 'SAP testing'],
       points: [
         'Built a backend integration pipeline for testing analytics and visualisation with Python and REST APIs.',
         'Traversed deep parent-child hierarchies in the test management system with tree traversals.',
@@ -208,6 +217,9 @@ export const content: Content = {
       org: 'Barclays',
       role: 'Technology Summer Intern',
       period: 'May – July 2025',
+      start: '2025-05',
+      end: '2025-07',
+      tools: ['Python', 'Flask', 'Grafana', 'Jira', 'Xray'],
       points: [
         'One of 19 students selected from the college.',
         'Built an ML classifier for testing logs with Python, Flask and Grafana.',
@@ -220,6 +232,9 @@ export const content: Content = {
       org: 'G-Square Solutions',
       role: 'AI and Data Science Intern',
       period: 'June – July 2024',
+      start: '2024-06',
+      end: '2024-07',
+      tools: ['Python', 'Django', 'Flask', 'SQL', 'BI dashboards'],
       points: [
         'Worked on BI dashboards and data pipelines for an AI/ML and BI solutions startup.',
         'Delivered one end-to-end project to a stakeholder, from data preprocessing to dashboard.',
@@ -360,9 +375,9 @@ export const content: Content = {
       lines: [
         'The matching algorithm, written from scratch.',
         'It places each person in a band for every skill, then pairs the bands that complement each other.',
-        'Distance measures between skill profiles decide how good a fit is.',
+        'Cosine distance between skill profiles decides how good a fit is.',
       ],
-      tools: ['Python', 'similarity metrics', 'scoring'],
+      tools: ['Python', 'cosine distance', 'scoring'],
     },
     {
       title: 'UBI Bharosa',
