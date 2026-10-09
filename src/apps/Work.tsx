@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import { content } from '../content'
 import type { Job } from '../content'
@@ -11,6 +11,9 @@ import './work.css'
 const JOBS = content.work.filter((job) => job.start).sort((a, b) => a.start!.localeCompare(b.start!))
 const CURRENT = JOBS.find((job) => !job.end) ?? JOBS[JOBS.length - 1]
 const READ_MS = 750
+// the scene is drawn for a window body of this size, and grows with a larger window
+const DESIGN_W = 768
+const DESIGN_H = 500
 
 function Floppy({ label, tone }: { label: string; tone: number }) {
   return (
@@ -27,6 +30,8 @@ function Floppy({ label, tone }: { label: string; tone: number }) {
 }
 
 const MONTHS = [...'JFMAMJJASOND']
+// the largest type on the printout, as a multiple of the normal size
+const MAX_TYPE = 1.5
 
 /** Months since year 0, from YYYY-MM. */
 function monthCount(yearMonth: string): number {
@@ -41,8 +46,35 @@ function Printout({ job, now }: { job: Job; now: number }) {
   const january = Math.floor(first / 12) * 12
   let n = 0
   const line = () => ({ '--n': n++ }) as CSSProperties
+  const paperRef = useRef<HTMLElement>(null)
+
+  // A short job prints in larger type, so that each sheet is about as long as the Mac column.
+  useLayoutEffect(() => {
+    const paper = paperRef.current
+    const scene = paper?.closest('.work')
+    const column = scene?.querySelector('.work-left')
+    if (!paper || !scene || !column) return
+    const fit = () => {
+      // one column on a narrow screen: the paper has all the height it needs
+      const sideBySide = paper.getBoundingClientRect().top < column.getBoundingClientRect().bottom - 1
+      let low = 1
+      let high = sideBySide ? MAX_TYPE : 1
+      for (let i = 0; i < 6 && high > low; i++) {
+        const mid = (low + high) / 2
+        paper.style.setProperty('--fit', String(mid))
+        if (paper.offsetHeight <= column.clientHeight) low = mid
+        else high = mid
+      }
+      paper.style.setProperty('--fit', String(low))
+    }
+    fit()
+    const observer = new ResizeObserver(fit)
+    observer.observe(scene)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <article className="work-paper work-detail" aria-live="polite">
+    <article className="work-paper work-detail" aria-live="polite" ref={paperRef}>
       <h3 style={line()}>{job.org}</h3>
       <p className="work-role" style={line()}>
         {job.role}
@@ -90,6 +122,22 @@ export function Work() {
   const drag = useRef<{ x: number; y: number; dx: number; dy: number; moved: boolean } | null>(null)
   const skipClick = useRef(false)
   const readTimer = useRef(0)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+
+  // in a larger window the Mac, the disks and the paper all become larger
+  useEffect(() => {
+    const frame = rootRef.current?.parentElement
+    if (!frame) return
+    const fit = () => {
+      const next = Math.min(frame.clientHeight / DESIGN_H, frame.clientWidth / DESIGN_W)
+      setScale(Math.max(1, Math.round(next * 100) / 100))
+    }
+    fit()
+    const observer = new ResizeObserver(fit)
+    observer.observe(frame)
+    return () => observer.disconnect()
+  }, [])
   // the current month, read once when the window opens
   const [now] = useState(() => {
     const today = new Date()
@@ -107,8 +155,9 @@ export function Work() {
     if (slot && !still) {
       const from = disk.getBoundingClientRect()
       const to = slot.getBoundingClientRect()
-      const x = dx + to.left + to.width / 2 - (from.left + from.width / 2)
-      const y = dy + to.top + to.height / 2 - (from.top + from.height / 2)
+      // the rectangles are in screen pixels, and the transform is in the pixels of the scaled scene
+      const x = dx + (to.left + to.width / 2 - (from.left + from.width / 2)) / scale
+      const y = dy + (to.top + to.height / 2 - (from.top + from.height / 2)) / scale
       await disk
         .animate([{ transform: `translate(${x}px, ${y}px) scale(0.5, 0.12)`, opacity: 0.6 }], {
           duration: 300,
@@ -144,10 +193,10 @@ export function Work() {
   const onPointerMove = (e: PointerEvent<HTMLButtonElement>) => {
     const d = drag.current
     if (!d) return
-    d.dx = e.clientX - d.x
-    d.dy = e.clientY - d.y
+    d.dx = (e.clientX - d.x) / scale
+    d.dy = (e.clientY - d.y) / scale
     // a small move is still a click
-    if (!d.moved && Math.hypot(d.dx, d.dy) < 5) return
+    if (!d.moved && Math.hypot(d.dx, d.dy) * scale < 5) return
     d.moved = true
     e.currentTarget.classList.add('is-dragging')
     e.currentTarget.style.transform = `translate(${d.dx}px, ${d.dy}px) rotate(-4deg)`
@@ -200,7 +249,7 @@ export function Work() {
   )
 
   return (
-    <div className="work">
+    <div className="work" ref={rootRef} style={{ zoom: scale }}>
       <div className="work-left">
         <div className={`work-mac${over ? ' is-over' : ''}`} ref={macRef}>
           <div className="work-screen">

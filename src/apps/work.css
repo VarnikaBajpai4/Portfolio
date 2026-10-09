@@ -3,8 +3,9 @@
 
 .work {
   display: grid;
-  grid-template-columns: 324px minmax(0, 1fr);
+  grid-template-columns: 324px minmax(0, 620px);
   gap: 18px;
+  justify-content: center;
   min-height: 100%;
   padding: 14px 16px 0;
 }
@@ -12,8 +13,8 @@
 .work-left {
   display: grid;
   gap: 10px;
-  align-content: start;
-  padding-bottom: 12px;
+  /* its own height, not the height of the row: the printout is fitted to it */
+  align-self: start;
 }
 
 /* ---------- the Mac ---------- */
@@ -136,8 +137,9 @@
 
 .work-printer {
   display: grid;
-  grid-template-rows: auto 1fr;
+  align-content: start;
   justify-items: center;
+  padding-bottom: 14px;
 }
 
 /* the slot that the paper comes out of */
@@ -153,8 +155,9 @@
 }
 
 .work-paper {
+  --fit: 1;
   --hole: 18px;
-  --row: 20px;
+  --row: calc(20px * var(--fit));
   width: calc(100% - 20px);
   padding: 12px calc(var(--hole) + 10px) 10px;
   /* tractor holes on the two edges, and a faint bar on each second pair of lines */
@@ -163,22 +166,22 @@
     radial-gradient(circle, #00000055 0 3px, transparent 3.5px) 100% 4px / var(--hole) var(--row) repeat-y,
     repeating-linear-gradient(#d9f2df 0 calc(var(--row) * 2), #fff 0 calc(var(--row) * 4));
   border: var(--px) solid var(--ink);
-  border-block: 0;
-  box-shadow: 4px 0 0 var(--ink);
+  border-top: 0;
+  box-shadow: 4px 4px 0 var(--ink);
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--fit));
   line-height: var(--row);
 }
 
 .work-paper h3 {
   font-family: var(--font-pixel);
-  font-size: 24px;
+  font-size: calc(24px * var(--fit));
   line-height: calc(var(--row) * 2);
 }
 
 .work-role {
   font-family: var(--font-pixel);
-  font-size: 15px;
+  font-size: calc(15px * var(--fit));
   font-weight: 600;
 }
 
@@ -186,16 +189,16 @@
   display: flex;
   gap: 3px;
   align-items: center;
-  margin: 10px 0;
+  margin: calc(var(--row) / 2) 0;
   height: var(--row);
 }
 
 .work-months span {
-  width: 17px;
-  height: 17px;
+  width: calc(17px * var(--fit));
+  height: calc(17px * var(--fit));
   border: 1px solid var(--ink);
-  font-size: 10px;
-  line-height: 15px;
+  font-size: calc(10px * var(--fit));
+  line-height: calc(15px * var(--fit));
   text-align: center;
 }
 
@@ -229,7 +232,7 @@
 
 /* the tear line */
 .work-end {
-  margin: 10px calc(-1 * var(--hole) - 10px) 0;
+  margin: calc(var(--row) / 2) calc(-1 * var(--hole) - 10px) 0;
   padding-top: 4px;
   border-top: 2px dashed #00000066;
   color: #00000088;
