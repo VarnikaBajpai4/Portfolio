@@ -11,13 +11,16 @@ test('windows stay reachable when the viewport shrinks', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 600 })
   await expect(page.getByRole('dialog')).toHaveCount(5)
 
-  const dockTop = (await dock.boundingBox())!.y
-  for (const button of await page.getByRole('button', { name: /^Close / }).all()) {
-    const b = (await button.boundingBox())!
-    expect(b.x).toBeGreaterThanOrEqual(0)
-    expect(b.x + b.width).toBeLessThanOrEqual(1024)
-    expect(b.y + b.height).toBeLessThanOrEqual(dockTop)
-  }
+  // the layout settles after the resize and after the open animation
+  await expect(async () => {
+    const dockTop = (await dock.boundingBox())!.y
+    for (const button of await page.getByRole('button', { name: /^Close / }).all()) {
+      const b = (await button.boundingBox())!
+      expect(b.x).toBeGreaterThanOrEqual(0)
+      expect(b.x + b.width).toBeLessThanOrEqual(1024)
+      expect(b.y + b.height).toBeLessThanOrEqual(dockTop)
+    }
+  }).toPass({ timeout: 3000 })
 
   await page.setViewportSize({ width: 700, height: 800 })
   await expect(page.getByRole('dialog')).toHaveCount(0)
