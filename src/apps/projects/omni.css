@@ -3,8 +3,9 @@
   display: grid;
   gap: 32px;
   min-height: 100%;
-  padding: 24px 26px 32px;
-  background: var(--paper);
+  padding: 0 26px 32px;
+  /* a wash of the palette's own colour, so the page changes with the theme */
+  background: color-mix(in srgb, var(--c2) 30%, var(--paper));
 }
 
 .omni h3 {
@@ -15,11 +16,24 @@
 .omni h3::before {
   content: '';
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   margin-right: 10px;
-  background: var(--c4);
+  background: var(--mark, var(--c4));
   border: var(--px) solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+#omni-stack {
+  --mark: var(--c1);
+}
+
+#omni-how {
+  --mark: var(--c3);
+}
+
+#omni-demo {
+  --mark: var(--c2);
 }
 
 .omni h4 {
@@ -37,7 +51,12 @@
   flex-wrap: wrap;
   gap: 12px 24px;
   align-items: center;
-  padding-bottom: 20px;
+  /* a full-width band with a fine dot pattern */
+  margin: 0 -26px;
+  padding: 24px 26px 22px;
+  background:
+    radial-gradient(#00000022 1px, transparent 1.5px) 0 0 / 8px 8px,
+    var(--c2);
   border-bottom: var(--px) solid var(--ink);
 }
 
@@ -55,6 +74,7 @@
 /* a rubber stamp */
 .omni-stamp {
   padding: 2px 10px;
+  background: var(--paper);
   border: 3px double #b3261e;
   border-radius: 4px;
   color: #b3261e;
@@ -93,6 +113,13 @@
   line-height: 1.6;
 }
 
+/* the first sentence carries the idea, so it reads larger */
+.omni-about p:first-of-type {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .omni-about p + p {
   margin-top: 12px;
 }
@@ -123,22 +150,26 @@
 }
 
 .omni-stack > li:nth-child(1) {
+  --n: 1;
   background: var(--c1);
 }
 
 .omni-stack > li:nth-child(2) {
+  --n: 2;
   margin-left: 6px;
   margin-right: -6px;
   background: var(--c2);
 }
 
 .omni-stack > li:nth-child(3) {
+  --n: 3;
   margin-left: 12px;
   margin-right: -12px;
   background: var(--c3);
 }
 
 .omni-stack > li:nth-child(4) {
+  --n: 4;
   margin-left: 18px;
   margin-right: -18px;
   background: var(--c4);
@@ -190,15 +221,30 @@
 }
 
 .omni-step-n {
-  font-size: 22px;
+  justify-self: start;
+  padding: 3px 7px;
+  background: var(--c1);
+  border: var(--px) solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-size: 15px;
   font-weight: 600;
   line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--ink);
+}
+
+.omni-steps li:nth-child(4n + 2) .omni-step-n {
+  background: var(--c3);
+}
+
+.omni-steps li:nth-child(4n + 3) .omni-step-n {
+  background: var(--c4);
+}
+
+.omni-steps li:nth-child(4n + 4) .omni-step-n {
+  background: var(--c2);
 }
 
 .omni-steps strong {
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 15px;
 }
 
@@ -392,6 +438,14 @@
   padding: 18px 20px;
 }
 
+.omni-graph {
+  background: color-mix(in srgb, var(--c1) 30%, var(--paper));
+}
+
+.omni-debug {
+  background: color-mix(in srgb, var(--c3) 30%, var(--paper));
+}
+
 .omni-graph svg {
   align-self: center;
   width: 100%;
@@ -515,12 +569,60 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* sections ease in as they are reached */
+  .omni-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .omni-reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 500ms ease-out,
+      transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* the stack is built from the bottom layer up */
+  .is-in .omni-stack > li {
+    animation: layer-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+    animation-delay: calc((4 - var(--n)) * 110ms + 150ms);
+  }
+
+  .is-in .omni-steps li {
+    animation: step-in 380ms ease-out both;
+    animation-delay: calc(var(--n) * 70ms + 100ms);
+  }
+
+  .omni-lines li,
+  .omni-array li,
+  .omni-cell {
+    transition:
+      background-color 180ms,
+      opacity 240ms,
+      box-shadow 180ms;
+  }
+
   .omni-node rect {
-    transition: fill 160ms steps(2);
+    transition: fill 200ms;
   }
 
   .omni-node.is-current rect {
     animation: node-pulse 900ms steps(2) infinite;
+  }
+}
+
+@keyframes layer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-22px);
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
 

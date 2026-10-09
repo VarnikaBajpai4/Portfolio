@@ -115,8 +115,9 @@ test('OmniCompiler opens as a steppable showcase', async ({ page }) => {
   // the window grows to make room
   await expect.poll(async () => (await projects.boundingBox())!.width).toBeGreaterThan(small.width + 200)
 
-  // the explanation and the stack come before the demo
+  // the explanation and the stack come before the demo, and they fade in without a scroll
   await expect(projects.getByRole('heading', { name: 'What it is' })).toBeVisible()
+  await expect(projects.locator('.omni-reveal').first()).toHaveCSS('opacity', '1')
   await expect(projects.getByRole('heading', { name: 'Tech stack' })).toBeVisible()
   for (const part of ['FastAPI', 'Docker', 'Monaco Editor', 'Gemini']) {
     await expect(projects.locator('.omni-stack').getByText(part, { exact: true })).toBeVisible()
@@ -136,4 +137,16 @@ test('OmniCompiler opens as a steppable showcase', async ({ page }) => {
   await projects.getByRole('button', { name: 'Back to Projects' }).click()
   await expect(projects.getByRole('button', { name: 'FloatChat' })).toBeVisible()
   await expect.poll(async () => (await projects.boundingBox())!.width).toBe(small.width)
+})
+
+test('making the window small again returns from a project to the folder', async ({ page }) => {
+  const projects = page.getByRole('dialog', { name: 'Projects' })
+  await projects.getByRole('button', { name: 'OmniCompiler' }).click()
+  await expect(projects.getByRole('heading', { name: 'OmniCompiler' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Zoom Projects' }).click()
+  await expect(projects.getByRole('heading', { name: 'OmniCompiler' })).toHaveCount(0)
+  for (const name of ['OmniCompiler', 'FloatChat', 'UBI Bharosa', 'Symbiote', 'MalShield']) {
+    await expect(projects.getByRole('button', { name })).toBeVisible()
+  }
 })

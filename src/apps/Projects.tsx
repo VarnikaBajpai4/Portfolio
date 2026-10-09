@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { content } from '../content'
 import { Icon } from '../icons/Icon'
 import { OmniCompiler } from './projects/OmniCompiler'
-
-const FOLDER_FILLS = ['var(--c3)', 'var(--c1)', 'var(--c4)', 'var(--paper)', 'var(--c3)']
+import { ProjectFolder } from './projects/ProjectFolder'
 
 export function Projects({ param }: { param?: string }) {
   const [selected, setSelected] = useState<string | null>(param ?? null)
@@ -18,10 +17,10 @@ export function Projects({ param }: { param?: string }) {
   if (!project) {
     return (
       <ul className="icon-grid app-pad">
-        {content.projects.map((p, i) => (
+        {content.projects.map((p) => (
           <li key={p.id}>
             <button type="button" className="icon-tile" onClick={() => setSelected(p.id)}>
-              <Icon name="folder" size={40} fill={FOLDER_FILLS[i % FOLDER_FILLS.length]} />
+              <ProjectFolder id={p.id} />
               <span className="chip">{p.name}</span>
             </button>
           </li>

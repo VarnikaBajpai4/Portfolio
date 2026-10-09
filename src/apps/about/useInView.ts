@@ -8,8 +8,9 @@ export function useInView(ref: RefObject<Element | null>): boolean {
     const el = ref.current
     if (!el || seen) return
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setSeen(true)
+      (entries) => {
+        // one callback can carry several records for the same element, oldest first
+        if (entries.some((entry) => entry.isIntersecting)) setSeen(true)
       },
       { threshold: 0.2 },
     )

@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import type { Project } from '../../content'
 import { prefersReducedMotion } from '../../motion'
 import { useWindowControls } from '../../wm/store'
+import { useInView } from '../about/useInView'
 import {
   ARRAY,
   COMPLEXITY,
@@ -21,6 +23,19 @@ import './omni.css'
 const GLYPHS = '{}[]()<>=+-*/;:#&|!?01'
 const MORPH_FRAMES = 9
 const PLAY_MS = 750
+/** Below this width there is no room for the showcase. */
+const MIN_WIDTH = 700
+
+/** A section that eases in the first time it scrolls into view. */
+function Reveal({ className = '', labelledBy, children }: { className?: string; labelledBy?: string; children: ReactNode }) {
+  const ref = useRef<HTMLElement>(null)
+  const seen = useInView(ref)
+  return (
+    <section ref={ref} className={`omni-reveal ${className}${seen ? ' is-in' : ''}`} aria-labelledby={labelledBy}>
+      {children}
+    </section>
+  )
+}
 
 /** The code as it is drawn right now: while a translation plays, lines are part noise. */
 function useMorph(language: Language): string[] {
@@ -51,6 +66,8 @@ function useMorph(language: Language): string[] {
 export function OmniCompiler({ project, onBack }: { project: Project; onBack: () => void }) {
   const controls = useWindowControls()
   const grew = useRef(false)
+  const rootRef = useRef<HTMLElement>(null)
+  const wasWide = useRef(false)
   const [languageId, setLanguageId] = useState(LANGUAGES[0].id)
   const [stepIndex, setStepIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
@@ -82,6 +99,18 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
     // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // If the window is made small again, there is no room for this page: return to the folder.
+  useLayoutEffect(() => {
+    const el = rootRef.current
+    if (!el || !controls) return
+    const observer = new ResizeObserver(() => {
+      if (el.clientWidth >= MIN_WIDTH) wasWide.current = true
+      else if (wasWide.current) onBack()
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [controls, onBack])
+
   useEffect(() => {
     if (!playing) return
     if (done) {
@@ -98,7 +127,7 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
   }
 
   return (
-    <article className="omni">
+    <article className="omni" ref={rootRef}>
       <header className="omni-head">
         <div>
           <h2>{project.name}</h2>
@@ -119,15 +148,15 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
 
       {/* ----- what it is, and what it is built with ----- */}
       <div className="omni-intro">
-        <section className="omni-about" aria-labelledby="omni-about">
+        <Reveal className="omni-about" labelledBy="omni-about">
           <h3 id="omni-about">What it is</h3>
           {OVERVIEW.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
           <p className="omni-meta">Final-year project. Journal article under review.</p>
-        </section>
+        </Reveal>
 
-        <section aria-labelledby="omni-stack">
+        <Reveal labelledBy="omni-stack">
           <h3 id="omni-stack">Tech stack</h3>
           <ol className="omni-stack">
             {STACK.map((item) => (
@@ -141,14 +170,14 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
               </li>
             ))}
           </ol>
-        </section>
+        </Reveal>
       </div>
 
-      <section aria-labelledby="omni-how">
+      <Reveal labelledBy="omni-how">
         <h3 id="omni-how">How it works</h3>
         <ol className="omni-steps">
           {PIPELINE.map((item, i) => (
-            <li key={item.name}>
+            <li key={item.name} style={{ '--n': i } as CSSProperties}>
               <span className="omni-step-n" aria-hidden="true">
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -157,10 +186,10 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
             </li>
           ))}
         </ol>
-      </section>
+      </Reveal>
 
       {/* ----- the demo ----- */}
-      <section aria-labelledby="omni-demo">
+      <Reveal labelledBy="omni-demo">
         <h3 id="omni-demo">Try the debugger</h3>
         <p className="omni-hint">Step through one binary search. Change the language at any time.</p>
 
@@ -277,7 +306,7 @@ export function OmniCompiler({ project, onBack }: { project: Project; onBack: ()
             </ol>
           </section>
         </div>
-      </section>
+      </Reveal>
     </article>
   )
 }
