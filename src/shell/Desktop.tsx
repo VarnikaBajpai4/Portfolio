@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { APPS, fillColor, getApp, rectFor } from '../apps/registry'
+import { content } from '../content'
 import { prefersReducedMotion } from '../motion'
 import { TITLE_H } from '../wm/reducer'
-import type { AppId, Bounds, Rect, Win } from '../wm/reducer'
+import type { AppId, Bounds, Win } from '../wm/reducer'
 import { useWM } from '../wm/store'
 import { Window } from '../wm/Window'
 import { WMProvider } from '../wm/WMProvider'
@@ -16,7 +17,7 @@ import './shell.css'
 import { StickyContext } from './stickies'
 import { Sticky } from './Sticky'
 import type { StickyNote } from './Sticky'
-import { playZoom } from './zoom'
+import { popIn, popOut } from './zoom'
 import type { Box } from './zoom'
 
 const MENU_H = 32
@@ -37,8 +38,19 @@ function startWindows(bounds: Bounds): Win[] {
   return START_APPS.map((app, i) => ({ id: app.id, rect: rectFor(app, bounds), z: i + 1, zoomed: false }))
 }
 
-function toViewport(rect: Rect): Box {
-  return { left: rect.x, top: rect.y + MENU_H, width: rect.w, height: rect.h }
+function windowEl(id: AppId): HTMLElement | null {
+  return document.querySelector(`[data-win="${id}"]`)
+}
+
+/** The note that is on the desktop from the start, placed under the icon column. */
+function homageNote(bounds: Bounds): StickyNote {
+  return {
+    id: 0,
+    text: content.homage,
+    x: Math.max(12, bounds.w - 236),
+    y: Math.min(540, bounds.h + DOCK_RESERVE - 190),
+    wide: true,
+  }
 }
 
 /** Where an app "lives" on screen: its dock or desktop icon, else the hard disk. */
@@ -55,7 +67,9 @@ interface Props {
 
 function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & { bounds: Bounds }) {
   const { windows, dispatch } = useWM()
-  const [stickies, setStickies] = useState<StickyNote[]>([])
+  const [stickies, setStickies] = useState<StickyNote[]>(() => [homageNote(bounds)])
+  const arriving = useRef(new Map<AppId, Box>())
+  const leaving = useRef(new Set<AppId>())
   const live = useRef({ windows, bounds })
   const nextSticky = useRef(1)
 
@@ -69,20 +83,38 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
 
   const openFrom = useCallback(
     (id: AppId, from: Box | null, param?: string) => {
-      const rect = rectFor(getApp(id), live.current.bounds)
-      const open = () => dispatch({ type: 'open', id, rect, param })
-      if (!from || live.current.windows.some((w) => w.id === id)) open()
-      else playZoom(from, toViewport(rect), open)
+      const isNew = !live.current.windows.some((w) => w.id === id)
+      if (from && isNew) arriving.current.set(id, from)
+      dispatch({ type: 'open', id, rect: rectFor(getApp(id), live.current.bounds), param })
     },
     [dispatch],
   )
 
   const openApp = useCallback((id: AppId, param?: string) => openFrom(id, homeOf(id), param), [openFrom])
 
-  const closeApp = (win: Win) => {
-    dispatch({ type: 'close', id: win.id })
-    const home = homeOf(win.id)
-    if (home) playZoom(toViewport(win.rect), home)
+  // a window that was just opened grows out of its icon
+  useLayoutEffect(() => {
+    for (const [id, from] of arriving.current) {
+      const el = windowEl(id)
+      if (el) popIn(el, from)
+    }
+    arriving.current.clear()
+  }, [windows])
+
+  // and shrinks back into it when closed
+  const closeApp = (id: AppId) => {
+    const el = windowEl(id)
+    const home = homeOf(id)
+    if (leaving.current.has(id)) return
+    if (!el || !home) {
+      dispatch({ type: 'close', id })
+      return
+    }
+    leaving.current.add(id)
+    popOut(el, home, () => {
+      leaving.current.delete(id)
+      dispatch({ type: 'close', id })
+    })
   }
 
   // Unpack the desktop out of the hard disk, one window at a time.
@@ -170,7 +202,7 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
                 title={app.title}
                 fill={fillColor(app.fill)}
                 bounds={bounds}
-                onClose={() => closeApp(win)}
+                onClose={() => closeApp(win.id)}
               >
                 <App param={win.param} />
               </Window>

@@ -24,7 +24,6 @@ test('loading screen shows once per session and a click skips it', async ({ page
 test('loading screen finishes by itself and unpacks the desktop', async ({ page }) => {
   await page.goto('./')
   await expect(loader(page)).toBeVisible()
-  await expect(page.getByText('Caught it.')).toBeVisible({ timeout: 4000 })
   await expect(loader(page)).toHaveCount(0, { timeout: 4000 })
   await expectDesktop(page)
 })

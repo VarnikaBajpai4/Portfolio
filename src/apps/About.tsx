@@ -1,5 +1,5 @@
 import { content } from '../content'
-import { Portrait } from '../icons/Portrait'
+import photo from '../assets/varnika.jpg'
 
 function Tags({ label, items }: { label: string; items: string[] }) {
   return (
@@ -20,9 +20,7 @@ export function About() {
   const { identity, languages, tools } = content
   return (
     <div className="about app-pad">
-      <div className="about-face px-border">
-        <Portrait size={120} detailed />
-      </div>
+      <img className="about-photo px-border" src={photo} alt="Varnika Bajpai" width={132} height={132} />
       <div className="about-info">
         <h2>{identity.name}</h2>
         <p>{identity.role}</p>

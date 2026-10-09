@@ -4,7 +4,7 @@ import { content } from '../content'
 import { useAddSticky } from '../shell/stickies'
 
 const CORNER = 30
-const SETTLE_MS = 220
+const SETTLE_MS = 460
 
 export function NotePad() {
   const pages = content.notes
@@ -101,7 +101,14 @@ export function NotePad() {
         }}
       >
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <polygon points="0,0 100,0 100,100" />
+          <defs>
+            <linearGradient id="notepad-fold" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0.5" stopColor="#d9d9d9" />
+              <stop offset="0.62" stopColor="#ffffff" />
+              <stop offset="1" stopColor="#f4f4f4" />
+            </linearGradient>
+          </defs>
+          <polygon className="notepad-flap" points="0,0 100,0 100,100" fill="url(#notepad-fold)" />
         </svg>
       </button>
     </div>

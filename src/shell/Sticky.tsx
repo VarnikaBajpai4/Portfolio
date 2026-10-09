@@ -6,6 +6,7 @@ export interface StickyNote {
   text: string
   x: number
   y: number
+  wide?: boolean
 }
 
 export function Sticky({ note, onRemove }: { note: StickyNote; onRemove: () => void }) {
@@ -26,7 +27,7 @@ export function Sticky({ note, onRemove }: { note: StickyNote; onRemove: () => v
 
   return (
     <div
-      className="sticky px-border"
+      className={`sticky px-border${note.wide ? ' sticky-wide' : ''}`}
       style={{ left: pos.x, top: pos.y }}
       onPointerDown={onDown}
       onPointerMove={onMove}

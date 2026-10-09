@@ -38,10 +38,9 @@ h3 {
   align-items: flex-start;
 }
 
-.about-face {
+.about-photo {
   flex: none;
-  padding: 8px;
-  background: var(--c2);
+  object-fit: cover;
   box-shadow: 3px 3px 0 var(--ink);
 }
 
@@ -281,7 +280,7 @@ h3 {
   background: none;
   border: 0;
   cursor: grab;
-  filter: drop-shadow(3px -3px 0 #0003);
+  filter: drop-shadow(4px -4px 5px #0000002e);
   touch-action: none;
 }
 
@@ -294,22 +293,22 @@ h3 {
   height: 100%;
 }
 
-.notepad-corner polygon {
-  fill: var(--paper);
+.notepad-flap {
   stroke: var(--ink);
   stroke-width: 2px;
+  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .is-settling .notepad-sheet {
-    transition: clip-path 220ms steps(6);
+    transition: clip-path 460ms cubic-bezier(0.3, 0.7, 0.2, 1);
   }
 
   .is-settling .notepad-corner {
     transition:
-      width 220ms steps(6),
-      height 220ms steps(6);
+      width 460ms cubic-bezier(0.3, 0.7, 0.2, 1),
+      height 460ms cubic-bezier(0.3, 0.7, 0.2, 1);
   }
 }
 

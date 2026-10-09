@@ -251,6 +251,7 @@ a.menu-item {
 
 .loader .overlay-card {
   gap: 10px;
+  padding-bottom: 36px;
   width: min(380px, 100%);
 }
 
@@ -290,11 +291,6 @@ a.menu-item {
   margin-bottom: 4px;
 }
 
-.loader-text {
-  min-height: 1.4em;
-  font-size: 14px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .loader-fill {
     animation: load-fill 2400ms steps(24) both;
@@ -318,14 +314,6 @@ a.menu-item {
 }
 
 /* ---------- entrance ---------- */
-
-.zoom-outline {
-  position: fixed;
-  z-index: 150000;
-  border: 2px dotted var(--ink);
-  outline: 1px dotted var(--paper);
-  pointer-events: none;
-}
 
 .entrance-wait .menubar {
   transform: translateY(-100%);
@@ -421,6 +409,13 @@ a.menu-item {
   transform: rotate(-2deg);
   touch-action: none;
   user-select: none;
+}
+
+.sticky-wide {
+  width: 210px;
+  font-size: 14px;
+  font-weight: 400;
+  transform: rotate(1.5deg);
 }
 
 .sticky-x {
@@ -541,7 +536,7 @@ a.menu-item {
     align-items: stretch;
   }
 
-  .about-face {
+  .about-photo {
     align-self: center;
   }
 

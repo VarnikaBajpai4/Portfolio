@@ -58,8 +58,8 @@ export function Loader({ onDone }: { onDone: () => void }) {
             <div className="loader-fill" />
           </div>
         </div>
-        <p className="loader-text" role="status">
-          {caught ? 'Caught it.' : 'Chindi is fetching the desktop...'}
+        <p className="sr-only" role="status">
+          {caught ? 'Ready.' : 'Loading.'}
         </p>
       </div>
       <button type="button" className="sr-only" onClick={onDone}>

@@ -61,6 +61,7 @@ export function Window({ win, title, fill = 'var(--paper)', bounds, onClose, chi
       ref={rootRef}
       tabIndex={-1}
       role="dialog"
+      data-win={id}
       aria-label={title}
       className={`win${topId === id ? ' win-top' : ''}`}
       style={{ left: rect.x, top: rect.y, width: rect.w, height: rect.h, zIndex: win.z }}

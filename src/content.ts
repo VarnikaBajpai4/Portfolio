@@ -40,6 +40,8 @@ export interface Content {
   /** one Note Pad page each */
   notes: string[]
   trash: string[]
+  /** the short note pinned to the desktop */
+  homage: string
   links: Link[]
   /** file name under public/, null until supplied */
   resumePdf: string | null
@@ -238,6 +240,9 @@ export const content: Content = {
     'Plan to read only one book at a time',
     'rest_day.txt',
   ],
+
+  homage:
+    'P.S. This whole site is a homage to my Mac. I got it when I started engineering and it has been my best friend ever since. Many people do not love Macs for coding. I do.',
 
   links: [
     { label: 'Email', href: 'mailto:bajpaivarnika04@gmail.com' },
