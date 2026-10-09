@@ -13,6 +13,8 @@ export interface Job {
   start?: string
   end?: string
   tools?: string[]
+  /** the hand-written label on the floppy disk in Work */
+  disk?: string
 }
 
 export interface Project {
@@ -191,6 +193,7 @@ export const content: Content = {
       role: 'Software Engineer',
       period: 'July 2026 – present',
       start: '2026-07',
+      disk: 'Barclays ’26 →',
       tools: ['Python', 'ML', 'MLOps'],
       points: [
         'Joined the same team full time after a pre-placement offer.',
@@ -203,6 +206,7 @@ export const content: Content = {
       role: 'Digital Technology Intern, SAP Testing',
       period: 'January – June 2026',
       start: '2026-01',
+      disk: 'LYB ’26',
       end: '2026-06',
       tools: ['Python', 'REST APIs', 'AWS', 'SAP testing'],
       points: [
@@ -218,6 +222,7 @@ export const content: Content = {
       role: 'Technology Summer Intern',
       period: 'May – July 2025',
       start: '2025-05',
+      disk: 'Barclays ’25',
       end: '2025-07',
       tools: ['Python', 'Flask', 'Grafana', 'Jira', 'Xray'],
       points: [
@@ -233,6 +238,7 @@ export const content: Content = {
       role: 'AI and Data Science Intern',
       period: 'June – July 2024',
       start: '2024-06',
+      disk: 'G-Square ’24',
       end: '2024-07',
       tools: ['Python', 'Django', 'Flask', 'SQL', 'BI dashboards'],
       points: [

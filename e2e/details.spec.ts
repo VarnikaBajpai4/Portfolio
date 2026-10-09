@@ -249,24 +249,40 @@ test('all five project folders fit on one row', async ({ page }) => {
   expect(tops.size).toBe(1)
 })
 
-test('Work shows a timeline and the details of the chosen role', async ({ page }) => {
+test('Work loads a job from a floppy disk and ejects it again', async ({ page }) => {
   await page.getByRole('navigation', { name: 'Dock' }).getByRole('button', { name: 'Work', exact: true }).click()
   const work = page.getByRole('dialog', { name: 'Work', exact: true })
   const detail = work.locator('.work-detail')
-  await expect(work.locator('.work-bar')).toHaveCount(4)
-  // the current job is shown first
+  // the disk of the current job is in the drive at the start
   await expect(detail).toContainText('Software Engineer')
   await expect(detail).toContainText('July 2026 – present')
+  await expect(work.locator('.work-disk')).toHaveCount(3)
 
-  await work.getByRole('button', { name: /LyondellBasell/ }).click()
+  // a click puts a disk in the drive
+  await work.getByRole('button', { name: /Insert disk: LyondellBasell/ }).click()
   await expect(detail).toContainText('SAP Testing')
   await expect(detail.getByText('AWS', { exact: true })).toBeVisible()
+  await expect(work.locator('.work-machine')).toContainText('Walk the test tree')
 
-  // earlier roles sit further left
+  // a drag onto the Mac does the same
+  const disk = work.getByRole('button', { name: /Insert disk: G-Square/ })
+  const from = (await disk.boundingBox())!
+  const screen = (await work.locator('.work-screen').boundingBox())!
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(screen.x + screen.width / 2, screen.y + screen.height / 2, { steps: 8 })
+  await page.mouse.up()
+  await expect(detail).toContainText('AI and Data Science Intern')
+
+  await work.getByRole('button', { name: 'Eject' }).click()
+  await expect(work.getByText('No disk in the drive.')).toBeVisible()
+  await expect(work.locator('.work-disk')).toHaveCount(4)
+
+  // the box is in time order
   const x = async (name: RegExp) => (await work.getByRole('button', { name }).boundingBox())!.x
   expect(await x(/G-Square/)).toBeLessThan(await x(/Technology Summer Intern/))
-  expect(await x(/Technology Summer Intern/)).toBeLessThan(await x(/LyondellBasell/))
-  expect(await x(/LyondellBasell/)).toBeLessThan(await x(/Barclays, Software Engineer/))
+  expect(await x(/Technology Summer Intern/)).toBeLessThan(await x(/Insert disk: LyondellBasell/))
+  expect(await x(/Insert disk: LyondellBasell/)).toBeLessThan(await x(/Barclays, Software Engineer/))
 })
 
 test('double-clicking Chindi introduces her, then the note leaves', async ({ page }) => {
