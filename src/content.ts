@@ -56,6 +56,16 @@ export type HobbyIcon =
   | 'whisk'
   | 'palette'
 
+/** A page of the Note Pad: what exactly I did somewhere, in a few lines. */
+export interface Note {
+  title: string
+  /** a short label beside the title, such as "my part" */
+  tag?: string
+  lines: string[]
+  /** the tools that page is about */
+  tools?: string[]
+}
+
 export interface Content {
   identity: {
     name: string
@@ -87,7 +97,7 @@ export interface Content {
   /** paragraphs */
   readMe: string[]
   /** one Note Pad page each */
-  notes: string[]
+  notes: Note[]
   trash: string[]
   /** the short note pinned to the desktop */
   homage: string
@@ -333,11 +343,67 @@ export const content: Content = {
     'This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
   ],
 
-  // DRAFT — owner to edit
   notes: [
-    'I love building new things.',
-    'Currently: shipping at Barclays, reading too many books at once, and chasing a new deadlift PR.',
-    'Unique. Creative. Challenging. Helpful. Pick at least three for every project.',
+    {
+      title: 'OmniCompiler',
+      tag: 'my part',
+      lines: [
+        'Breakpoint recommendation, end to end.',
+        'One Random Forest model per language, trained on features of each line of code.',
+        'It scores the candidate lines and suggests where to pause.',
+      ],
+      tools: ['Random Forest', 'scikit-learn', 'feature engineering'],
+    },
+    {
+      title: 'Symbiote',
+      tag: 'my part',
+      lines: [
+        'The matching algorithm, written from scratch.',
+        'It places each person in a band for every skill, then pairs the bands that complement each other.',
+        'Distance measures between skill profiles decide how good a fit is.',
+      ],
+      tools: ['Python', 'similarity metrics', 'scoring'],
+    },
+    {
+      title: 'UBI Bharosa',
+      tag: 'my part',
+      lines: [
+        'The ML models, built to plug into the bank\'s existing software.',
+        'Face recognition with ArcFace embeddings.',
+        'Loan recommendations with Random Forest.',
+        'Customer priority with XGBoost regression.',
+      ],
+      tools: ['ArcFace', 'Random Forest', 'XGBoost'],
+    },
+    {
+      title: 'LyondellBasell',
+      tag: 'internship',
+      lines: [
+        'A backend pipeline for SAP testing analytics, in Python over REST APIs.',
+        'Tree traversal across parent and child test hierarchies.',
+        'It runs on AWS on a schedule, with no manual step.',
+      ],
+      tools: ['Python', 'REST APIs', 'AWS'],
+    },
+    {
+      title: 'Barclays',
+      tag: 'now',
+      lines: [
+        'ML development and MLOps, as my daily work.',
+        'As an intern: an ML classifier for test logs, and automation that drafts Xray test cases in Jira.',
+        'The details stay inside the bank.',
+      ],
+      tools: ['Python', 'Flask', 'Grafana'],
+    },
+    {
+      title: 'What I am working on',
+      tag: 'research',
+      lines: [
+        'Paper under review: "A Unified Multi-Language Debugging Framework: Containerized Execution, Structural Analysis, and Breakpoint Recommendation".',
+        'Studying quantisation fidelity: quantisation does not damage a model evenly, and the usual benchmarks miss the abilities that break first.',
+      ],
+      tools: ['debugging', 'quantisation', 'LLMs'],
+    },
   ],
 
   // DRAFT — owner to edit

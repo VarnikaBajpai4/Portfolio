@@ -48,7 +48,7 @@ function homageNote(bounds: Bounds): StickyNote {
     id: 0,
     text: content.homage,
     x: Math.max(12, bounds.w - 236),
-    y: Math.min(540, bounds.h + DOCK_RESERVE - 190),
+    y: Math.min(600, bounds.h + DOCK_RESERVE - 180),
     wide: true,
   }
 }

@@ -15,30 +15,52 @@ test('About shows the headline and skills without ratings', async ({ page }) => 
   await expect(about).not.toContainText('/10')
 })
 
-test('Note Pad turns a page on click', async ({ page }) => {
+test('Note Pad lists my work and turns a page on click', async ({ page }) => {
   const pad = page.getByRole('dialog', { name: 'Note Pad' })
-  await expect(pad.locator('.notepad-sheet')).toContainText('I love building new things.')
+  const sheet = pad.locator('.notepad-sheet')
+  await expect(sheet).toContainText('What I built, exactly')
   await pad.getByRole('button', { name: 'Next page' }).click()
-  await expect(pad.locator('.notepad-sheet')).not.toContainText('I love building new things.')
-  await expect(pad.locator('.notepad-page')).toHaveText('2')
+  await expect(sheet).toContainText('OmniCompiler')
+  await expect(sheet).toContainText('One Random Forest model per language')
+  await expect(pad.locator('.notepad-page')).toHaveText('2 / 8')
+
+  // the index jumps straight to a page
+  for (let i = 0; i < 7; i++) await pad.getByRole('button', { name: 'Next page' }).click()
+  await expect(sheet).toContainText('What I built, exactly')
+  await sheet.getByRole('button', { name: 'What I am working on' }).click()
+  await expect(sheet).toContainText('A Unified Multi-Language Debugging Framework')
+  await expect(sheet).toContainText('quantisation fidelity')
 })
 
 test('a page pulled off the Note Pad becomes a sticky note', async ({ page }) => {
   const pad = page.getByRole('dialog', { name: 'Note Pad' })
+  await pad.locator('.notepad-sheet').getByRole('button', { name: 'Symbiote' }).click()
   const corner = (await pad.getByRole('button', { name: 'Next page' }).boundingBox())!
   await page.mouse.move(corner.x + 8, corner.y + corner.height - 8)
   await page.mouse.down()
   await page.mouse.move(corner.x + 80, corner.y - 60, { steps: 5 })
-  await page.mouse.move(corner.x + 60, corner.y + 260, { steps: 5 })
+  await page.mouse.move(corner.x - 120, corner.y + 200, { steps: 5 })
   await page.mouse.up()
 
-  const sticky = page.locator('.sticky', { hasText: 'I love building new things.' })
+  const sticky = page.locator('.sticky', { hasText: 'The matching algorithm, written from scratch.' })
   await expect(sticky).toHaveCount(1)
-  await expect(sticky).toContainText('I love building new things.')
-  await expect(pad.locator('.notepad-page')).toHaveText('2')
+  await expect(pad.locator('.notepad-sheet')).toContainText('UBI Bharosa')
 
   await sticky.getByRole('button', { name: 'Remove note' }).click()
   await expect(sticky).toHaveCount(0)
+})
+
+test('the last Note Pad page is the visitor\'s to write on and take', async ({ page }) => {
+  const pad = page.getByRole('dialog', { name: 'Note Pad' })
+  await pad.locator('.notepad-sheet').getByRole('button', { name: 'A page for you' }).click()
+  await pad.getByLabel('Write a note').fill('Call her on Monday')
+  const corner = (await pad.getByRole('button', { name: 'Next page' }).boundingBox())!
+  await page.mouse.move(corner.x + 8, corner.y + corner.height - 8)
+  await page.mouse.down()
+  await page.mouse.move(corner.x + 80, corner.y - 60, { steps: 5 })
+  await page.mouse.move(corner.x - 120, corner.y + 200, { steps: 5 })
+  await page.mouse.up()
+  await expect(page.locator('.sticky', { hasText: 'Call her on Monday' })).toHaveCount(1)
 })
 
 test('the homage note is on the desktop and About shows the photo', async ({ page }) => {
@@ -66,11 +88,11 @@ test('Chindi never sits in front of a window that covers her', async ({ page }) 
     }
     return false
   }
-  // put her on the Note Pad, then cover the Note Pad with a full-size window
-  await page.evaluate(() => window.dispatchEvent(new CustomEvent('vb:pet', { detail: { goto: 'notepad' } })))
+  // put her on the Terminal, then cover the Terminal with a full-size window
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('vb:pet', { detail: { goto: 'terminal' } })))
   await page.waitForTimeout(900)
-  const pad = (await page.getByRole('dialog', { name: 'Note Pad' }).boundingBox())!
-  expect((await cat.boundingBox())!.y).toBeLessThan(pad.y)
+  const perch = (await page.getByRole('dialog', { name: 'Terminal' }).boundingBox())!
+  expect((await cat.boundingBox())!.y).toBeLessThan(perch.y)
 
   await page.getByRole('button', { name: 'Zoom About Varnika' }).click()
   await expect.poll(overlaps, { timeout: 3000 }).toBe(false)

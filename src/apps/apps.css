@@ -237,16 +237,96 @@ h3 {
   background-size: 4px 4px;
 }
 
-.notepad-text {
-  padding: 14px 16px 34px;
-  font-size: 19px;
-  font-weight: 600;
-  line-height: 1.3;
+.notepad-page-body {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  height: 100%;
+  padding: 14px 18px 30px;
 }
 
 .notepad-under {
   position: absolute;
   inset: 0;
+}
+
+.note-title {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding-bottom: 4px;
+  border-bottom: var(--px) solid var(--ink);
+  font-size: 19px;
+}
+
+.note-tag {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.note-lines {
+  display: grid;
+  gap: 5px;
+  padding-left: 16px;
+  font-family: var(--font-read);
+  font-size: 13.5px;
+  line-height: 1.4;
+  list-style: square;
+}
+
+.note-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-self: end;
+}
+
+.note-tools li {
+  padding: 0 7px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-size: 12px;
+}
+
+.note-index {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 14px;
+  margin: 0;
+  padding-left: 22px;
+  font-size: 14px;
+}
+
+.note-index button {
+  padding: 1px 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px dotted var(--ink);
+  font-weight: 600;
+  text-align: left;
+}
+
+.note-index button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.note-write {
+  width: 100%;
+  min-height: 130px;
+  padding: 0;
+  /* ruled lines to write on */
+  background: repeating-linear-gradient(transparent 0 23px, #00000030 23px 24px);
+  border: 0;
+  font-family: var(--font-read);
+  font-size: 15px;
+  line-height: 24px;
+  resize: none;
+}
+
+.note-write:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 .notepad-sheet {
@@ -289,9 +369,9 @@ h3 {
 
 .notepad-page {
   position: absolute;
+  right: 12px;
   bottom: 6px;
-  left: 50%;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 /* ---------- Terminal ---------- */

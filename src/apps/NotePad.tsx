@@ -1,6 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { content } from '../content'
+import type { Note } from '../content'
 import { prefersReducedMotion } from '../motion'
 import { useAddSticky } from '../shell/stickies'
 import { foldCorner, fullyTurned } from './fold'
@@ -11,11 +12,41 @@ const REST = 26
 const TURN_MS = 620
 const RETURN_MS = 380
 
+/** The pad opens on a list of its pages, and ends on a page for the visitor to write on. */
+const INDEX = 0
+const FIRST_NOTE = 1
+
+function NotePage({ note }: { note: Note }) {
+  return (
+    <>
+      <h3 className="note-title">
+        {note.title}
+        {note.tag && <span className="note-tag">{note.tag}</span>}
+      </h3>
+      <ul className="note-lines">
+        {note.lines.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </ul>
+      {note.tools && (
+        <ul className="note-tools">
+          {note.tools.map((tool) => (
+            <li key={tool}>{tool}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  )
+}
+
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)
 const points = (poly: Pt[]) => poly.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
 
 export function NotePad() {
-  const pages = content.notes
+  const notes = content.notes
+  /** the index, each note, then the visitor's own page */
+  const count = notes.length + 2
+  const [draft, setDraft] = useState('')
   const addSticky = useAddSticky()
   const gradientId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -25,7 +56,7 @@ export function NotePad() {
   const [corner, setCorner] = useState<Pt | null>(null)
   const drag = useRef<{ moved: boolean } | null>(null)
   const frame = useRef(0)
-  const next = (page + 1) % pages.length
+  const next = (page + 1) % count
 
   useLayoutEffect(() => {
     const el = rootRef.current
@@ -41,8 +72,11 @@ export function NotePad() {
   const at = corner ?? rest
   const fold = foldCorner(size.w, size.h, at)
 
+  const turning = useRef(false)
+
   const turnPage = () => {
-    setPage(next)
+    turning.current = false
+    setPage((p) => (p + 1) % count)
     setCorner(null)
   }
 
@@ -60,7 +94,10 @@ export function NotePad() {
     frame.current = requestAnimationFrame(step)
   }
 
-  const finishTurn = (from: Pt) => glide(from, fullyTurned(size.w, size.h), TURN_MS, turnPage)
+  const finishTurn = (from: Pt) => {
+    turning.current = true
+    glide(from, fullyTurned(size.w, size.h), TURN_MS, turnPage)
+  }
 
   const local = (e: PointerEvent): Pt => {
     const box = rootRef.current!.getBoundingClientRect()
@@ -69,6 +106,8 @@ export function NotePad() {
 
   const onDown = (e: PointerEvent<HTMLButtonElement>) => {
     cancelAnimationFrame(frame.current)
+    // a page that is still turning lands at once, so quick clicks never lose a turn
+    if (turning.current) turnPage()
     e.currentTarget.setPointerCapture(e.pointerId)
     drag.current = { moved: false }
   }
@@ -90,7 +129,8 @@ export function NotePad() {
     const outside = p.x < 0 || p.y < 0 || p.x > size.w || p.y > size.h
     if (outside && addSticky) {
       // pulled right off the pad: the page becomes a sticky note on the desktop
-      addSticky(pages[page], e.clientX, e.clientY)
+      addSticky(textOf(page), e.clientX, e.clientY)
+      if (page === count - 1) setDraft('')
       turnPage()
     } else if (Math.hypot(p.x, p.y - size.h) > 0.55 * Math.hypot(size.w, size.h)) {
       finishTurn(p)
@@ -99,19 +139,70 @@ export function NotePad() {
     }
   }
 
+  /** What a page says, as plain text, for the sticky note it becomes when torn off. */
+  const textOf = (index: number): string => {
+    if (index === INDEX) return ['What I built, exactly', ...notes.map((n) => `· ${n.title}`)].join('\n')
+    if (index === count - 1) return draft.trim() || "A note from Varnika's pad."
+    const note = notes[index - FIRST_NOTE]
+    return [note.title, ...note.lines.map((l) => `· ${l}`)].join('\n')
+  }
+
+  const body = (index: number, live: boolean) => {
+    if (index === INDEX) {
+      return (
+        <>
+          <h3 className="note-title">What I built, exactly</h3>
+          <ol className="note-index">
+            {notes.map((note, i) => (
+              <li key={note.title}>
+                <button type="button" tabIndex={live ? 0 : -1} onClick={() => setPage(i + FIRST_NOTE)}>
+                  {note.title}
+                </button>
+              </li>
+            ))}
+            <li>
+              <button type="button" tabIndex={live ? 0 : -1} onClick={() => setPage(count - 1)}>
+                A page for you
+              </button>
+            </li>
+          </ol>
+        </>
+      )
+    }
+    if (index === count - 1) {
+      return (
+        <>
+          <h3 className="note-title">Your page</h3>
+          <textarea
+            className="note-write"
+            aria-label="Write a note"
+            placeholder="Write here. Then pull the corner off the pad to take it with you."
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            tabIndex={live ? 0 : -1}
+            readOnly={!live}
+          />
+        </>
+      )
+    }
+    return <NotePage note={notes[index - FIRST_NOTE]} />
+  }
+
   return (
     <div className="notepad" ref={rootRef}>
-      <p className="notepad-text notepad-under" aria-hidden="true">
-        {pages[next]}
-      </p>
+      <div className="notepad-page-body notepad-under" aria-hidden="true">
+        {body(next, false)}
+      </div>
       <div
         className="notepad-sheet"
         style={{ clipPath: `polygon(${fold.sheet.map((p) => `${p.x.toFixed(1)}px ${p.y.toFixed(1)}px`).join(', ')})` }}
       >
-        <p className="notepad-text" aria-live="polite">
-          {pages[page]}
-        </p>
-        <span className="notepad-page">{page + 1}</span>
+        <div className="notepad-page-body" aria-live="polite">
+          {body(page, true)}
+        </div>
+        <span className="notepad-page">
+          {page + 1} / {count}
+        </span>
       </div>
       <svg className="notepad-fold" width={size.w} height={size.h} aria-hidden="true">
         <defs>
