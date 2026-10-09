@@ -5,6 +5,7 @@ import { useWindowControls } from '../wm/store'
 import './about/about.css'
 import { DitherPhoto } from './about/DitherPhoto'
 import { Story } from './about/Story'
+import { SystemPanel } from './about/SystemPanel'
 import { TypedLine } from './about/TypedLine'
 
 /** At this width there is room for the story, so it shows by itself. */
@@ -70,6 +71,7 @@ export function About() {
             </>
           )}
         </div>
+        {story && <SystemPanel />}
       </header>
       {story && <Story />}
     </div>

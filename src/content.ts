@@ -115,11 +115,11 @@ export const content: Content = {
   },
 
   family: [
-    { who: 'Nanu', note: 'My grandfather. Started it.', tag: 'init' },
+    { who: 'Nanu', note: 'My grandfather. He started it.', tag: 'init' },
     { who: 'Dad', note: 'The best engineer I know.' },
-    { who: 'My brother', note: 'Laid out the path.' },
-    { who: 'His wife', note: 'Newly merged in.', tag: 'merge', branch: true },
-    { who: 'Me', note: 'Building is a kind of power.', tag: 'HEAD' },
+    { who: 'My brother', note: 'Went first and laid out the path for me.' },
+    { who: 'His wife', note: 'My favourite woman in STEM.', tag: 'merge', branch: true },
+    { who: 'Me', note: 'Grew up knowing that building is a kind of power.', tag: 'HEAD' },
   ],
 
   quote: {
@@ -129,7 +129,7 @@ export const content: Content = {
 
   stats: [
     { value: 9.66, decimals: 2, label: 'CGPA' },
-    { value: 2, prefix: '#', label: 'in my batch. Silver medal.' },
+    { value: 2, prefix: '#', label: 'in my batch, silver medal' },
   ],
 
   story: [FELL_FOR_CS, SINCE_THEN],

@@ -82,23 +82,23 @@ test('Chindi never sits in front of a window that covers her', async ({ page }) 
 
 test('Open my story turns About into the full story', async ({ page }) => {
   const about = page.getByRole('dialog', { name: 'About Varnika' })
-  await expect(about.getByText('A family of engineers')).toHaveCount(0)
+  await expect(about.getByText('family-of-engineers')).toHaveCount(0)
   await about.getByRole('button', { name: 'Open my story' }).click()
 
-  await expect(about.getByRole('heading', { name: 'A family of engineers' })).toBeVisible()
+  await expect(about.getByRole('heading', { name: 'family-of-engineers' })).toBeVisible()
   for (const who of ['Nanu', 'Dad', 'My brother', 'His wife', 'Me']) {
-    await expect(about.locator('.lineage-who', { hasText: who }).first()).toBeVisible()
+    await expect(about.locator('.graph-who', { hasText: who }).first()).toBeVisible()
   }
-  await expect(about.locator('.lineage li').last()).toContainText('HEAD')
-  await expect(about.locator('.stat-number')).toHaveCount(2)
-  await expect(about.locator('.key', { hasText: 'Python' })).toBeVisible()
+  await expect(about.locator('.graph li').first()).toContainText('HEAD')
+  await expect(about.getByText('My favourite woman in STEM.')).toBeVisible()
   await expect(about.getByText('I have never corrected her.')).toBeVisible()
 
-  // the numbers count up when they scroll into view
-  await about.locator('.stat-number').first().scrollIntoViewIfNeeded()
-  await expect(about.locator('.stat-number').first()).toHaveText('9.66', { timeout: 4000 })
+  // the grade counts up beside its bar
+  await expect(about.locator('.stat-number')).toHaveText('9.66', { timeout: 4000 })
+  await expect(about.locator('.sys')).toContainText('#2')
+  await expect(about.locator('.key', { hasText: 'Python' })).toBeVisible()
 
   await about.getByText('Football', { exact: true }).scrollIntoViewIfNeeded()
   await expect(about.locator('.hobby')).toHaveCount(10)
-  await expect(about.getByText('homage to the retro Mac')).toBeVisible()
+  await expect(about.locator('.sys')).toContainText('homage to the retro Mac')
 })

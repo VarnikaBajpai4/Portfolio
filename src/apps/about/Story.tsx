@@ -3,7 +3,6 @@ import type { CSSProperties, PointerEvent, ReactNode } from 'react'
 import { content } from '../../content'
 import type { HobbyIcon } from '../../content'
 import { Sticker } from '../../icons/Sticker'
-import { CountUp } from './CountUp'
 import { useInView } from './useInView'
 
 /** A panel that plays its entrance when it first scrolls into view. */
@@ -17,55 +16,38 @@ function Tile({ className, children }: { className: string; children: (seen: boo
   )
 }
 
-/** Where it comes from: the family as a small commit line, and one line about my mother. */
-function Roots() {
+/** The family as a commit graph, newest on top, with one line about my mother as the commit note. */
+function Family() {
+  const members = [...content.family].reverse()
   return (
-    <Tile className="tile-roots">
+    <Tile className="tile-family">
       {() => (
         <>
-          <h3>A family of engineers</h3>
-          <ol className="lineage">
-            {content.family.map((member, i) => (
+          <h3>
+            <span aria-hidden="true">$ git log --graph </span>family-of-engineers
+          </h3>
+          <ol className="graph">
+            {members.map((member, i) => (
               <li
                 key={member.who}
-                className={member.branch ? 'lineage-branch' : undefined}
-                style={{ '--order': i } as CSSProperties}
+                className={member.branch ? 'graph-branch' : undefined}
+                style={{ '--order': members.length - i } as CSSProperties}
               >
-                <span className="lineage-who">{member.who}</span>
-                {member.tag && <span className="lineage-tag">{member.tag}</span>}
-                <span className="lineage-note">{member.note}</span>
+                <span className="graph-who">
+                  {member.who}
+                  {member.tag && <span className="graph-tag">{member.tag}</span>}
+                </span>
+                <span className="graph-note">{member.note}</span>
               </li>
             ))}
           </ol>
-          <figure className="roots-quote">
-            <blockquote>{content.quote.text}</blockquote>
+          <figure className="graph-quote">
             <figcaption>{content.quote.about}</figcaption>
+            <blockquote>{content.quote.text}</blockquote>
           </figure>
         </>
       )}
     </Tile>
-  )
-}
-
-function Stats() {
-  return (
-    <>
-      {content.stats.map((stat, i) => (
-        <Tile key={stat.label} className={`tile-stat tile-stat-${i}`}>
-          {(seen) => (
-            <>
-              {i === 1 && (
-                <span className="stat-medal" aria-hidden="true">
-                  <Sticker name="medal" size={48} fill="var(--c2)" />
-                </span>
-              )}
-              <CountUp stat={stat} active={seen} />
-              <span className="stat-label">{stat.label}</span>
-            </>
-          )}
-        </Tile>
-      ))}
-    </>
   )
 }
 
@@ -157,28 +139,24 @@ function Hobbies() {
 export function Story() {
   return (
     <div className="story">
-      <Roots />
-      <Stats />
-      <KeyCaps />
-      <Tile className="tile-text">
-        {() => (
-          <>
-            <h3>How I got here</h3>
-            {content.story.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </>
-        )}
-      </Tile>
-      <Hobbies />
-      <Tile className="tile-homage">
-        {() => (
-          <>
-            <Sticker name="mac" size={64} fill="var(--c2)" />
-            <p>{content.readMe[content.readMe.length - 1]}</p>
-          </>
-        )}
-      </Tile>
+      <div className="story-col">
+        <Family />
+        <Tile className="tile-doc">
+          {() => (
+            <>
+              <div className="doc-ruler" aria-hidden="true" />
+              <h3>How I got here</h3>
+              {content.story.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </>
+          )}
+        </Tile>
+      </div>
+      <div className="story-col">
+        <KeyCaps />
+        <Hobbies />
+      </div>
     </div>
   )
 }
