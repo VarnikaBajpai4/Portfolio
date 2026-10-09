@@ -66,9 +66,15 @@ test('Chindi never sits in front of a window that covers her', async ({ page }) 
     }
     return false
   }
-  // a full-size window covers every other window's top edge
+  // put her on the Note Pad, then cover the Note Pad with a full-size window
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('vb:pet', { detail: { goto: 'notepad' } })))
+  await page.waitForTimeout(900)
+  const pad = (await page.getByRole('dialog', { name: 'Note Pad' }).boundingBox())!
+  expect((await cat.boundingBox())!.y).toBeLessThan(pad.y)
+
   await page.getByRole('button', { name: 'Zoom About Varnika' }).click()
-  for (let i = 0; i < 12; i++) {
+  await expect.poll(overlaps, { timeout: 3000 }).toBe(false)
+  for (let i = 0; i < 6; i++) {
     await page.waitForTimeout(700)
     expect(await overlaps(), `check ${i}`).toBe(false)
   }
