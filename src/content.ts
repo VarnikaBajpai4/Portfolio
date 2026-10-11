@@ -76,6 +76,16 @@ export interface Note {
   tools?: string[]
 }
 
+/** A painting or sketch in the Paintings window. The picture is src/assets/paintings/<id>.jpg. */
+export interface Painting {
+  id: string
+  title: string
+  medium: string
+  /** size of the picture file in pixels */
+  w: number
+  h: number
+}
+
 export interface Content {
   identity: {
     name: string
@@ -108,6 +118,8 @@ export interface Content {
   achievements: Achievement[]
   /** paragraphs */
   readMe: string[]
+  /** in the order they are shown */
+  paintings: Painting[]
   /** one Note Pad page each */
   notes: Note[]
   trash: string[]
@@ -448,6 +460,22 @@ export const content: Content = {
       ],
       tools: ['debugging', 'quantisation', 'LLMs'],
     },
+  ],
+
+  // DRAFT titles — owner to edit
+  paintings: [
+    { id: 'swans', title: 'Swans', medium: 'paint on canvas', w: 750, h: 900 },
+    { id: 'fawn', title: 'Fawn', medium: 'paint on canvas', w: 760, h: 750 },
+    { id: 'meadow', title: 'Meadow at Sunset', medium: 'paint on canvas', w: 620, h: 900 },
+    { id: 'mountain', title: 'Mountain Lake', medium: 'paint on canvas', w: 730, h: 900 },
+    { id: 'universe', title: 'Our Little Universe', medium: 'paint on canvas', w: 680, h: 900 },
+    { id: 'bluebird', title: 'Bluebird', medium: 'paint on canvas', w: 760, h: 740 },
+    { id: 'hummingbird', title: 'Hummingbird', medium: 'watercolour', w: 1000, h: 690 },
+    { id: 'automatic', title: 'Automatic', medium: 'pencil', w: 760, h: 800 },
+    { id: 'butterfly', title: 'Butterfly', medium: 'pencil', w: 690, h: 900 },
+    { id: 'wildflowers', title: 'Wildflowers', medium: 'pencil', w: 1000, h: 800 },
+    { id: 'goldengate', title: 'Golden Gate', medium: 'pencil', w: 720, h: 900 },
+    { id: 'lion', title: 'Lion', medium: 'pencil', w: 670, h: 900 },
   ],
 
   // DRAFT — owner to edit

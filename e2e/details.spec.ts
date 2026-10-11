@@ -319,3 +319,34 @@ test('Achievements is a scrapbook with a scroll bar, and the photo opens larger'
   await expect(book).toContainText('Certificates')
   await expect(book.getByRole('button', { name: 'Next' })).toBeDisabled()
 })
+
+test('Paintings shows each picture as dots, then in colour, and the tools change it', async ({ page }) => {
+  await page.getByRole('button', { name: 'Paintings' }).dblclick()
+  const paint = page.getByRole('dialog', { name: 'Paintings' })
+  const art = paint.locator('.paint-art')
+  await expect(paint.getByRole('img', { name: /^Swans/ })).toBeVisible()
+  await expect(paint.getByRole('list', { name: 'Pictures' }).getByRole('button')).toHaveCount(12)
+  // the colour comes in by itself
+  await expect(art).toHaveAttribute('data-state', 'colour')
+
+  // a double-click on the eraser brings the dots back, and the bucket pours the colour in again
+  await paint.getByRole('button', { name: 'Eraser' }).dblclick()
+  await expect(art).toHaveAttribute('data-state', 'dots')
+  await paint.getByRole('button', { name: 'Paint bucket' }).click()
+  await expect(art).toHaveAttribute('data-state', 'colour')
+
+  // the brush paints by hand
+  await paint.getByRole('button', { name: 'Eraser' }).dblclick()
+  await paint.getByRole('button', { name: 'Brush' }).click()
+  const box = (await art.boundingBox())!
+  await page.mouse.move(box.x + 30, box.y + 30)
+  await page.mouse.down()
+  await page.mouse.move(box.x + box.width - 30, box.y + box.height - 30, { steps: 6 })
+  await page.mouse.up()
+  await expect(art).toHaveAttribute('data-state', 'mixed')
+
+  await paint.getByRole('button', { name: 'Lion' }).click()
+  await expect(paint.getByRole('img', { name: /^Lion, pencil/ })).toBeVisible()
+  await paint.getByRole('button', { name: 'Next picture' }).click()
+  await expect(paint.locator('.paint-info')).toContainText('Swans')
+})

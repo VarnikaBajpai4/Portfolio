@@ -8,6 +8,7 @@ import './apps.css'
 import { Contact } from './Contact'
 import { HardDisk } from './HardDisk'
 import { NotePad } from './NotePad'
+import { Paint } from './Paint'
 import { Projects } from './Projects'
 import { Resume } from './Resume'
 import { Terminal } from './Terminal'
@@ -42,6 +43,7 @@ export const APPS: AppDef[] = [
   { id: 'resume', title: 'Resume', icon: 'doc', component: Resume, size: { w: 540, h: 520 }, pos: { x: 0.34, y: 0.06 }, fill: 'paper' },
   { id: 'trash', title: 'Trash', icon: 'trash', component: Trash, size: { w: 400, h: 260 }, pos: { x: 0.36, y: 0.3 }, fill: 'paper' },
   { id: 'notepad', title: 'Note Pad', icon: 'note', component: NotePad, size: { w: 380, h: 280 }, pos: { x: 0.5, y: 0.04 }, fill: 'c3', openOnStart: true },
+  { id: 'paint', title: 'Paintings', icon: 'paint', component: Paint, size: { w: 680, h: 520 }, pos: { x: 0.22, y: 0.05 }, fill: 'paper' },
   { id: 'community', title: 'Community', icon: 'people', component: Community, size: { w: 460, h: 300 }, pos: { x: 0.26, y: 0.16 }, fill: 'c2' },
 ]
 
@@ -74,5 +76,6 @@ export const DESKTOP_ICONS: { app: AppId; label?: string; icon?: IconName; fill?
   { app: 'hd' },
   { app: 'about', label: 'Read Me', icon: 'doc', fill: 'var(--paper)' },
   { app: 'resume' },
+  { app: 'paint', fill: 'var(--c1)' },
   { app: 'trash' },
 ]

@@ -1,0 +1,249 @@
+/* Paintings: a paint program. Tools on the left, the picture in the middle, and a row of small pictures at the foot. */
+
+.paint {
+  display: grid;
+  grid-template: 'tools stage' 1fr 'tools info' auto 'sizes strip' auto / 62px minmax(0, 1fr);
+  height: 100%;
+  min-height: 360px;
+  background: var(--paper);
+}
+
+/* ---------- tools ---------- */
+
+.paint-tools {
+  display: grid;
+  grid-area: tools;
+  gap: 0;
+  align-content: start;
+  padding: 8px 7px;
+  border-right: var(--px) solid var(--ink);
+}
+
+.paint-tool {
+  display: grid;
+  place-items: center;
+  height: 40px;
+  margin: 0 0 -1px;
+  padding: 0;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.paint-tool[aria-pressed='true'] {
+  filter: invert(1);
+}
+
+.paint-tool:active {
+  background: var(--c3);
+}
+
+/* under the tools: step to the picture before or after */
+.paint-step {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10px;
+}
+
+.paint-step button {
+  height: 24px;
+  margin-right: -1px;
+  padding: 0;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  font-size: 10px;
+}
+
+.paint-step button:active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.paint-count {
+  margin-top: 4px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.paint-sizes {
+  display: grid;
+  grid-area: sizes;
+  gap: 2px;
+  align-content: center;
+  padding: 4px 8px;
+  border-top: var(--px) solid var(--ink);
+  border-right: var(--px) solid var(--ink);
+}
+
+.paint-sizes button {
+  display: grid;
+  align-items: center;
+  height: 14px;
+  padding: 0 4px;
+  background: none;
+  border: 1px solid transparent;
+}
+
+.paint-sizes button[aria-pressed='true'] {
+  border-color: var(--ink);
+}
+
+.paint-sizes span {
+  display: block;
+  background: var(--ink);
+}
+
+/* ---------- the picture ---------- */
+
+.paint-stage {
+  display: grid;
+  grid-area: stage;
+  position: relative;
+  place-items: center;
+  min-height: 0;
+  padding: 16px;
+  overflow: hidden;
+  /* the grey desk of a paint program: a fine dither in the accent colour */
+  background:
+    conic-gradient(#00000040 25%, transparent 0 50%, #00000040 0 75%, transparent 0) 0 0 / 4px 4px,
+    var(--c2);
+  container-type: size;
+}
+
+.paint-art {
+  position: relative;
+  /* as large as the stage allows, in the proportions of the picture */
+  width: min(100cqw, 100cqh * var(--ratio));
+  aspect-ratio: var(--ratio);
+  margin: 0;
+  background: var(--paper);
+  outline: var(--px) solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.paint-art img,
+.paint-art canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.paint-art img {
+  user-select: none;
+}
+
+.paint-art canvas {
+  image-rendering: pixelated;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.tool-eraser canvas {
+  cursor: cell;
+}
+
+.tool-zoom canvas {
+  cursor: zoom-in;
+}
+
+/* FatBits: the picture is enlarged around the pointer */
+.tool-zoom .paint-art:hover {
+  scale: 2.6;
+}
+
+.tool-zoom .paint-art:hover img {
+  image-rendering: pixelated;
+}
+
+/* ---------- the caption ---------- */
+
+.paint-info {
+  display: flex;
+  grid-area: info;
+  gap: 10px;
+  align-items: baseline;
+  margin: 0;
+  padding: 3px 10px;
+  border-top: var(--px) solid var(--ink);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.paint-info strong {
+  font-size: 15px;
+}
+
+.paint-hint {
+  margin-left: auto;
+  overflow: hidden;
+  font-family: var(--font-read);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  color: #000000b0;
+}
+
+/* ---------- the row of pictures ---------- */
+
+.paint-strip {
+  display: flex;
+  grid-area: strip;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  border-top: var(--px) solid var(--ink);
+  list-style: none;
+}
+
+.paint-strip li {
+  flex: 1 0 34px;
+  max-width: 54px;
+  border-right: 1px solid var(--ink);
+}
+
+.paint-strip button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: var(--paper);
+  border: 0;
+}
+
+.paint-strip img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  /* the pictures that are not open look like patterns: hard black and white */
+  filter: grayscale(1) contrast(2.2);
+  image-rendering: pixelated;
+}
+
+.paint-strip button:hover img,
+.paint-strip button[aria-pressed='true'] img {
+  filter: none;
+}
+
+.paint-strip button[aria-pressed='true'] {
+  outline: 3px solid var(--ink);
+  outline-offset: -3px;
+}
+
+.paint-strip button:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .paint-art {
+    transition: scale 140ms ease-out;
+  }
+}
+
+@media (max-width: 560px) {
+  .paint-hint {
+    display: none;
+  }
+
+  .paint-stage {
+    padding: 10px;
+  }
+}

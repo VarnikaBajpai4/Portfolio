@@ -14,6 +14,7 @@ export type IconName =
   | 'note'
   | 'people'
   | 'bomb'
+  | 'paint'
 
 // '#' ink, 'a' accent (the fill prop), 'o' paper, 'k' screen black, 'g' screen green
 const GRIDS: Record<Exclude<IconName, 'face'>, string[]> = {
@@ -195,6 +196,24 @@ const GRIDS: Record<Exclude<IconName, 'face'>, string[]> = {
     '#aaaaaa##aaaaaa#',
     '################',
     '................',
+    '................',
+  ],
+  paint: [
+    '................',
+    '.....######.....',
+    '...##aaaaaa##...',
+    '..#aaakkaaaaa#..',
+    '.#aaaaaaaaggaa#.',
+    '.#aooaaaaaaaaa#.',
+    '#aaaaaaaaaaaa#..',
+    '#aaaaaaaaaa##...',
+    '#akkaaaaaa#.....',
+    '#aaaaaaaaa#..##.',
+    '.#aaaaaaaaa##aa#',
+    '.#aaaggaaaaaaaa#',
+    '..#aaaaaaaaaaa#.',
+    '...##aaaaaaa##..',
+    '.....#######....',
     '................',
   ],
   bomb: [
