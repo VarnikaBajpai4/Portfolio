@@ -33,7 +33,7 @@ const HELP = [
   'open <name>      open an app or a project',
   'python           a real Python prompt',
   'catsay <text>    make Chindi say it',
-  'theme <name>     sorbet, cocoa, blueberry or noir',
+  'theme <name>     sorbet, cocoa, overworld or noir',
   'clear            clear the screen',
   '',
   'Tab completes. Some commands are not on this list.',

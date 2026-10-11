@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Chindi } from '../icons/Chindi'
 import type { ChindiPose } from '../icons/Chindi'
 import { prefersReducedMotion } from '../motion'
+import { getPalette } from '../theme'
 import type { AppId, Bounds, Win } from '../wm/reducer'
 import { PET_EVENT } from './events'
 import type { PetRequest } from './events'
@@ -22,6 +23,9 @@ const LINES = [
   'Purr review: approved.',
   'She codes. I supervise.',
 ]
+
+/** what she says more often when the Overworld theme is on */
+const BLOCK_LINES = ['Meow.', 'She tames axolotls, llamas and horses. I tamed her.']
 
 type Perch = AppId | 'ground'
 type Mode = 'sit' | 'walk' | 'sleep' | 'fall' | 'hop'
@@ -228,7 +232,10 @@ export function Pet({ windows, bounds, areaH, onMeet }: Props) {
         type="button"
         className="pet-cat"
         aria-label="Chindi the cat"
-        onClick={() => say(LINES[Math.floor(Math.random() * LINES.length)])}
+        onClick={() => {
+          const lines = getPalette() === 'overworld' ? [...BLOCK_LINES, ...BLOCK_LINES, ...LINES] : LINES
+          say(lines[Math.floor(Math.random() * lines.length)])
+        }}
         onDoubleClick={() => {
           window.clearTimeout(bubbleTimer.current)
           setBubble(null)

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getApp, rectFor } from '../apps/registry'
 import { content } from '../content'
+import { PixelGrid } from '../icons/PixelGrid'
 import { Portrait } from '../icons/Portrait'
 import { PALETTES, usePalette } from '../theme'
 import type { Bounds } from '../wm/reducer'
@@ -35,6 +36,10 @@ interface Props {
   onRestartIntro: () => void
   onShutDown: () => void
 }
+
+// a heart of the Overworld theme: K outline, R red, W shine
+const HEART = ['.KK.KK.', 'KRWKRRK', 'KRRRRRK', '.KRRRK.', '..KRK..', '...K...']
+const HEART_LEGEND = { K: '#000000', R: '#e0312b', W: '#ffffff' }
 
 function useClock() {
   const [now, setNow] = useState(() => new Date())
@@ -186,6 +191,12 @@ export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClea
       ))}
 
       <div className="menubar-right">
+        {/* shown by the Overworld theme only */}
+        <span className="hearts" aria-hidden="true">
+          {Array.from({ length: 10 }, (_, i) => (
+            <PixelGrid key={i} rows={HEART} legend={HEART_LEGEND} size={14} />
+          ))}
+        </span>
         <div className="swatches" role="group" aria-label="Colour palette">
           {PALETTES.map((p) => (
             <button

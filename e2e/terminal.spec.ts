@@ -52,8 +52,8 @@ test('empty and bad input print help instead of failing', async ({ page }) => {
 })
 
 test('theme switches the palette', async ({ page }) => {
-  await run(page, 'theme blueberry')
-  await expect(page.locator('html')).toHaveAttribute('data-palette', 'blueberry')
+  await run(page, 'theme overworld')
+  await expect(page.locator('html')).toHaveAttribute('data-palette', 'overworld')
 })
 
 test('history and clear', async ({ page }) => {

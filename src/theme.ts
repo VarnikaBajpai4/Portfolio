@@ -1,12 +1,13 @@
 import { useSyncExternalStore } from 'react'
 import { readStored, writeStored } from './storage'
 
-export type PaletteId = 'sorbet' | 'cocoa' | 'blueberry' | 'noir'
+export type PaletteId = 'sorbet' | 'cocoa' | 'overworld' | 'noir'
 
 export const PALETTES: { id: PaletteId; label: string; swatch: string }[] = [
   { id: 'sorbet', label: 'Sorbet', swatch: '#1fa8c9' },
   { id: 'cocoa', label: 'Cocoa', swatch: '#7a3b1d' },
-  { id: 'blueberry', label: 'Blueberry', swatch: '#8ea2e8' },
+  // a small grass block: green on top, earth below
+  { id: 'overworld', label: 'Overworld', swatch: 'linear-gradient(#5d9b3a 0 45%, #7a5230 45%)' },
   { id: 'noir', label: 'Noir', swatch: '#1c1c1c' },
 ]
 

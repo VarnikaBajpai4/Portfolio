@@ -32,13 +32,14 @@
   --c4: #8fe0ff;
 }
 
-:root[data-palette='blueberry'] {
-  --desk-1: #8ea2e8;
-  --desk-2: #7f93dc;
-  --c1: #ffc2dc;
-  --c2: #bfe8d2;
-  --c3: #fff1b8;
-  --c4: #c9c2ff;
+/* grass, oak planks, diamond, sand and earth */
+:root[data-palette='overworld'] {
+  --desk-1: #6aa84f;
+  --desk-2: #4f8a3a;
+  --c1: #dcc08a;
+  --c2: #86e6dc;
+  --c3: #ecdca0;
+  --c4: #c9966a;
 }
 
 :root[data-palette='noir'] {
