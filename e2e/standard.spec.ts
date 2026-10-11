@@ -17,3 +17,15 @@ test('Standard View shows every section from the content file', async ({ page })
   await expect(page.getByRole('link', { name: 'bajpaivarnika04@gmail.com' })).toHaveAttribute('href', /^mailto:/)
   await expect(page.getByRole('link', { name: 'Back to desktop' })).toHaveAttribute('href', /^\/$/)
 })
+
+test('the resume PDF can be downloaded from the Standard View and from the Resume window', async ({ page, request }) => {
+  await page.goto('./standard/')
+  const href = await page.getByRole('link', { name: 'Download resume (PDF)' }).getAttribute('href')
+  const file = await request.get(href!)
+  expect(file.ok()).toBe(true)
+  expect(file.headers()['content-type']).toContain('pdf')
+
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Resume', exact: true }).dblclick()
+  await expect(page.getByRole('dialog', { name: 'Resume' }).getByRole('link', { name: 'Download PDF' })).toHaveAttribute('href', href!)
+})

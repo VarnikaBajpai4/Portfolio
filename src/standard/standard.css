@@ -51,9 +51,14 @@ body {
 
 .sv-bar {
   display: flex;
+  gap: 18px;
   justify-content: space-between;
   padding: 14px 2px;
   font-size: 13px;
+}
+
+.sv-download {
+  margin-left: auto;
 }
 
 .sv-bar button {

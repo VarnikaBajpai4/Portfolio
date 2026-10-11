@@ -621,5 +621,5 @@ export const content: Content = {
     { label: 'GitHub', href: 'https://github.com/VarnikaBajpai4' },
   ],
 
-  resumePdf: null,
+  resumePdf: 'Varnika_Bajpai_Resume.pdf',
 }

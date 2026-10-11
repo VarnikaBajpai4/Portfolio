@@ -47,12 +47,17 @@ function Jobs({ jobs }: { jobs: Job[] }) {
 
 /** The plain page: the same facts as the desktop, as a document to read or print. */
 export function StandardView() {
-  const { identity, languages, tools, work, community, projects, achievements, links } = content
+  const { identity, languages, tools, work, community, projects, achievements, links, resumePdf } = content
   const medal = achievements.find((a) => a.id === 'silver-medal')
   return (
     <div className="sv">
       <nav className="sv-bar" aria-label="Page">
         <a href={HOME_URL}>Back to desktop</a>
+        {resumePdf && (
+          <a className="sv-download" href={`${HOME_URL}${resumePdf}`} download>
+            Download resume (PDF)
+          </a>
+        )}
         <button
           type="button"
           onClick={() => {
