@@ -95,6 +95,8 @@ export function Paint() {
   const [size, setSize] = useState(1)
   const [state, setState] = useState<'dots' | 'mixed' | 'colour'>('colour')
   const [origin, setOrigin] = useState('50% 50%')
+  /** the picture whose dot picture is made; the tools wait for it */
+  const [readyId, setReadyId] = useState<string | null>(null)
   const work = works[index]
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -157,6 +159,7 @@ export function Paint() {
       canvas.width = width
       canvas.height = height
       setState('colour')
+      setReadyId(work.id)
     }
     image.src = file(work.id)
     return () => {
@@ -180,7 +183,7 @@ export function Paint() {
   }
 
   const onPointerDown = (e: PointerEvent<HTMLCanvasElement>) => {
-    if (tool === 'zoom' || e.button !== 0) return
+    if (tool === 'zoom' || e.button !== 0 || readyId !== work.id) return
     stopMotion()
     e.currentTarget.setPointerCapture(e.pointerId)
     last.current = { x: e.clientX, y: e.clientY }
@@ -268,6 +271,7 @@ export function Paint() {
         <figure
           className="paint-art"
           data-state={state}
+          data-ready={readyId === work.id}
           style={{ '--ratio': work.w / work.h, transformOrigin: origin } as CSSProperties}
         >
           <img key={work.id} src={file(work.id)} alt={`${work.title}, ${work.medium}, by Varnika`} draggable={false} />

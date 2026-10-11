@@ -88,7 +88,7 @@ export function Recipes() {
         ) : (
           <div className="stack-home">
             <h2>Varnika’s Recipe Stack</h2>
-            <p>Two things I bake that people ask for again. Short, because nobody reads a long recipe.</p>
+            <p>Two things I bake that people ask for again.</p>
             <ul>
               {recipes.map((item, i) => (
                 <li key={item.id}>

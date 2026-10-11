@@ -18,6 +18,7 @@ export type IconName =
   | 'map'
   | 'book'
   | 'stack'
+  | 'cat'
 
 // '#' ink, 'a' accent (the fill prop), 'o' paper, 'k' screen black, 'g' screen green
 const GRIDS: Record<Exclude<IconName, 'face'>, string[]> = {
@@ -271,6 +272,24 @@ const GRIDS: Record<Exclude<IconName, 'face'>, string[]> = {
     '#aaaaaaaaa###...',
     '#aaaaaaaaa#.....',
     '###########.....',
+    '................',
+  ],
+  cat: [
+    '................',
+    '.##........##...',
+    '#aa#......#aa#..',
+    '#aaa######aaa#..',
+    '#aaaaaaaaaaaa#..',
+    '#aoo#aaaa#ooa#..',
+    '#aoo#aaaa#ooa#..',
+    '#aaaaa##aaaaa#..',
+    '.#aaaaaaaaaa#...',
+    '..##aaaaaa##.##.',
+    '..#aaaaaaaa##a#.',
+    '.#aaaaaaaaaa#a#.',
+    '.#aaaaaaaaaa##..',
+    '.#aa#aaaa#aa#...',
+    '.############...',
     '................',
   ],
   bomb: [

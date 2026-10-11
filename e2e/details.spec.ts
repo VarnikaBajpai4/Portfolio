@@ -89,10 +89,17 @@ test('Chindi never sits in front of a window that covers her', async ({ page }) 
     return false
   }
   // put her on the Terminal, then cover the Terminal with a full-size window
-  await page.evaluate(() => window.dispatchEvent(new CustomEvent('vb:pet', { detail: { goto: 'terminal' } })))
-  await page.waitForTimeout(900)
   const perch = (await page.getByRole('dialog', { name: 'Terminal' }).boundingBox())!
-  expect((await cat.boundingBox())!.y).toBeLessThan(perch.y)
+  // ask again until she is there: on a slow start the first request can come before she listens
+  await expect
+    .poll(
+      async () => {
+        await page.evaluate(() => window.dispatchEvent(new CustomEvent('vb:pet', { detail: { goto: 'terminal' } })))
+        return (await cat.boundingBox())!.y
+      },
+      { timeout: 8000, intervals: [900] },
+    )
+    .toBeLessThan(perch.y)
 
   await page.getByRole('button', { name: 'Zoom About Varnika' }).click()
   await expect.poll(overlaps, { timeout: 3000 }).toBe(false)
@@ -124,7 +131,7 @@ test('Open my story turns About into the full story', async ({ page }) => {
   await expect(about.locator('.keys-display')).toContainText('Docker: Sandboxed runtimes')
   await expect(about.getByRole('button', { name: 'Docker', exact: true })).toHaveAttribute('aria-pressed', 'true')
 
-  await about.getByText('Chelsea FC', { exact: true }).scrollIntoViewIfNeeded()
+  await about.getByText('Football', { exact: true }).scrollIntoViewIfNeeded()
   await expect(about.locator('.hobby')).toHaveCount(10)
   await expect(about.locator('.sys')).toContainText('homage to the retro Mac')
 })
@@ -328,14 +335,18 @@ test('Paintings shows the pictures in colour, and the tools change them', async 
   await expect(paint.getByRole('list', { name: 'Pictures' }).getByRole('button')).toHaveCount(12)
   await expect(art).toHaveAttribute('data-state', 'colour')
   await expect(paint.locator('.paint-info')).toContainText('Try the eraser')
+  await expect(art).toHaveAttribute('data-ready', 'true')
 
   // the eraser is ready: a drag rubs part of the picture down to dots
-  const box = (await art.boundingBox())!
-  await page.mouse.move(box.x + 30, box.y + 30)
-  await page.mouse.down()
-  await page.mouse.move(box.x + box.width - 30, box.y + box.height - 30, { steps: 6 })
-  await page.mouse.up()
-  await expect(art).toHaveAttribute('data-state', 'mixed')
+  // the window may still be on its way in, so try until a stroke lands on the picture
+  await expect(async () => {
+    const box = (await art.boundingBox())!
+    await page.mouse.move(box.x + 30, box.y + 30)
+    await page.mouse.down()
+    await page.mouse.move(box.x + box.width - 30, box.y + box.height - 30, { steps: 6 })
+    await page.mouse.up()
+    await expect(art).toHaveAttribute('data-state', 'mixed', { timeout: 300 })
+  }).toPass()
 
   // a double-click on the eraser rubs it all out, and the bucket pours the colour back
   await paint.getByRole('button', { name: 'Eraser' }).dblclick()
@@ -390,4 +401,35 @@ test('the recipe stack goes from the home card to each recipe and back', async (
   await expect(stack.getByRole('heading', { level: 2 })).toHaveText('Oreo Truffles')
   await stack.getByRole('button', { name: 'Home card' }).click()
   await expect(stack).toContainText('Card 1 of 3')
+})
+
+test('Chindi Jump starts, counts a jump, and ends when she runs into someone', async ({ page }) => {
+  const term = page.getByRole('dialog', { name: 'Terminal' })
+  await term.getByRole('textbox').fill('open jump')
+  await term.getByRole('textbox').press('Enter')
+  const game = page.getByRole('dialog', { name: 'Chindi Jump' })
+  const root = game.locator('.jump')
+  await expect(root).toHaveAttribute('data-state', 'ready')
+  await expect(game.locator('.jump-person')).toHaveCount(5)
+
+  // with no jump, the first person stops the game
+  await game.getByRole('button', { name: 'Jump', exact: true }).click()
+  await expect(root).toHaveAttribute('data-state', 'running')
+  await expect(root).toHaveAttribute('data-state', 'over', { timeout: 8000 })
+  await expect(game.getByRole('status')).toContainText(/Chindi ran into (Mom|Dad|Brother|Sister-in-law|Boyfriend)/)
+
+  // a new game with a player that jumps when a person is near: the count goes up
+  await game.getByRole('button', { name: 'Jump', exact: true }).click()
+  await page.evaluate(() => {
+    const track = document.querySelector<HTMLElement>('.jump-track')!
+    const cat = document.querySelector('.jump-cat')!
+    window.setInterval(() => {
+      const edge = cat.getBoundingClientRect().right
+      for (const person of document.querySelectorAll('.jump-person')) {
+        const gap = person.getBoundingClientRect().left - edge
+        if (gap > 0 && gap < 45) track.click()
+      }
+    }, 16)
+  })
+  await expect(game.locator('.jump-score strong').first()).not.toHaveText('0', { timeout: 15000 })
 })

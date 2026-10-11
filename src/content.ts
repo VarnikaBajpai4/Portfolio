@@ -205,7 +205,7 @@ export const content: Content = {
     { icon: 'goggles', label: 'Swimming' },
     { icon: 'shuttle', label: 'Badminton' },
     { icon: 'book', label: 'Reading' },
-    { icon: 'football', label: 'Chelsea FC' },
+    { icon: 'football', label: 'Football' },
     { icon: 'mic', label: 'Singing' },
     { icon: 'whisk', label: 'Baking' },
     { icon: 'palette', label: 'Painting' },
@@ -410,7 +410,7 @@ export const content: Content = {
     'My mother is why I take challenges head on, the way she does. She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
     FELL_FOR_CS,
     SINCE_THEN,
-    'Away from the keyboard: weights, pilates, running, swimming, badminton, books, Chelsea, singing, baking and painting.',
+    'Away from the keyboard: weights, pilates, running, swimming, badminton, books, football, singing, baking and painting.',
     'This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
   ],
 

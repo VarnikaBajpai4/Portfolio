@@ -1,0 +1,76 @@
+/* Chindi Jump: a strip of ground. The cat stays at the left and the people run in from the right. */
+
+.jump {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 6px;
+  height: 100%;
+  min-height: 230px;
+  padding: 10px 14px 12px;
+}
+
+.jump-score {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.jump-score strong {
+  font-size: 18px;
+}
+
+.jump-track {
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  padding: 0;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.jump-world {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  /* the ground: a line, and a row of marks under it that moves while she runs */
+  background:
+    linear-gradient(var(--ink), var(--ink)) 0 calc(100% - 22px) / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 34px) 0 calc(100% - 12px) / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 57px) 17px calc(100% - 6px) / 100% 2px no-repeat;
+}
+
+.jump-cat,
+.jump-person {
+  position: absolute;
+  bottom: 24px;
+  will-change: transform;
+}
+
+.jump-person {
+  left: 0;
+}
+
+.jump-message {
+  min-height: 20px;
+  font-family: var(--font-read);
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-state='running'] .jump-world {
+    animation: jump-ground 600ms linear infinite;
+  }
+}
+
+@keyframes jump-ground {
+  to {
+    background-position:
+      0 calc(100% - 22px),
+      -136px calc(100% - 12px),
+      -97px calc(100% - 6px);
+  }
+}
