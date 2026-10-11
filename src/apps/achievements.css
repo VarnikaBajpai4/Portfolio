@@ -1,10 +1,16 @@
 /* Achievements: a scrapbook. One item on a page, and a scroll bar along the foot to turn the pages. */
 
 .scrapbook {
+  --page: color-mix(in srgb, var(--c1) 32%, var(--paper));
   display: grid;
   grid-template-rows: 1fr auto;
   height: 100%;
   min-height: 230px;
+  /* album paper: a pale tint with a fine grid, so that it does not look like the yellow Note Pad */
+  background:
+    linear-gradient(#00000012 1px, transparent 1px) 0 0 / 16px 16px,
+    linear-gradient(90deg, #00000012 1px, transparent 1px) 0 0 / 16px 16px,
+    var(--page);
 }
 
 .scrap-page {
