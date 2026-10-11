@@ -394,6 +394,11 @@ h3 {
   overflow-wrap: anywhere;
 }
 
+.term-hint {
+  font-size: 11px;
+  opacity: 0.45;
+}
+
 .term-in,
 .term-form {
   color: #8ff5c9;

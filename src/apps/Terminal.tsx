@@ -8,14 +8,15 @@ import { loadPython } from '../terminal/python'
 import type { Python } from '../terminal/python'
 import { setPalette } from '../theme'
 
-type Line = { kind: 'in' | 'out'; text: string } | { kind: 'card'; lines: string[] }
+type Line = { kind: 'in' | 'out' | 'hint'; text: string } | { kind: 'card'; lines: string[] }
 
 const out = (text: string): Line => ({ kind: 'out', text })
 
 const BANNER: Line[] = [
   out("Varnika's terminal."),
   out("Type 'help' to begin."),
-  out("psst: type 'python'. It is real CPython, on WebAssembly."),
+  // small and dim on purpose: a thing to find, not the first thing to do
+  { kind: 'hint', text: "psst: try 'python'" },
 ]
 
 export function Terminal() {
@@ -136,7 +137,7 @@ export function Terminal() {
               </div>
             </div>
           ) : (
-            <p key={i} className={line.kind === 'in' ? 'term-in' : undefined}>
+            <p key={i} className={line.kind === 'out' ? undefined : `term-${line.kind}`}>
               {line.text}
             </p>
           ),
