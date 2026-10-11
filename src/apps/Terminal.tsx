@@ -16,7 +16,7 @@ const BANNER: Line[] = [
   out("Varnika's terminal."),
   out("Type 'help' to begin."),
   // small and dim on purpose: a thing to find, not the first thing to do
-  { kind: 'hint', text: "psst: try 'python'" },
+  { kind: 'hint', text: "psst: try 'python'. It is real CPython, on WebAssembly." },
 ]
 
 export function Terminal() {
