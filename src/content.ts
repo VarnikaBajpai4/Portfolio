@@ -99,6 +99,16 @@ export interface Place {
   note: string
 }
 
+/** One card of the recipe stack. Kept short on purpose. */
+export interface Recipe {
+  id: 'muffins' | 'truffles'
+  title: string
+  makes: string
+  ingredients: string[]
+  steps: string[]
+  tip: string
+}
+
 export interface Content {
   identity: {
     name: string
@@ -135,6 +145,7 @@ export interface Content {
   paintings: Painting[]
   places: Place[]
   books: { title: string; author: string }[]
+  recipes: Recipe[]
   /** one Note Pad page each */
   notes: Note[]
   trash: string[]
@@ -535,6 +546,48 @@ export const content: Content = {
       lon: -83.05,
       zone: 'America/Detroit',
       note: 'Eminem. I like all rap, but he is first.',
+    },
+  ],
+
+  recipes: [
+    {
+      id: 'muffins',
+      title: 'Double Chocolate Muffins',
+      makes: 'about 14',
+      ingredients: [
+        '2 cups flour',
+        '1 cup sugar',
+        '½ cup cocoa',
+        '1 tsp baking soda',
+        '½ tsp salt',
+        '1¾ cups chocolate chips',
+        '2 eggs',
+        '¾ cup sour cream or yogurt',
+        '½ cup oil',
+        '½ cup milk',
+        '1½ tsp vanilla',
+      ],
+      steps: [
+        'Whisk the dry things and the chips in one bowl.',
+        'Whisk the wet things, then fold them in. The batter is thick. Do not overmix.',
+        'Fill the liners to the top.',
+        'Bake 5 minutes at 220°C, then about 15 minutes at 180°C.',
+      ],
+      tip: 'The hot start gives the tall tops.',
+    },
+    {
+      id: 'truffles',
+      title: 'Oreo Truffles',
+      makes: 'a full tray',
+      ingredients: ['38 Oreos', '225 g cream cheese', '1 cup dark melting chocolate', '1 cup white melting chocolate'],
+      steps: [
+        'Crush the Oreos to fine crumbs.',
+        'Beat the cream cheese smooth, then mix in the crumbs.',
+        'Roll into small balls. Freeze for 15 minutes.',
+        'Dip half in dark chocolate and half in white.',
+        'Chill for one hour.',
+      ],
+      tip: 'They keep for three weeks in the fridge. They never last that long.',
     },
   ],
 

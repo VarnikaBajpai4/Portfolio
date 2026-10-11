@@ -12,6 +12,7 @@ import { WorldMap } from './WorldMap'
 import { NotePad } from './NotePad'
 import { Paint } from './Paint'
 import { Projects } from './Projects'
+import { Recipes } from './Recipes'
 import { Resume } from './Resume'
 import { Terminal } from './Terminal'
 import { Trash } from './Trash'
@@ -48,6 +49,7 @@ export const APPS: AppDef[] = [
   { id: 'paint', title: 'Paintings', icon: 'paint', component: Paint, size: { w: 680, h: 520 }, pos: { x: 0.22, y: 0.05 }, fill: 'paper' },
   { id: 'map', title: 'Map', icon: 'map', component: WorldMap, size: { w: 500, h: 436 }, pos: { x: 0.3, y: 0.12 }, fill: 'c2' },
   { id: 'books', title: 'Books', icon: 'book', component: Books, size: { w: 440, h: 300 }, pos: { x: 0.32, y: 0.22 }, fill: 'c3' },
+  { id: 'recipes', title: 'Recipes', icon: 'stack', component: Recipes, size: { w: 520, h: 476 }, pos: { x: 0.28, y: 0.08 }, fill: 'c1' },
   { id: 'community', title: 'Community', icon: 'people', component: Community, size: { w: 460, h: 300 }, pos: { x: 0.26, y: 0.16 }, fill: 'c2' },
 ]
 

@@ -376,3 +376,18 @@ test('the bookshelf on the disk names a book when its spine is chosen', async ({
   await shelf.getByRole('button', { name: /Atomic Habits/ }).click()
   await expect(shelf.locator('.books-card')).toContainText('James Clear')
 })
+
+test('the recipe stack goes from the home card to each recipe and back', async ({ page }) => {
+  const term = page.getByRole('dialog', { name: 'Terminal' })
+  await term.getByRole('textbox').fill('open recipes')
+  await term.getByRole('textbox').press('Enter')
+  const stack = page.getByRole('dialog', { name: 'Recipes' })
+  await expect(stack).toContainText('Card 1 of 3')
+  await stack.getByRole('button', { name: 'Double Chocolate Muffins' }).click()
+  await expect(stack.getByRole('list', { name: 'Ingredients' }).getByRole('listitem')).toHaveCount(11)
+  await expect(stack).toContainText('220°C')
+  await stack.getByRole('button', { name: 'Next card' }).click()
+  await expect(stack.getByRole('heading', { level: 2 })).toHaveText('Oreo Truffles')
+  await stack.getByRole('button', { name: 'Home card' }).click()
+  await expect(stack).toContainText('Card 1 of 3')
+})
