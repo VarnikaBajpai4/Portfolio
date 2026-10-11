@@ -7,6 +7,11 @@ import type { PostHog } from 'posthog-js'
 const KEY = import.meta.env.VITE_POSTHOG_KEY ?? ''
 const HOST = import.meta.env.VITE_POSTHOG_HOST ?? 'https://us.i.posthog.com'
 
+/** True when this build counts visits. The site says so to the visitor only when it does. */
+export const ANALYTICS_ON = KEY !== ''
+/** the short notice for the visitor */
+export const ANALYTICS_NOTE = 'This site counts visits and clicks. It uses no cookies and keeps no personal data.'
+
 type Properties = Record<string, string | number | boolean>
 
 let client: PostHog | null = null

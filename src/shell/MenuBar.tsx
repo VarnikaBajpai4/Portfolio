@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getApp, rectFor } from '../apps/registry'
-import { track } from '../analytics'
+import { ANALYTICS_NOTE, ANALYTICS_ON, track } from '../analytics'
 import { content } from '../content'
 import { PixelGrid } from '../icons/PixelGrid'
 import { Portrait } from '../icons/Portrait'
@@ -103,6 +103,8 @@ export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClea
         { label: 'About Varnika', onSelect: () => openApp('about') },
         { label: 'Standard View', href: STANDARD_URL },
         { label: 'Restart Intro', onSelect: onRestartIntro },
+        // Chindi reads the notice out; it is there only when visits are counted
+        ...(ANALYTICS_ON ? [{ label: 'Privacy', onSelect: () => askPet({ say: ANALYTICS_NOTE }) }] : []),
       ],
     },
     {

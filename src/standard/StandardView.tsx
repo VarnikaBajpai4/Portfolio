@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { track } from '../analytics'
+import { ANALYTICS_NOTE, ANALYTICS_ON, track } from '../analytics'
 import { content } from '../content'
 import type { Job } from '../content'
 import { HOME_URL } from '../shell/links'
@@ -148,6 +148,7 @@ export function StandardView() {
           </Section>
         </main>
       </div>
+      {ANALYTICS_ON && <p className="sv-note">{ANALYTICS_NOTE}</p>}
     </div>
   )
 }

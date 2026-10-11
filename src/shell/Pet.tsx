@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Chindi } from '../icons/Chindi'
 import type { ChindiPose } from '../icons/Chindi'
 import { prefersReducedMotion } from '../motion'
@@ -107,6 +107,18 @@ export function Pet({ windows, bounds, areaH, onMeet }: Props) {
   const [view, setView] = useState(() => startSim(windows, bounds, areaH))
   const [bubble, setBubble] = useState<string | null>(null)
   const bubbleTimer = useRef(0)
+  const bubbleRef = useRef<HTMLSpanElement>(null)
+
+  // a long line near the edge of the screen would be cut off: move the bubble back inside
+  useLayoutEffect(() => {
+    const el = bubbleRef.current
+    if (!el) return
+    el.style.marginLeft = '0px'
+    const box = el.getBoundingClientRect()
+    const edge = 6
+    if (box.left < edge) el.style.marginLeft = `${edge - box.left}px`
+    else if (box.right > window.innerWidth - edge) el.style.marginLeft = `${window.innerWidth - edge - box.right}px`
+  }, [bubble])
 
   useEffect(() => {
     world.current = { windows, bounds, areaH }
@@ -224,7 +236,7 @@ export function Pet({ windows, bounds, areaH, onMeet }: Props) {
       style={{ transform: `translate(${Math.round(s.x)}px, ${Math.round(s.y)}px)` }}
     >
       {bubble && (
-        <span className="pet-bubble px-border" role="status">
+        <span className="pet-bubble px-border" role="status" ref={bubbleRef}>
           {bubble}
         </span>
       )}
