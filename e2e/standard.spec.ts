@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test('Standard View shows every section from the content file', async ({ page }) => {
   await page.goto('./standard/')
   await expect(page.getByRole('heading', { level: 1, name: 'Varnika Bajpai' })).toBeVisible()
-  for (const name of ['About', 'Skills', 'Experience', 'Projects', 'Achievements', 'Community', 'Contact']) {
+  for (const name of ['Experience', 'Education', 'Projects', 'Skills', 'Achievements', 'Community']) {
     await expect(page.getByRole('heading', { level: 2, name, exact: true })).toBeVisible()
   }
   const main = page.locator('body')
@@ -11,5 +11,9 @@ test('Standard View shows every section from the content file', async ({ page })
   await expect(main).toContainText('OmniCompiler')
   await expect(main).toContainText('LyondellBasell')
   await expect(main).not.toContainText('+91')
+  // a plain document: no life story and no picture
+  await expect(main).not.toContainText('ballerina')
+  await expect(page.getByRole('img')).toHaveCount(0)
+  await expect(page.getByRole('link', { name: 'bajpaivarnika04@gmail.com' })).toHaveAttribute('href', /^mailto:/)
   await expect(page.getByRole('link', { name: 'Back to desktop' })).toHaveAttribute('href', /\/Portfolio\/$/)
 })

@@ -1,120 +1,241 @@
+/* The Standard View: a plain document. It has its own small set of styles and none of the desktop's. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: #f3f3f1;
+}
+
+body {
+  margin: 0;
+}
+
 .sv {
-  min-height: 100%;
-  padding: 32px 16px 48px;
-  font-family: var(--font-read);
-  font-size: 16px;
-  line-height: 1.55;
+  --text: #1a1a1a;
+  --soft: #5c5c5c;
+  --line: #d9d9d6;
+  --link: #0b5c7a;
+  padding: 0 16px 56px;
+  color: var(--text);
+  font:
+    15px/1.55 system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+:where(.sv) :where(h1, h2, h3, p, ul, dl, dd) {
+  margin: 0;
+}
+
+.sv a {
+  color: var(--link);
+  text-underline-offset: 2px;
+}
+
+.sv :focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.sv-bar,
+.sv-page {
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+.sv-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 2px;
+  font-size: 13px;
+}
+
+.sv-bar button {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
 }
 
 .sv-page {
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 28px clamp(18px, 5vw, 40px) 36px;
-  background: var(--paper);
+  padding: 44px 52px 40px;
+  background: #fff;
+  border: 1px solid var(--line);
 }
 
-.sv h1,
-.sv h2,
-.sv h3,
-.sv .btn,
-.sv .chip {
-  font-family: var(--font-pixel);
+/* ---------- header ---------- */
+
+.sv-header {
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--text);
 }
 
 .sv h1 {
   font-size: 32px;
-  line-height: 1.1;
-}
-
-.sv h2 {
-  margin: 32px 0 12px;
-  padding: 2px 10px;
-  background: var(--c2);
-  border: var(--px) solid var(--ink);
-  font-size: 20px;
-}
-
-.sv h3 {
-  font-size: 18px;
-}
-
-.sv section > p + p {
-  margin-top: 10px;
-}
-
-.sv-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: center;
-}
-
-.sv-face {
-  flex: none;
-  padding: 8px;
-  background: var(--c2);
-  box-shadow: 3px 3px 0 var(--ink);
-}
-
-.sv-id {
-  display: grid;
-  flex: 1;
-  gap: 4px;
-  min-width: 240px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 .sv-role {
-  font-weight: 600;
+  margin-top: 2px;
+  font-size: 17px;
+  color: var(--soft);
+}
+
+.sv-summary {
+  max-width: 62ch;
+  margin-top: 12px;
 }
 
 .sv-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 4px 28px;
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
 }
 
-.sv-back {
-  background: var(--c3);
+.sv-links span {
+  margin-right: 6px;
+  color: var(--soft);
 }
 
-.sv section > h3 {
-  margin: 12px 0 6px;
-}
+/* ---------- sections: the title on the left, the text on the right ---------- */
 
-.sv-headline {
-  font-weight: 600;
-}
-
-.sv-footer {
-  margin-top: 32px;
-  padding-top: 14px;
-  border-top: var(--px) solid var(--ink);
-  font-style: italic;
-}
-
-.sv-list {
+.sv-section {
   display: grid;
-  gap: 14px;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 8px 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.sv-section:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.sv h2 {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.sv-body {
+  display: grid;
+  gap: 18px;
 }
 
 .sv-entry {
   display: grid;
-  gap: 6px;
-  padding: 14px 16px;
-  border: var(--px) solid var(--ink);
+  gap: 4px;
 }
 
 .sv-entry-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 2px 16px;
+  gap: 0 16px;
   align-items: baseline;
   justify-content: space-between;
 }
 
-.sv-award {
-  padding: 2px 8px;
-  background: var(--c3);
-  border: var(--px) solid var(--ink);
+.sv h3 {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.sv-org {
+  font-weight: 400;
+}
+
+.sv-when {
+  font-size: 13.5px;
+  color: var(--soft);
+  white-space: nowrap;
+}
+
+:where(.sv) ul {
+  display: grid;
+  gap: 3px;
+  padding-left: 18px;
+}
+
+.sv-stack {
+  font-size: 13.5px;
+  color: var(--soft);
+}
+
+.sv-skills {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 18px;
+}
+
+.sv-skills dt {
+  color: var(--soft);
+}
+
+@media (max-width: 640px) {
+  .sv-page {
+    padding: 26px 20px;
+  }
+
+  .sv-section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sv-skills {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .sv-skills dd {
+    margin-bottom: 6px;
+  }
+}
+
+@media print {
+  html {
+    background: #fff;
+  }
+
+  .sv {
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  .sv-bar {
+    display: none;
+  }
+
+  .sv-page {
+    max-width: none;
+    padding: 0;
+    border: 0;
+  }
+
+  .sv-entry {
+    break-inside: avoid;
+  }
+
+  .sv a {
+    color: inherit;
+    text-decoration: none;
+  }
 }

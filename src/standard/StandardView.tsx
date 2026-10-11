@@ -1,145 +1,145 @@
+import type { ReactNode } from 'react'
 import { content } from '../content'
 import type { Job } from '../content'
-import { Portrait } from '../icons/Portrait'
 import { HOME_URL } from '../shell/links'
 
 function external(href: string) {
   return href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {}
 }
 
+/** The label of a link as a reader of a printed page needs it: the address, not the word "Email". */
+function shown(href: string) {
+  return href.replace(/^mailto:|^https?:\/\/(www\.)?/, '').replace(/\/$/, '')
+}
+
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  return (
+    <section className="sv-section" aria-labelledby={`sv-${id}`}>
+      <h2 id={`sv-${id}`}>{title}</h2>
+      <div className="sv-body">{children}</div>
+    </section>
+  )
+}
+
 function Jobs({ jobs }: { jobs: Job[] }) {
   return (
-    <div className="sv-list">
+    <>
       {jobs.map((job) => (
         <article key={job.id} className="sv-entry">
           <header className="sv-entry-head">
-            <h3>{job.org}</h3>
-            <span>{job.period}</span>
+            <h3>
+              {job.role} <span className="sv-org">· {job.org}</span>
+            </h3>
+            <span className="sv-when">{job.period}</span>
           </header>
-          <p className="sv-role">{job.role}</p>
-          <ul className="bullets">
+          <ul>
             {job.points.map((point) => (
               <li key={point}>{point}</li>
             ))}
           </ul>
+          {job.tools && <p className="sv-stack">{job.tools.join(', ')}</p>}
         </article>
       ))}
-    </div>
+    </>
   )
 }
 
+/** The plain page: the same facts as the desktop, as a document to read or print. */
 export function StandardView() {
-  const { identity, languages, tools, work, community, projects, achievements, readMe, links } = content
+  const { identity, languages, tools, work, community, projects, achievements, links } = content
+  const medal = achievements.find((a) => a.id === 'silver-medal')
   return (
-    <div className="sv checker">
-      <div className="sv-page px-border px-shadow">
+    <div className="sv">
+      <nav className="sv-bar" aria-label="Page">
+        <a href={HOME_URL}>Back to desktop</a>
+        <button type="button" onClick={() => window.print()}>
+          Print or save as PDF
+        </button>
+      </nav>
+
+      <div className="sv-page">
         <header className="sv-header">
-          <div className="sv-face px-border">
-            <Portrait size={96} detailed />
-          </div>
-          <div className="sv-id">
-            <h1>{identity.name}</h1>
-            <p className="sv-role">{identity.role}</p>
-            <p className="sv-headline">{identity.headline}</p>
-            <p>{identity.subline}</p>
-            <nav className="sv-links" aria-label="Links">
-              {links.map((link) => (
-                <a key={link.label} className="btn" href={link.href} {...external(link.href)}>
-                  {link.label}
+          <h1>{identity.name}</h1>
+          <p className="sv-role">{identity.role}</p>
+          <p className="sv-summary">{identity.summary}</p>
+          <ul className="sv-links" aria-label="Links">
+            {links.map((link) => (
+              <li key={link.label}>
+                <span>{link.label}</span>
+                <a href={link.href} {...external(link.href)}>
+                  {shown(link.href)}
                 </a>
-              ))}
-              <a className="btn sv-back" href={HOME_URL}>
-                Back to desktop
-              </a>
-            </nav>
-          </div>
+              </li>
+            ))}
+          </ul>
         </header>
 
         <main>
-          <section aria-labelledby="sv-about">
-            <h2 id="sv-about">About</h2>
-            {readMe.slice(0, -1).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-            <p>{identity.education}. Silver medal, rank 2 in the IT branch, CGPA 9.66.</p>
-          </section>
-
-          <section aria-labelledby="sv-skills">
-            <h2 id="sv-skills">Skills</h2>
-            <h3>Languages</h3>
-            <ul className="chips">
-              {languages.map((language) => (
-                <li key={language} className="chip">
-                  {language}
-                </li>
-              ))}
-            </ul>
-            <h3>Works with</h3>
-            <ul className="chips">
-              {tools.map((tool) => (
-                <li key={tool} className="chip">
-                  {tool}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section aria-labelledby="sv-experience">
-            <h2 id="sv-experience">Experience</h2>
+          <Section id="experience" title="Experience">
             <Jobs jobs={work} />
-          </section>
+          </Section>
 
-          <section aria-labelledby="sv-projects">
-            <h2 id="sv-projects">Projects</h2>
-            <div className="sv-list">
-              {projects.map((project) => (
-                <article key={project.id} className="sv-entry">
-                  <header className="sv-entry-head">
-                    <h3>{project.name}</h3>
-                    <a href={project.repo} {...external(project.repo)}>
-                      GitHub
-                    </a>
-                  </header>
-                  <p>{project.summary}</p>
-                  {project.award && <p className="sv-award">★ {project.award}</p>}
-                  {project.note && <p>{project.note}</p>}
-                  <ul className="chips" aria-label="Tech stack">
-                    {project.stack.map((tech) => (
-                      <li key={tech} className="chip">
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
-          </section>
+          <Section id="education" title="Education">
+            <article className="sv-entry">
+              <p>{identity.education}</p>
+              {medal && (
+                <ul>
+                  <li>
+                    {medal.title}. {medal.detail}
+                  </li>
+                  {medal.tally && (
+                    <li>
+                      {medal.tally.label}: {medal.tally.values[0]}.
+                    </li>
+                  )}
+                </ul>
+              )}
+            </article>
+          </Section>
 
-          <section aria-labelledby="sv-achievements">
-            <h2 id="sv-achievements">Achievements</h2>
-            <ul className="bullets">
-              {achievements.map((a) => (
-                <li key={a.id}>
-                  <strong>{a.title}.</strong> {a.detail}
-                </li>
-              ))}
+          <Section id="projects" title="Projects">
+            {projects.map((project) => (
+              <article key={project.id} className="sv-entry">
+                <header className="sv-entry-head">
+                  <h3>{project.name}</h3>
+                  <a className="sv-when" href={project.repo} {...external(project.repo)}>
+                    {shown(project.repo)}
+                  </a>
+                </header>
+                <p>{project.summary}</p>
+                {(project.award || project.note) && (
+                  <p>{[project.award, project.note].filter(Boolean).join(' ')}</p>
+                )}
+                <p className="sv-stack">{project.stack.join(', ')}</p>
+              </article>
+            ))}
+          </Section>
+
+          <Section id="skills" title="Skills">
+            <dl className="sv-skills">
+              <dt>Languages</dt>
+              <dd>{languages.join(', ')}</dd>
+              <dt>Tools and areas</dt>
+              <dd>{tools.join(', ')}</dd>
+            </dl>
+          </Section>
+
+          <Section id="achievements" title="Achievements">
+            <ul>
+              {achievements
+                .filter((a) => a !== medal)
+                .map((a) => (
+                  <li key={a.id}>
+                    <strong>{a.title}.</strong> {a.detail}
+                  </li>
+                ))}
             </ul>
-          </section>
+          </Section>
 
-          <section aria-labelledby="sv-community">
-            <h2 id="sv-community">Community</h2>
+          <Section id="community" title="Community">
             <Jobs jobs={community} />
-          </section>
-
-          <section aria-labelledby="sv-contact">
-            <h2 id="sv-contact">Contact</h2>
-            <p>
-              Email me at <a href={`mailto:${identity.email}`}>{identity.email}</a>.
-            </p>
-          </section>
+          </Section>
         </main>
-
-        <footer className="sv-footer">{readMe[readMe.length - 1]}</footer>
       </div>
     </div>
   )

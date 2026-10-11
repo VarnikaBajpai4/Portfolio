@@ -86,6 +86,8 @@ export interface Content {
     /** identities and motto as one line */
     headline: string
     subline: string
+    /** two plain sentences for the Standard View */
+    summary: string
     education: string
     email: string
   }
@@ -131,6 +133,8 @@ export const content: Content = {
     motto: MOTTO,
     headline: `${IDENTITIES.join(' ')} ${MOTTO}`,
     subline: 'At my core I am a builder. I like to build things that challenge me and help my community.',
+    summary:
+      'Software engineer working on ML development and MLOps. I build backend systems, automation and applied machine learning models.',
     education:
       'BTech in Information Technology with Honours in AI, KJ Somaiya School of Engineering, Mumbai (2022–2026)',
     email: 'bajpaivarnika04@gmail.com',
