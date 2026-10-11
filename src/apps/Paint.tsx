@@ -73,8 +73,8 @@ const GLYPHS: Record<Tool | 'bucket', string[]> = {
 const LEGEND = { '#': 'var(--ink)', a: 'var(--c4)', o: 'var(--paper)' }
 
 const HINTS: Record<Tool, string> = {
-  brush: 'Brush: drag on the picture to paint the colour in.',
-  eraser: 'Eraser: drag to rub the colour out. Double-click the tool to clear it all.',
+  brush: 'Brush: drag to paint the colour back.',
+  eraser: 'Try the eraser: drag on the picture. Double-click the tool to rub it all out.',
   zoom: 'FatBits: move over the picture to look closely.',
 }
 
@@ -82,33 +82,28 @@ const HINTS: Record<Tool, string> = {
 const DOTS = 230
 /** brush widths, in dots */
 const SIZES = [8, 16, 30]
-const AUTO_MS = 1100
 const POUR_MS = 650
 
 /**
- * My paintings in a paint program, as MacPaint was. Each one starts as a black and white dot picture.
- * The bucket pours the colour in, the brush paints it in by hand, and the eraser takes it out again.
+ * My paintings in a paint program, as MacPaint was. The eraser rubs a picture down to black and white dots,
+ * as the first Macintosh drew pictures. The brush paints the colour back, and the bucket pours it all back.
  */
 export function Paint() {
   const works = content.paintings
   const [index, setIndex] = useState(0)
-  const [tool, setTool] = useState<Tool>('brush')
+  const [tool, setTool] = useState<Tool>('eraser')
   const [size, setSize] = useState(1)
-  const [state, setState] = useState<'dots' | 'mixed' | 'colour'>('dots')
+  const [state, setState] = useState<'dots' | 'mixed' | 'colour'>('colour')
   const [origin, setOrigin] = useState('50% 50%')
   const work = works[index]
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   /** the full dot picture, kept so that the eraser can put dots back */
   const dotsRef = useRef<HTMLCanvasElement | null>(null)
-  const autoTimer = useRef(0)
   const frame = useRef(0)
   const last = useRef<{ x: number; y: number } | null>(null)
 
-  const stopMotion = () => {
-    window.clearTimeout(autoTimer.current)
-    cancelAnimationFrame(frame.current)
-  }
+  const stopMotion = () => cancelAnimationFrame(frame.current)
 
   /** The colour runs down the picture from the top. */
   const pour = () => {
@@ -130,11 +125,6 @@ export function Paint() {
     }
     frame.current = requestAnimationFrame(step)
   }
-  const pourRef = useRef(pour)
-  useEffect(() => {
-    pourRef.current = pour
-  })
-
   const allDots = () => {
     const canvas = canvasRef.current
     const dots = dotsRef.current
@@ -144,7 +134,7 @@ export function Paint() {
     setState('dots')
   }
 
-  // a new picture: make its dot picture, show it, and then let the colour in
+  // a new picture: make its dot picture and keep it for the eraser; the picture itself shows in colour
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -153,27 +143,24 @@ export function Paint() {
     const height = Math.round(work.h * scale)
     const image = new Image()
     image.onload = () => {
-      canvas.width = width
-      canvas.height = height
-      const context = canvas.getContext('2d', { willReadFrequently: true })
+      const copy = document.createElement('canvas')
+      copy.width = width
+      copy.height = height
+      const context = copy.getContext('2d', { willReadFrequently: true })
       if (!context) return
       context.drawImage(image, 0, 0, width, height)
       const pixels = context.getImageData(0, 0, width, height)
       atkinson(pixels)
       context.putImageData(pixels, 0, 0)
-      const copy = document.createElement('canvas')
-      copy.width = width
-      copy.height = height
-      copy.getContext('2d')?.drawImage(canvas, 0, 0)
       dotsRef.current = copy
-      setState('dots')
-      if (prefersReducedMotion()) pourRef.current()
-      else autoTimer.current = window.setTimeout(() => pourRef.current(), AUTO_MS)
+      // setting the size also clears the canvas, so the colour picture below shows
+      canvas.width = width
+      canvas.height = height
+      setState('colour')
     }
     image.src = file(work.id)
     return () => {
       image.onload = null
-      window.clearTimeout(autoTimer.current)
       cancelAnimationFrame(frame.current)
     }
   }, [work])

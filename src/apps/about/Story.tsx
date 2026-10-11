@@ -133,6 +133,7 @@ function KeyCaps() {
   )
 }
 
+const CHELSEA_BLUE = '#2f6fd6'
 const STICKER_FILLS = ['var(--c4)', 'var(--c2)', 'var(--c3)', 'var(--c1)']
 
 function Hobby({ icon, label, index }: { icon: HobbyIcon; label: string; index: number }) {
@@ -165,7 +166,7 @@ function Hobby({ icon, label, index }: { icon: HobbyIcon; label: string; index: 
     >
       {/* a new key restarts the wobble each time it is dropped */}
       <span key={drops} className={`hobby-art px-border${drops ? ' is-dropped' : ''}`}>
-        <Sticker name={icon} size={44} fill={STICKER_FILLS[index % STICKER_FILLS.length]} />
+        <Sticker name={icon} size={44} fill={icon === 'football' ? CHELSEA_BLUE : STICKER_FILLS[index % STICKER_FILLS.length]} />
       </span>
       <span className="hobby-label">{label}</span>
     </li>

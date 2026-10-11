@@ -81,7 +81,8 @@ export function WorldMap() {
           {/* the lines of latitude and longitude through the chosen place */}
           <line className="map-cross" x1="0" x2={COLS} y1={y(place.lat)} y2={y(place.lat)} />
           <line className="map-cross" y1="0" y2={ROWS} x1={x(place.lon)} x2={x(place.lon)} />
-          {places.map((p) => (
+          {/* the chosen pin is drawn last, on top: some places are close to each other */}
+          {[...places.filter((p) => p.id !== id), place].map((p) => (
             <rect
               key={p.id}
               className={`map-pin${p.id === id ? ' is-on' : ''}`}

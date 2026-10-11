@@ -134,6 +134,7 @@ export interface Content {
   /** in the order they are shown */
   paintings: Painting[]
   places: Place[]
+  books: { title: string; author: string }[]
   /** one Note Pad page each */
   notes: Note[]
   trash: string[]
@@ -193,7 +194,7 @@ export const content: Content = {
     { icon: 'goggles', label: 'Swimming' },
     { icon: 'shuttle', label: 'Badminton' },
     { icon: 'book', label: 'Reading' },
-    { icon: 'football', label: 'Football' },
+    { icon: 'football', label: 'Chelsea FC' },
     { icon: 'mic', label: 'Singing' },
     { icon: 'whisk', label: 'Baking' },
     { icon: 'palette', label: 'Painting' },
@@ -398,7 +399,7 @@ export const content: Content = {
     'My mother is why I take challenges head on, the way she does. She gave me the confidence, some would call it delusion, that I cannot fail. I have never corrected her.',
     FELL_FOR_CS,
     SINCE_THEN,
-    'Away from the keyboard: weights, pilates, running, swimming, badminton, books, football, singing, baking and painting.',
+    'Away from the keyboard: weights, pilates, running, swimming, badminton, books, Chelsea, singing, baking and painting.',
     'This whole site is a homage to the retro Mac, System 1 to 7. I got my Mac when I started engineering and it has been my best friend ever since.',
   ],
 
@@ -517,7 +518,15 @@ export const content: Content = {
       lat: 46.43,
       lon: 6.91,
       zone: 'Europe/Zurich',
-      note: 'Queen recorded here. The statue of Freddie looks at the lake.',
+      note: 'Queen, my favourite band, recorded here. The statue of Freddie looks at the lake.',
+    },
+    {
+      id: 'silverstone',
+      name: 'Silverstone',
+      lat: 52.07,
+      lon: -1.02,
+      zone: 'Europe/London',
+      note: 'Lewis Hamilton, number 44. This is his home race.',
     },
     {
       id: 'detroit',
@@ -527,36 +536,23 @@ export const content: Content = {
       zone: 'America/Detroit',
       note: 'Eminem. I like all rap, but he is first.',
     },
-    {
-      id: 'interlagos',
-      name: 'Interlagos, São Paulo',
-      lat: -23.7,
-      lon: -46.7,
-      zone: 'America/Sao_Paulo',
-      note: 'Lewis Hamilton, number 44. Some of his best drives were here.',
-    },
-    {
-      id: 'stockholm',
-      name: 'Stockholm',
-      lat: 59.33,
-      lon: 18.07,
-      zone: 'Europe/Stockholm',
-      note: 'Minecraft was made here. I still play it.',
-    },
-    {
-      id: 'sanfrancisco',
-      name: 'San Francisco',
-      lat: 37.82,
-      lon: -122.48,
-      zone: 'America/Los_Angeles',
-      note: 'The Golden Gate. I drew it in pencil: it is in Paintings.',
-    },
+  ],
+
+  // The books I tell people to read.
+  books: [
+    { title: 'One, Two, Buckle My Shoe', author: 'Agatha Christie' },
+    { title: 'To Kill a Mockingbird', author: 'Harper Lee' },
+    { title: 'Barbarians at the Gate', author: 'Bryan Burrough and John Helyar' },
+    { title: 'The Third Door', author: 'Alex Banayan' },
+    { title: 'The Joys of Compounding', author: 'Gautam Baid' },
+    { title: 'Atomic Habits', author: 'James Clear' },
+    { title: 'O. Henry Omnibus', author: 'O. Henry' },
+    { title: 'My Gita', author: 'Devdutt Pattanaik' },
   ],
 
   // DRAFT — owner to edit
   trash: [
     'todo_app_v7_final_FINAL.zip',
-    'A blockchain for my sourdough starter',
     'model_that_was_99_percent_accurate_on_training_data.pkl',
     'Plan to read only one book at a time',
     'rest_day.txt',

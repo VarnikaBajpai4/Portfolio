@@ -124,7 +124,7 @@ test('Open my story turns About into the full story', async ({ page }) => {
   await expect(about.locator('.keys-display')).toContainText('Docker: Sandboxed runtimes')
   await expect(about.getByRole('button', { name: 'Docker', exact: true })).toHaveAttribute('aria-pressed', 'true')
 
-  await about.getByText('Football', { exact: true }).scrollIntoViewIfNeeded()
+  await about.getByText('Chelsea FC', { exact: true }).scrollIntoViewIfNeeded()
   await expect(about.locator('.hobby')).toHaveCount(10)
   await expect(about.locator('.sys')).toContainText('homage to the retro Mac')
 })
@@ -320,24 +320,16 @@ test('Achievements is a scrapbook with a scroll bar, and the photo opens larger'
   await expect(book.getByRole('button', { name: 'Next' })).toBeDisabled()
 })
 
-test('Paintings shows each picture as dots, then in colour, and the tools change it', async ({ page }) => {
+test('Paintings shows the pictures in colour, and the tools change them', async ({ page }) => {
   await page.getByRole('button', { name: 'Paintings' }).dblclick()
   const paint = page.getByRole('dialog', { name: 'Paintings' })
   const art = paint.locator('.paint-art')
   await expect(paint.getByRole('img', { name: /^Swans/ })).toBeVisible()
   await expect(paint.getByRole('list', { name: 'Pictures' }).getByRole('button')).toHaveCount(12)
-  // the colour comes in by itself
   await expect(art).toHaveAttribute('data-state', 'colour')
+  await expect(paint.locator('.paint-info')).toContainText('Try the eraser')
 
-  // a double-click on the eraser brings the dots back, and the bucket pours the colour in again
-  await paint.getByRole('button', { name: 'Eraser' }).dblclick()
-  await expect(art).toHaveAttribute('data-state', 'dots')
-  await paint.getByRole('button', { name: 'Paint bucket' }).click()
-  await expect(art).toHaveAttribute('data-state', 'colour')
-
-  // the brush paints by hand
-  await paint.getByRole('button', { name: 'Eraser' }).dblclick()
-  await paint.getByRole('button', { name: 'Brush' }).click()
+  // the eraser is ready: a drag rubs part of the picture down to dots
   const box = (await art.boundingBox())!
   await page.mouse.move(box.x + 30, box.y + 30)
   await page.mouse.down()
@@ -345,8 +337,15 @@ test('Paintings shows each picture as dots, then in colour, and the tools change
   await page.mouse.up()
   await expect(art).toHaveAttribute('data-state', 'mixed')
 
+  // a double-click on the eraser rubs it all out, and the bucket pours the colour back
+  await paint.getByRole('button', { name: 'Eraser' }).dblclick()
+  await expect(art).toHaveAttribute('data-state', 'dots')
+  await paint.getByRole('button', { name: 'Paint bucket' }).click()
+  await expect(art).toHaveAttribute('data-state', 'colour')
+
   await paint.getByRole('button', { name: 'Lion' }).click()
   await expect(paint.getByRole('img', { name: /^Lion, pencil/ })).toBeVisible()
+  await expect(art).toHaveAttribute('data-state', 'colour')
   await paint.getByRole('button', { name: 'Next picture' }).click()
   await expect(paint.locator('.paint-info')).toContainText('Swans')
 })
@@ -357,7 +356,7 @@ test('Map shows my places with their local time', async ({ page }) => {
   await term.getByRole('textbox').press('Enter')
   const map = page.getByRole('dialog', { name: 'Map', exact: true })
   await expect(map.getByRole('heading', { level: 2 })).toHaveText('Mumbai')
-  await expect(map.locator('.map-pin')).toHaveCount(8)
+  await expect(map.locator('.map-pin')).toHaveCount(6)
 
   await map.getByRole('button', { name: 'Stamford Bridge, London' }).click()
   await expect(map).toContainText('A Blue since birth')
@@ -367,4 +366,13 @@ test('Map shows my places with their local time', async ({ page }) => {
 
   await map.getByRole('button', { name: 'Find next' }).click()
   await expect(map.getByRole('heading', { level: 2 })).toHaveText('Giverny')
+})
+
+test('the bookshelf on the disk names a book when its spine is chosen', async ({ page }) => {
+  await page.getByRole('button', { name: /Varnika HD/ }).dblclick()
+  await page.getByRole('dialog', { name: 'Varnika HD' }).getByRole('button', { name: 'Books' }).click()
+  const shelf = page.getByRole('dialog', { name: 'Books' })
+  await expect(shelf.getByRole('list', { name: 'Shelf' }).getByRole('button')).toHaveCount(8)
+  await shelf.getByRole('button', { name: /Atomic Habits/ }).click()
+  await expect(shelf.locator('.books-card')).toContainText('James Clear')
 })

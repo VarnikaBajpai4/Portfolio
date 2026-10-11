@@ -58,7 +58,7 @@ const TOP = [
   '  2  gym              21.5',
   '  3  side-projects    14.0',
   '  4  reading          11.0',
-  '  5  football          6.5',
+  '  5  chelsea           6.5',
   '  6  baking            5.0',
   '  7  painting          4.0',
   '  8  window-shopping   3.0',
