@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { APPS, fillColor, getApp, rectFor } from '../apps/registry'
 import { content } from '../content'
+import { track } from '../analytics'
 import { PixelGrid } from '../icons/PixelGrid'
 import { prefersReducedMotion } from '../motion'
 import { TITLE_H } from '../wm/reducer'
@@ -99,8 +100,10 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
   )
 
   const openApp = useCallback(
-    (id: AppId, param?: string, origin?: Element) =>
-      openFrom(id, origin?.getBoundingClientRect() ?? homeOf(id), param),
+    (id: AppId, param?: string, origin?: Element) => {
+      track('window_open', { app: id })
+      openFrom(id, origin?.getBoundingClientRect() ?? homeOf(id), param)
+    },
     [openFrom],
   )
 

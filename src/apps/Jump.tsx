@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { track } from '../analytics'
 import { Chindi } from '../icons/Chindi'
 import { Person } from '../icons/Family'
 import { FAMILY_IDS, PERSON_H, PERSON_W } from '../icons/people'
@@ -58,6 +59,7 @@ export function Jump() {
     for (const runner of g.runners) runner.on = false
     setScore(0)
     setState('running')
+    track('game_start')
   }
 
   /** One control for all of it: start, jump, and start again. */
@@ -146,6 +148,7 @@ export function Jump() {
 
       place()
       if (bumped) {
+        track('game_over', { jumped: g.score })
         setState('over')
         setBest((old) => {
           const top = Math.max(old, g.score)

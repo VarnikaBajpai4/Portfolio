@@ -41,3 +41,9 @@ To add the resume download, put the PDF in `public/` and set `resumePdf` in `src
 The site is served from the root of its own domain. Cloudflare builds it on each push to `main`: the build command is `npm run build` and the output folder is `dist`.
 
 `.github/workflows/check.yml` runs the lint, the type check and the build on each push. It does not deploy.
+
+## Analytics
+
+`src/analytics.ts` counts actions with PostHog: which window opens, which project, the name of a terminal command, a theme change, a game, and a click on one of my links. It sends the names of actions only, never typed text. It uses no cookie.
+
+Nothing is loaded or sent unless the build has the variable `VITE_POSTHOG_KEY` (the project key from PostHog). `VITE_POSTHOG_HOST` is optional: the default is the US host, and `https://eu.i.posthog.com` is the EU one. It is off on localhost and for a browser that asks not to be tracked.

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import { track } from './analytics'
 import { readStored, writeStored } from './storage'
 
 export type PaletteId = 'sorbet' | 'cocoa' | 'overworld' | 'noir'
@@ -26,6 +27,8 @@ export function getPalette(): PaletteId {
 }
 
 export function setPalette(id: PaletteId): void {
+  // the first call of a page only applies the saved choice: that is not a change by the visitor
+  if (current && current !== id) track('theme_change', { theme: id })
   current = id
   document.documentElement.dataset.palette = id
   writeStored(KEY, id)

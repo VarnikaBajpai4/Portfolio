@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent, KeyboardEvent } from 'react'
+import { track } from '../analytics'
 import { Portrait } from '../icons/Portrait'
 import { askPet, dropEverything } from '../shell/events'
 import { useOpenApp } from '../shell/openApp'
-import { complete, runCommand } from '../terminal/engine'
+import { COMMANDS, complete, runCommand } from '../terminal/engine'
 import { loadPython } from '../terminal/python'
 import type { Python } from '../terminal/python'
 import { setPalette } from '../theme'
@@ -77,6 +78,10 @@ export function Terminal() {
       void runPython(python, command)
       return
     }
+
+    // the name of the command only, and only if it is one of mine: never what was typed
+    const word = command.trim().toLowerCase().split(/\s+/)[0]
+    if (word) track('terminal_command', { command: COMMANDS.includes(word) ? word : 'other' })
 
     const result = runCommand(command)
     const action = result.action

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { track } from '../analytics'
 import type { ComponentType } from 'react'
 import { content } from '../content'
 import type { Project } from '../content'
@@ -33,7 +34,10 @@ export function Projects({ param }: { param?: string }) {
       <ul className="project-grid app-pad">
         {content.projects.map((p) => (
           <li key={p.id}>
-            <button type="button" className="icon-tile" onClick={() => setSelected(p.id)}>
+            <button type="button" className="icon-tile" onClick={() => {
+                track('project_open', { project: p.id })
+                setSelected(p.id)
+              }}>
               <ProjectFolder id={p.id} />
               <span className="chip">{p.name}</span>
             </button>

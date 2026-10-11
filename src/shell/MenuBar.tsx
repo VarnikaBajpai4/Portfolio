@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getApp, rectFor } from '../apps/registry'
+import { track } from '../analytics'
 import { content } from '../content'
 import { PixelGrid } from '../icons/PixelGrid'
 import { Portrait } from '../icons/Portrait'
@@ -84,6 +85,7 @@ export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClea
 
   const copyEmail = () => {
     const { email } = content.identity
+    track('copy_email')
     // the clipboard can be blocked: then Chindi reads the address out
     const copied = navigator.clipboard?.writeText(email) ?? Promise.reject(new Error('no clipboard'))
     copied.then(

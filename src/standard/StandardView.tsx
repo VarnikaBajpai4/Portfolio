@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { track } from '../analytics'
 import { content } from '../content'
 import type { Job } from '../content'
 import { HOME_URL } from '../shell/links'
@@ -52,7 +53,13 @@ export function StandardView() {
     <div className="sv">
       <nav className="sv-bar" aria-label="Page">
         <a href={HOME_URL}>Back to desktop</a>
-        <button type="button" onClick={() => window.print()}>
+        <button
+          type="button"
+          onClick={() => {
+            track('print')
+            window.print()
+          }}
+        >
           Print or save as PDF
         </button>
       </nav>
