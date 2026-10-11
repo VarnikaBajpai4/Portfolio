@@ -31,6 +31,10 @@ export interface Achievement {
   id: string
   title: string
   detail: string
+  /** the small drawing on its Scrapbook page */
+  sticker?: 'medal' | 'book' | 'mic' | 'mac'
+  /** a row of marks under the text, such as four grades */
+  tally?: { label: string; values: string[] }
 }
 
 export interface FamilyMember {
@@ -147,7 +151,7 @@ export const content: Content = {
 
   stats: [
     { value: 9.66, decimals: 2, label: 'CGPA' },
-    { value: 2, prefix: '#', label: 'in my batch, silver medal' },
+    { value: 2, prefix: '#', label: 'in the IT branch, silver medal' },
   ],
 
   story: [FELL_FOR_CS, SINCE_THEN],
@@ -226,7 +230,6 @@ export const content: Content = {
       end: '2025-07',
       tools: ['Python', 'Flask', 'Grafana', 'Jira', 'Xray'],
       points: [
-        'One of 19 students selected from the college.',
         'Built an ML classifier for testing logs with Python, Flask and Grafana.',
         'Connected an internal AI platform to Jira so that it drafts Xray test cases automatically.',
         'Converted the internship into a pre-placement offer.',
@@ -319,28 +322,33 @@ export const content: Content = {
     {
       id: 'silver-medal',
       title: 'Silver Medal',
-      detail: 'Graduated second in the entire batch with a CGPA of 9.66.',
-    },
-    {
-      id: 'honours',
-      title: 'Honours in AI',
-      detail: 'Completed an Honours in Artificial Intelligence alongside the BTech.',
+      detail: 'Second in the IT branch, with a CGPA of 9.66.',
+      sticker: 'medal',
+      tally: { label: 'SGPA in each of the last four semesters', values: ['10', '10', '10', '10'] },
     },
     {
       id: 'ubi',
       title: 'UBI Idea Hackathon, 2nd Runner-up',
-      detail: 'National level, 500+ teams. Built UBI Bharosa for Union Bank of India.',
+      detail: 'PSBs Hackathon Series 2025. National level, 500+ teams. We built UBI Bharosa for Union Bank of India.',
+    },
+    {
+      id: 'honours',
+      title: 'Honours in AI',
+      detail: 'With the BTech: data science, AI, machine learning, deep learning and NLP.',
+      sticker: 'book',
+    },
+    {
+      id: 'barclays-ppo',
+      title: 'Barclays Internship and PPO',
+      detail: 'Selected for the summer internship, then offered a full-time role.',
+      sticker: 'mac',
     },
     {
       id: 'emun',
       title: 'E-MUN, 2nd Best Delegate',
       detail:
         'Represented the Republic of India in the WTO committee on e-commerce and digital trade: navigating tariff moratoriums.',
-    },
-    {
-      id: 'barclays-ppo',
-      title: 'Barclays Internship and PPO',
-      detail: 'One of 19 students selected from the college, then offered a full-time role.',
+      sticker: 'mic',
     },
     {
       id: 'gcp',
@@ -415,6 +423,17 @@ export const content: Content = {
         'The details stay inside the bank.',
       ],
       tools: ['Python', 'Flask', 'Grafana'],
+    },
+    {
+      title: 'Honours in AI',
+      tag: 'studied',
+      lines: [
+        'Data science and AI: normalisation, similarity, search, reasoning.',
+        'ML: classification, LDA, PCA, kernel methods.',
+        'DL and NLP: CNNs, RNNs, LSTMs, seq2seq.',
+        'I built each topic as a small project. On my GitHub: speech emotion recognition with an LSTM.',
+      ],
+      tools: ['ML', 'deep learning', 'NLP'],
     },
     {
       title: 'What I am working on',

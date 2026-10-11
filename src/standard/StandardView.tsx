@@ -61,7 +61,7 @@ export function StandardView() {
             {readMe.slice(0, -1).map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
-            <p>{identity.education}. Silver medal, rank 2 in the batch, CGPA 9.66.</p>
+            <p>{identity.education}. Silver medal, rank 2 in the IT branch, CGPA 9.66.</p>
           </section>
 
           <section aria-labelledby="sv-skills">

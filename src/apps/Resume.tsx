@@ -21,7 +21,7 @@ export function Resume() {
       </header>
 
       <h3>Education</h3>
-      <p className="read">{identity.education}. Silver medal, rank 2 in the batch, CGPA 9.66.</p>
+      <p className="read">{identity.education}. Silver medal, rank 2 in the IT branch, CGPA 9.66.</p>
 
       <h3>Skills</h3>
       <p className="read">{[...languages, ...tools].join(' · ')}</p>

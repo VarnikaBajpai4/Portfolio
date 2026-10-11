@@ -1,0 +1,247 @@
+/* Achievements: a scrapbook. One item on a page, and a scroll bar along the foot to turn the pages. */
+
+.scrapbook {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  min-height: 230px;
+}
+
+.scrap-page {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 0;
+  padding: 14px 18px;
+  overflow: hidden;
+}
+
+/* the drawing sits on a small card that is taped to the page */
+.scrap-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  rotate: -3deg;
+}
+
+.scrap-art::before,
+.scrap-photo::before {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 44px;
+  height: 16px;
+  background: #ffffffb0;
+  border: 1px solid #00000055;
+  content: '';
+  translate: -50% 0;
+  rotate: 2deg;
+}
+
+/* the photo is an instant print: a white frame with more room at the foot */
+.scrap-photo {
+  position: relative;
+  width: 210px;
+  padding: 7px 7px 20px;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: zoom-in;
+  rotate: -2deg;
+}
+
+.scrap-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border: 1px solid var(--ink);
+}
+
+/* a click gives the photo the full page */
+.scrap-page.is-big {
+  position: relative;
+}
+
+.is-big .scrap-photo {
+  position: absolute;
+  inset: 10px 14px;
+  width: auto;
+  padding: 6px;
+  cursor: zoom-out;
+  rotate: none;
+}
+
+.is-big .scrap-photo img {
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+  border: 0;
+}
+
+.is-big .scrap-photo::before,
+.is-big .scrap-text {
+  display: none;
+}
+
+.scrap-text {
+  display: none;
+}
+
+.scrap-text {
+  display: grid;
+  gap: 6px;
+}
+
+.scrap-text h2 {
+  font-size: 19px;
+}
+
+.scrap-tally {
+  display: grid;
+  gap: 3px;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.scrap-tally ul {
+  display: flex;
+  gap: 5px;
+}
+
+.scrap-tally li {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 26px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ---------- the scroll bar ---------- */
+
+.scrap-bar {
+  display: flex;
+  align-items: stretch;
+  height: 24px;
+  background: var(--paper);
+  border-top: var(--px) solid var(--ink);
+  font-size: 12px;
+  line-height: 22px;
+}
+
+.scrap-count,
+.scrap-kind {
+  flex: none;
+  min-width: 46px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.scrap-arrow {
+  flex: none;
+  width: 24px;
+  padding: 0;
+  background: var(--paper);
+  border: 0;
+  border-inline: var(--px) solid var(--ink);
+  font-size: 10px;
+}
+
+.scrap-arrow:disabled {
+  color: #00000055;
+  cursor: default;
+}
+
+.scrap-arrow:active:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.scrap-scroll {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  /* the grey of an old scroll bar: a one-pixel dither */
+  background: conic-gradient(#00000059 25%, transparent 0 50%, #00000059 0 75%, transparent 0) 0 0 / 2px 2px;
+  cursor: pointer;
+}
+
+.scrap-scroll::-webkit-slider-thumb {
+  width: 26px;
+  height: 22px;
+  appearance: none;
+  background: var(--paper);
+  border-inline: var(--px) solid var(--ink);
+}
+
+.scrap-scroll::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--paper);
+  border: 0;
+  border-inline: var(--px) solid var(--ink);
+  border-radius: 0;
+}
+
+.scrap-scroll:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scrap-page {
+    animation: scrap-in 200ms ease-out both;
+  }
+
+  .scrap-tally li {
+    animation: scrap-stamp 180ms ease-out both;
+    animation-delay: calc(var(--n) * 110ms + 200ms);
+  }
+
+  .scrap-art,
+  .scrap-photo {
+    transition: rotate 160ms ease-out;
+  }
+
+  .scrap-art:hover,
+  .scrap-page:not(.is-big) .scrap-photo:hover {
+    rotate: 0deg;
+  }
+}
+
+@keyframes scrap-in {
+  from {
+    opacity: 0;
+    translate: 10px 0;
+  }
+}
+
+@keyframes scrap-stamp {
+  from {
+    opacity: 0;
+    scale: 1.6;
+  }
+}
+
+@media (max-width: 560px) {
+  .scrap-page {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    align-content: center;
+  }
+
+  .scrap-tally {
+    justify-items: center;
+  }
+}

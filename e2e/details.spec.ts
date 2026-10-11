@@ -22,10 +22,10 @@ test('Note Pad lists my work and turns a page on click', async ({ page }) => {
   await pad.getByRole('button', { name: 'Next page' }).click()
   await expect(sheet).toContainText('OmniCompiler')
   await expect(sheet).toContainText('One Random Forest model per language')
-  await expect(pad.locator('.notepad-page')).toHaveText('2 / 8')
+  await expect(pad.locator('.notepad-page')).toHaveText('2 / 9')
 
   // the index jumps straight to a page
-  for (let i = 0; i < 7; i++) await pad.getByRole('button', { name: 'Next page' }).click()
+  for (let i = 0; i < 8; i++) await pad.getByRole('button', { name: 'Next page' }).click()
   await expect(sheet).toContainText('What I built, exactly')
   await sheet.getByRole('button', { name: 'What I am working on' }).click()
   await expect(sheet).toContainText('A Unified Multi-Language Debugging Framework')
@@ -297,4 +297,25 @@ test('double-clicking Chindi introduces her, then the note leaves', async ({ pag
   await expect(card).toContainText('I prefer her company to most humans.')
   await expect(card.getByRole('img')).toBeVisible()
   await expect(card).toHaveCount(0, { timeout: 9000 })
+})
+
+test('Achievements is a scrapbook with a scroll bar, and the photo opens larger', async ({ page }) => {
+  await page.getByRole('navigation', { name: 'Dock' }).getByRole('button', { name: 'Achievements', exact: true }).click()
+  const book = page.getByRole('dialog', { name: 'Achievements' })
+  await expect(book).toContainText('Silver Medal')
+  await expect(book).toContainText('Second in the IT branch')
+  await expect(book.getByRole('list', { name: /last four semesters/ }).getByRole('listitem')).toHaveCount(4)
+  await expect(book.getByRole('button', { name: 'Previous' })).toBeDisabled()
+
+  await book.getByRole('button', { name: 'Next' }).click()
+  await expect(book).toContainText('UBI Idea Hackathon')
+  await expect(book.locator('.scrap-kind')).toHaveText('PICT')
+  await book.getByRole('button', { name: 'Make the photo larger' }).click()
+  await expect(book.getByRole('img')).toBeVisible()
+  await expect(book.locator('.scrap-text')).toBeHidden()
+
+  // the scroll bar goes to any page
+  await book.getByRole('slider', { name: 'Page' }).fill('7')
+  await expect(book).toContainText('Certificates')
+  await expect(book.getByRole('button', { name: 'Next' })).toBeDisabled()
 })
