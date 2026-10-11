@@ -1,0 +1,126 @@
+/* Map: a dot map of the world on top, the list of places and the chosen place below. */
+
+.map {
+  display: grid;
+  grid-template: 'world world' auto 'list detail' 1fr / 172px minmax(0, 1fr);
+  gap: 10px 12px;
+  min-height: 100%;
+  padding: 12px;
+}
+
+.map-world {
+  grid-area: world;
+  background: var(--paper);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.map-world svg {
+  width: 100%;
+  height: auto;
+}
+
+.map-land {
+  fill: var(--ink);
+}
+
+.map-cross {
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.55;
+}
+
+.map-pin {
+  fill: var(--c4);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+
+.map-pin.is-on {
+  fill: var(--c3);
+  stroke-width: 2.5;
+}
+
+.map-list {
+  display: grid;
+  grid-area: list;
+  align-content: start;
+  background: var(--paper);
+  border: var(--px) solid var(--ink);
+  overflow-y: auto;
+}
+
+.map-list button {
+  display: block;
+  width: 100%;
+  padding: 2px 8px;
+  overflow: hidden;
+  background: none;
+  border: 0;
+  font-size: 13px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-list button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.map-list button:focus-visible {
+  outline-offset: -3px;
+}
+
+.map-detail {
+  display: grid;
+  grid-area: detail;
+  gap: 6px;
+  align-content: start;
+}
+
+.map-detail h2 {
+  font-size: 18px;
+}
+
+.map-detail dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 12px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.map-detail dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.map-find {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 1px 10px;
+  font-size: 13px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .map-pin.is-on {
+    animation: map-blink 600ms steps(2, jump-none) infinite alternate;
+  }
+}
+
+@keyframes map-blink {
+  to {
+    fill: var(--paper);
+  }
+}
+
+@media (max-width: 560px) {
+  .map {
+    grid-template: 'world' auto 'detail' auto 'list' auto / minmax(0, 1fr);
+  }
+}

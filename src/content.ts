@@ -86,6 +86,19 @@ export interface Painting {
   h: number
 }
 
+/** A pin on the Map: a place that means something to me. */
+export interface Place {
+  id: string
+  name: string
+  /** north is positive */
+  lat: number
+  /** east is positive */
+  lon: number
+  /** IANA time zone, for the local time */
+  zone: string
+  note: string
+}
+
 export interface Content {
   identity: {
     name: string
@@ -120,6 +133,7 @@ export interface Content {
   readMe: string[]
   /** in the order they are shown */
   paintings: Painting[]
+  places: Place[]
   /** one Note Pad page each */
   notes: Note[]
   trash: string[]
@@ -476,6 +490,67 @@ export const content: Content = {
     { id: 'wildflowers', title: 'Wildflowers', medium: 'pencil', w: 1000, h: 800 },
     { id: 'goldengate', title: 'Golden Gate', medium: 'pencil', w: 720, h: 900 },
     { id: 'lion', title: 'Lion', medium: 'pencil', w: 670, h: 900 },
+  ],
+
+  // DRAFT notes — owner to edit
+  places: [
+    { id: 'mumbai', name: 'Mumbai', lat: 19.08, lon: 72.88, zone: 'Asia/Kolkata', note: 'Home. Everything starts here.' },
+    {
+      id: 'london',
+      name: 'Stamford Bridge, London',
+      lat: 51.48,
+      lon: -0.19,
+      zone: 'Europe/London',
+      note: 'Chelsea. A Blue since birth.',
+    },
+    {
+      id: 'giverny',
+      name: 'Giverny',
+      lat: 49.08,
+      lon: 1.53,
+      zone: 'Europe/Paris',
+      note: 'The garden of Monet. He is why I love to paint.',
+    },
+    {
+      id: 'montreux',
+      name: 'Montreux',
+      lat: 46.43,
+      lon: 6.91,
+      zone: 'Europe/Zurich',
+      note: 'Queen recorded here. The statue of Freddie looks at the lake.',
+    },
+    {
+      id: 'detroit',
+      name: 'Detroit',
+      lat: 42.33,
+      lon: -83.05,
+      zone: 'America/Detroit',
+      note: 'Eminem. I like all rap, but he is first.',
+    },
+    {
+      id: 'interlagos',
+      name: 'Interlagos, São Paulo',
+      lat: -23.7,
+      lon: -46.7,
+      zone: 'America/Sao_Paulo',
+      note: 'Lewis Hamilton, number 44. Some of his best drives were here.',
+    },
+    {
+      id: 'stockholm',
+      name: 'Stockholm',
+      lat: 59.33,
+      lon: 18.07,
+      zone: 'Europe/Stockholm',
+      note: 'Minecraft was made here. I still play it.',
+    },
+    {
+      id: 'sanfrancisco',
+      name: 'San Francisco',
+      lat: 37.82,
+      lon: -122.48,
+      zone: 'America/Los_Angeles',
+      note: 'The Golden Gate. I drew it in pencil: it is in Paintings.',
+    },
   ],
 
   // DRAFT — owner to edit

@@ -350,3 +350,21 @@ test('Paintings shows each picture as dots, then in colour, and the tools change
   await paint.getByRole('button', { name: 'Next picture' }).click()
   await expect(paint.locator('.paint-info')).toContainText('Swans')
 })
+
+test('Map shows my places with their local time', async ({ page }) => {
+  const term = page.getByRole('dialog', { name: 'Terminal' })
+  await term.getByRole('textbox').fill('open map')
+  await term.getByRole('textbox').press('Enter')
+  const map = page.getByRole('dialog', { name: 'Map', exact: true })
+  await expect(map.getByRole('heading', { level: 2 })).toHaveText('Mumbai')
+  await expect(map.locator('.map-pin')).toHaveCount(8)
+
+  await map.getByRole('button', { name: 'Stamford Bridge, London' }).click()
+  await expect(map).toContainText('A Blue since birth')
+  await expect(map).toContainText('51.48° N')
+  await expect(map).toContainText('0.19° W')
+  await expect(map.locator('.map-detail dd').last()).toHaveText(/\d\d:\d\d/)
+
+  await map.getByRole('button', { name: 'Find next' }).click()
+  await expect(map.getByRole('heading', { level: 2 })).toHaveText('Giverny')
+})

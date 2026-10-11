@@ -11,6 +11,7 @@ export const APP_IDS = [
   'trash',
   'hd',
   'paint',
+  'map',
 ] as const
 
 export type AppId = (typeof APP_IDS)[number]
