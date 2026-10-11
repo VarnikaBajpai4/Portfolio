@@ -9,6 +9,7 @@ import { useWM } from '../wm/store'
 import { Window } from '../wm/Window'
 import { WMProvider } from '../wm/WMProvider'
 import { ChindiCard } from './ChindiCard'
+import { Critters } from './Critters'
 import { DesktopIcons } from './DesktopIcons'
 import { Dock } from './Dock'
 import { GRAVITY_EVENT, askPet } from './events'
@@ -220,6 +221,7 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
           onShutDown={onShutDown}
         />
         <main className="desk-area">
+          <Critters />
           <DesktopIcons />
           {paws.map((paw) => (
             <span key={paw.id} className="paw" style={{ left: paw.x, top: paw.y, rotate: `${paw.turn}deg` }} aria-hidden="true">

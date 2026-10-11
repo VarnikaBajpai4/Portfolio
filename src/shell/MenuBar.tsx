@@ -41,13 +41,19 @@ interface Props {
 const HEART = ['.KK.KK.', 'KRWKRRK', 'KRRRRRK', '.KRRRK.', '..KRK..', '...K...']
 const HEART_LEGEND = { K: '#000000', R: '#e0312b', W: '#ffffff' }
 
+// the square sun and moon of the Overworld theme
+const SUN = ['YYYYY', 'YWWWY', 'YWWWY', 'YWWWY', 'YYYYY']
+const MOON = ['WWWWW', 'WGWWW', 'WWWGW', 'WWGWW', 'WWWWW']
+const SKY_LEGEND = { Y: '#f2c94c', W: '#fff6c9', G: '#b9bfd0' }
+
 function useClock() {
   const [now, setNow] = useState(() => new Date())
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 15_000)
     return () => window.clearInterval(timer)
   }, [])
-  return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+  const hour = now.getHours()
+  return { clock: now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }), day: hour >= 6 && hour < 18 }
 }
 
 export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClearPaws, onRestartIntro, onShutDown }: Props) {
@@ -56,7 +62,7 @@ export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClea
   const [palette, setPalette] = usePalette()
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const barRef = useRef<HTMLElement>(null)
-  const clock = useClock()
+  const { clock, day } = useClock()
 
   useEffect(() => {
     if (!openMenu) return
@@ -214,6 +220,10 @@ export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClea
         <a className="btn standard-link" href={STANDARD_URL}>
           Standard View
         </a>
+        {/* the Overworld theme shows the sun by day and the moon by night */}
+        <span className="sky" aria-hidden="true">
+          <PixelGrid rows={day ? SUN : MOON} legend={day ? SKY_LEGEND : { ...SKY_LEGEND, W: '#e6e9f2' }} size={14} />
+        </span>
         <span className="clock">{clock}</span>
       </div>
     </header>
