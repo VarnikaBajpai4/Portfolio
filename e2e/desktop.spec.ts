@@ -116,5 +116,5 @@ test('palette choice survives a reload', async ({ page }) => {
 })
 
 test('Standard View link points at the standard page', async ({ page }) => {
-  await expect(page.getByRole('link', { name: 'Standard View' })).toHaveAttribute('href', /\/Portfolio\/standard\/$/)
+  await expect(page.getByRole('link', { name: 'Standard View' })).toHaveAttribute('href', /^\/standard\/$/)
 })

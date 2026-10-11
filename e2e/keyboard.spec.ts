@@ -34,5 +34,5 @@ test('the desktop works with the keyboard alone', async ({ page }) => {
 
   await tabTo(page, 'Standard View')
   await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/\/Portfolio\/standard\/$/)
+  await expect(page).toHaveURL(/:4173\/standard\/$/)
 })

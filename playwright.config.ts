@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const url = 'http://localhost:4173/Portfolio/'
+const url = 'http://localhost:4173/'
 
 export default defineConfig({
   testDir: 'e2e',

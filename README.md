@@ -38,4 +38,6 @@ To add the resume download, put the PDF in `public/` and set `resumePdf` in `src
 
 ## Deployment
 
-Pushing to `main` builds the site and deploys it to GitHub Pages through `.github/workflows/deploy.yml`. One-time setup: in the repository settings, open **Pages** and set **Source** to **GitHub Actions**.
+The site is served from the root of its own domain. Cloudflare builds it on each push to `main`: the build command is `npm run build` and the output folder is `dist`.
+
+`.github/workflows/check.yml` runs the lint, the type check and the build on each push. It does not deploy.
