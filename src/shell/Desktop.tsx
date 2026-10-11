@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { APPS, fillColor, getApp, rectFor } from '../apps/registry'
 import { content } from '../content'
+import { PixelGrid } from '../icons/PixelGrid'
 import { prefersReducedMotion } from '../motion'
 import { TITLE_H } from '../wm/reducer'
 import type { AppId, Bounds, Win } from '../wm/reducer'
@@ -10,7 +11,7 @@ import { WMProvider } from '../wm/WMProvider'
 import { ChindiCard } from './ChindiCard'
 import { DesktopIcons } from './DesktopIcons'
 import { Dock } from './Dock'
-import { GRAVITY_EVENT } from './events'
+import { GRAVITY_EVENT, askPet } from './events'
 import { MenuBar } from './MenuBar'
 import { OpenAppContext } from './openApp'
 import { Pet } from './Pet'
@@ -44,6 +45,8 @@ function windowEl(id: AppId): HTMLElement | null {
 }
 
 /** The note that is on the desktop from the start, placed under the icon column. */
+const PAW = ['..#...#..', '.###.###.', '..#...#..', '#..###..#', '##.###.##', '..#####..', '.#######.', '..##.##..']
+
 function homageNote(bounds: Bounds): StickyNote {
   return {
     id: 0,
@@ -69,6 +72,7 @@ interface Props {
 function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & { bounds: Bounds }) {
   const { windows, dispatch } = useWM()
   const [stickies, setStickies] = useState<StickyNote[]>(() => [homageNote(bounds)])
+  const [paws, setPaws] = useState<{ id: number; x: number; y: number; turn: number }[]>([])
   const [meeting, setMeeting] = useState(false)
   const endMeeting = useCallback(() => setMeeting(false), [])
   const arriving = useRef(new Map<AppId, Box>())
@@ -184,6 +188,20 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
     }
   }, [dispatch])
 
+  /** Edit > Paste Paw Print: Chindi leaves a print at a random place on the desktop. */
+  const pastePaw = () => {
+    setPaws((list) => [
+      ...list,
+      {
+        id: nextSticky.current++,
+        x: Math.round(Math.random() * Math.max(bounds.w - 60, 0)) + 10,
+        y: Math.round(Math.random() * Math.max(bounds.h - 60, 0)) + 10,
+        turn: Math.round(Math.random() * 60 - 30),
+      },
+    ])
+    if (paws.length === 0) askPet({ say: 'That one is mine.' })
+  }
+
   const addSticky = useCallback((text: string, x: number, y: number) => {
     setStickies((list) => [...list, { id: nextSticky.current++, text, x: x - 70, y: y - MENU_H - 20 }])
   }, [])
@@ -194,11 +212,20 @@ function DesktopInner({ bounds, entrance, onRestartIntro, onShutDown }: Props & 
         <MenuBar
           bounds={bounds}
           onCleanUp={() => dispatch({ type: 'reset', windows: startWindows(bounds) })}
+          paws={paws.length}
+          onPastePaw={pastePaw}
+          onUndoPaw={() => setPaws((list) => list.slice(0, -1))}
+          onClearPaws={() => setPaws([])}
           onRestartIntro={onRestartIntro}
           onShutDown={onShutDown}
         />
         <main className="desk-area">
           <DesktopIcons />
+          {paws.map((paw) => (
+            <span key={paw.id} className="paw" style={{ left: paw.x, top: paw.y, rotate: `${paw.turn}deg` }} aria-hidden="true">
+              <PixelGrid rows={PAW} legend={{ '#': 'currentColor' }} size={36} />
+            </span>
+          ))}
           {windows.map((win) => {
             const app = getApp(win.id)
             const App = app.component

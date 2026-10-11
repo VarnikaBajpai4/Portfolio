@@ -639,3 +639,24 @@ a.menu-item {
     transform: scaleX(0);
   }
 }
+
+/* a paw print that Chindi leaves on the desktop, from the Edit menu */
+.paw {
+  position: absolute;
+  color: var(--ink);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .paw {
+    animation: paw-press 220ms ease-out both;
+  }
+}
+
+@keyframes paw-press {
+  from {
+    opacity: 0;
+    scale: 1.7;
+  }
+}

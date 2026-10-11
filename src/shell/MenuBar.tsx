@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { getApp, rectFor } from '../apps/registry'
+import { content } from '../content'
 import { Portrait } from '../icons/Portrait'
 import { PALETTES, usePalette } from '../theme'
 import type { Bounds } from '../wm/reducer'
 import { useWM } from '../wm/store'
+import { askPet } from './events'
 import { STANDARD_URL } from './links'
 import { useOpenApp } from './openApp'
 
@@ -25,6 +27,11 @@ interface MenuDef {
 interface Props {
   bounds: Bounds
   onCleanUp: () => void
+  /** how many paw prints are on the desktop */
+  paws: number
+  onPastePaw: () => void
+  onUndoPaw: () => void
+  onClearPaws: () => void
   onRestartIntro: () => void
   onShutDown: () => void
 }
@@ -38,7 +45,7 @@ function useClock() {
   return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
 }
 
-export function MenuBar({ bounds, onCleanUp, onRestartIntro, onShutDown }: Props) {
+export function MenuBar({ bounds, onCleanUp, paws, onPastePaw, onUndoPaw, onClearPaws, onRestartIntro, onShutDown }: Props) {
   const { dispatch, topId } = useWM()
   const openApp = useOpenApp()
   const [palette, setPalette] = usePalette()
@@ -63,6 +70,16 @@ export function MenuBar({ bounds, onCleanUp, onRestartIntro, onShutDown }: Props
       document.removeEventListener('pointerdown', onPointer)
     }
   }, [openMenu])
+
+  const copyEmail = () => {
+    const { email } = content.identity
+    // the clipboard can be blocked: then Chindi reads the address out
+    const copied = navigator.clipboard?.writeText(email) ?? Promise.reject(new Error('no clipboard'))
+    copied.then(
+      () => askPet({ say: 'Copied. Now write to her.' }),
+      () => askPet({ say: email }),
+    )
+  }
 
   const menus: MenuDef[] = [
     {
@@ -90,7 +107,13 @@ export function MenuBar({ bounds, onCleanUp, onRestartIntro, onShutDown }: Props
     {
       id: 'edit',
       label: 'Edit',
-      items: ['Undo', 'Cut', 'Copy', 'Paste'].map((label) => ({ label, disabled: true })),
+      // the usual words of an Edit menu, each with a small job of its own
+      items: [
+        { label: 'Undo Paw Print', disabled: paws === 0, onSelect: onUndoPaw },
+        { label: 'Copy My Email', onSelect: copyEmail },
+        { label: 'Paste Paw Print', onSelect: onPastePaw },
+        { label: 'Clear Paw Prints', disabled: paws === 0, onSelect: onClearPaws },
+      ],
     },
     {
       id: 'view',

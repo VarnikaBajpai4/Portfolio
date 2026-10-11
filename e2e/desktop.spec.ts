@@ -118,3 +118,20 @@ test('palette choice survives a reload', async ({ page }) => {
 test('Standard View link points at the standard page', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Standard View' })).toHaveAttribute('href', /^\/standard\/$/)
 })
+
+test('the Edit menu pastes paw prints, takes the last one back, and clears them', async ({ page }) => {
+  const edit = async (item: string) => {
+    await page.getByRole('button', { name: 'Edit', exact: true }).click()
+    await page.getByRole('menuitem', { name: item }).click()
+  }
+  await edit('Paste Paw Print')
+  await edit('Paste Paw Print')
+  await edit('Paste Paw Print')
+  await expect(page.locator('.paw')).toHaveCount(3)
+  await edit('Undo Paw Print')
+  await expect(page.locator('.paw')).toHaveCount(2)
+  await edit('Clear Paw Prints')
+  await expect(page.locator('.paw')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Edit', exact: true }).click()
+  await expect(page.getByRole('menuitem', { name: 'Undo Paw Print' })).toBeDisabled()
+})

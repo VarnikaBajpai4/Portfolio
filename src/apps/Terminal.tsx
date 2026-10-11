@@ -12,7 +12,11 @@ type Line = { kind: 'in' | 'out'; text: string } | { kind: 'card'; lines: string
 
 const out = (text: string): Line => ({ kind: 'out', text })
 
-const BANNER: Line[] = [out("Varnika's terminal."), out("Type 'help' to begin.")]
+const BANNER: Line[] = [
+  out("Varnika's terminal."),
+  out("Type 'help' to begin."),
+  out("psst: type 'python'. It is real CPython, on WebAssembly."),
+]
 
 export function Terminal() {
   const openApp = useOpenApp()
