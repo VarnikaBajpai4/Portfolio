@@ -403,11 +403,9 @@ test('the recipe stack goes from the home card to each recipe and back', async (
   await expect(stack).toContainText('Card 1 of 3')
 })
 
-test('Chindi Jump starts, counts a jump, and ends when she runs into someone', async ({ page }) => {
-  const term = page.getByRole('dialog', { name: 'Terminal' })
-  await term.getByRole('textbox').fill('open jump')
-  await term.getByRole('textbox').press('Enter')
-  const game = page.getByRole('dialog', { name: 'Chindi Jump' })
+test('the game starts, ends when Chindi runs into someone, and counts a jump', async ({ page }) => {
+  await page.getByRole('button', { name: 'Game', exact: true }).dblclick()
+  const game = page.getByRole('dialog', { name: 'Game', exact: true })
   const root = game.locator('.jump')
   await expect(root).toHaveAttribute('data-state', 'ready')
   await expect(game.locator('.jump-person')).toHaveCount(5)
@@ -416,7 +414,7 @@ test('Chindi Jump starts, counts a jump, and ends when she runs into someone', a
   await game.getByRole('button', { name: 'Jump', exact: true }).click()
   await expect(root).toHaveAttribute('data-state', 'running')
   await expect(root).toHaveAttribute('data-state', 'over', { timeout: 8000 })
-  await expect(game.getByRole('status')).toContainText(/Chindi ran into (Mom|Dad|Brother|Sister-in-law|Boyfriend)/)
+  await expect(game.getByRole('status')).toHaveText('Press space or tap to try again.')
 
   // a new game with a player that jumps when a person is near: the count goes up
   await game.getByRole('button', { name: 'Jump', exact: true }).click()

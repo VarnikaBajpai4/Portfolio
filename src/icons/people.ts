@@ -20,26 +20,24 @@ const LEGS = ['..PPPPPPPP..', '..PPP..PPP..', '..PPP..PPP..', '..PPP..PPP..', '.
 
 export const PEOPLE = {
   mom: {
-    label: 'Mom',
     rows: [
       '...HHHHHH...',
       '..HHHHHHHH..',
-      '..HSSRSSSH..',
-      '..HSKSSKSH..',
-      '..HSSSSSSH..',
-      '...SSRRSS...',
-      '....SSSS....',
-      '..NNNNNNNN..',
-      '.NNNNNNNNNN.',
-      '.NNYWRYWNNN.',
-      'RNNNNNNNNNNR',
-      '.NNNNNNNNNN.',
-      '..NNNNNNNN..',
+      '.HHHSSSSHHH.',
+      '.HHSKSSKSHH.',
+      '.HWSSSSSSWH.',
+      '.HHSSRRSSHH.',
+      '.HH.SSSS.HH.',
+      '.HHYYYYYYHH.',
+      '.HYYWYYWYYH.',
+      '.YYYWYYYWYY.',
+      'SYYYYWWYYYYS',
+      '.YYWYYYYWYY.',
+      '..YYYYYYYY..',
       ...LEGS,
     ],
   },
   dad: {
-    label: 'Dad',
     rows: [
       '....SSSS....',
       '...SSSSSS...',
@@ -58,7 +56,6 @@ export const PEOPLE = {
     ],
   },
   brother: {
-    label: 'Brother',
     rows: [
       '...HHHHHH...',
       '..HHHHHHHH..',
@@ -77,7 +74,6 @@ export const PEOPLE = {
     ],
   },
   sisterInLaw: {
-    label: 'Sister-in-law',
     rows: [
       '...HHHHHH...',
       '..HHHHHHHH..',
@@ -96,14 +92,13 @@ export const PEOPLE = {
     ],
   },
   boyfriend: {
-    label: 'Boyfriend',
     rows: [
       '...HHHHHH...',
       '..HHHHHHHH..',
       '..HHHHHSSH..',
       '..SKSKKSKS..',
       '..SSSSSSSS..',
-      '...SBBBBS...',
+      '...SSKKSS...',
       '....SSSS....',
       '..TTGTTGTT..',
       '.TTTTTTTTTT.',
@@ -118,7 +113,6 @@ export const PEOPLE = {
 
 export type FamilyId = keyof typeof PEOPLE
 export const FAMILY_IDS = Object.keys(PEOPLE) as FamilyId[]
-export const familyLabel = (id: FamilyId) => PEOPLE[id].label
 /** size of one person in grid pixels */
 export const PERSON_W = 12
 export const PERSON_H = 18

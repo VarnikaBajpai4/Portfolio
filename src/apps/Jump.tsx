@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Chindi } from '../icons/Chindi'
 import { Person } from '../icons/Family'
-import { FAMILY_IDS, PERSON_H, PERSON_W, familyLabel } from '../icons/people'
+import { FAMILY_IDS, PERSON_H, PERSON_W } from '../icons/people'
 import type { FamilyId } from '../icons/people'
 import { readStored, writeStored } from '../storage'
 import './jump.css'
@@ -29,12 +29,11 @@ interface Runner {
   passed: boolean
 }
 
-/** A jump game: Chindi runs, my family comes the other way, and she must jump over each of them. */
+/** A jump game: Chindi runs, people come the other way, and she must jump over each of them. */
 export function Jump() {
   const [state, setState] = useState<'ready' | 'running' | 'over'>('ready')
   const [score, setScore] = useState(0)
   const [best, setBest] = useState(() => Number(readStored(BEST_KEY)) || 0)
-  const [hit, setHit] = useState<FamilyId | null>(null)
   const [step, setStep] = useState(false)
 
   const trackRef = useRef<HTMLDivElement>(null)
@@ -58,7 +57,6 @@ export function Jump() {
     g.score = 0
     for (const runner of g.runners) runner.on = false
     setScore(0)
-    setHit(null)
     setState('running')
   }
 
@@ -131,13 +129,13 @@ export function Jump() {
         g.gap = g.speed * (0.95 + Math.random() * 0.75)
       }
 
-      let bumped: FamilyId | null = null
+      let bumped = false
       for (const runner of g.runners) {
         if (!runner.on) continue
         runner.x -= g.speed * dt
         if (runner.x < -MAN_W) runner.on = false
         const overlapX = runner.x + SLACK < CAT_X + CAT_W - SLACK && runner.x + MAN_W - SLACK > CAT_X + SLACK
-        if (overlapX && g.y < MAN_H - SLACK) bumped = runner.id
+        if (overlapX && g.y < MAN_H - SLACK) bumped = true
         if (!runner.passed && runner.x + MAN_W < CAT_X) {
           runner.passed = true
           g.score += 1
@@ -148,7 +146,6 @@ export function Jump() {
 
       place()
       if (bumped) {
-        setHit(bumped)
         setState('over')
         setBest((old) => {
           const top = Math.max(old, g.score)
@@ -166,11 +163,7 @@ export function Jump() {
   }, [state])
 
   const message =
-    state === 'ready'
-      ? 'Press space or tap to start. Jump over my family.'
-      : state === 'over' && hit
-        ? `Chindi ran into ${familyLabel(hit)}. Press space or tap to try again.`
-        : ''
+    state === 'ready' ? 'Press space or tap to start.' : state === 'over' ? 'Press space or tap to try again.' : ''
 
   return (
     <div className="jump" data-state={state}>
