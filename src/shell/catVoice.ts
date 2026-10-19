@@ -1,6 +1,7 @@
 // Chindi's voice for `catsay`: the text is spoken in meows. Each syllable becomes one short meow, made with the
 // Web Audio API, so it sounds like a cat that talks and not like a person. The vowel of a syllable sets the
-// sound of its meow, and a question goes up at the end, so it follows the text without being words.
+// sound of its meow, and a question goes up at the end. Under the meows, the browser's speech voice says the
+// words quietly at its highest pitch, so that a listener can just make them out.
 
 let audio: AudioContext | null = null
 
@@ -9,6 +10,10 @@ const MOST_SYLLABLES = 24
 /** where the band-pass filter sits for each vowel: the "mee", "maa", "moo" of a meow */
 const FORMANTS: Record<string, number> = { a: 1500, e: 2200, i: 2600, o: 1100, u: 900, y: 2400 }
 const BASE_HZ = 620
+/** how loud the words under the meows are, from 0 to 1: enough to follow, not enough to sound like a person */
+const WORDS_VOLUME = 0.45
+/** voices that sound light, in order of preference; the first one that the browser has is used */
+const VOICE_NAMES = ['Samantha', 'Karen', 'Moira', 'Tessa', 'Google UK English Female', 'Microsoft Zira', 'Victoria']
 
 function context(): AudioContext | null {
   const Audio = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
@@ -92,8 +97,30 @@ function meow(ctx: AudioContext, start: number, length: number, syllable: Syllab
   wobble.stop(end + 0.05)
 }
 
-/** Say the text the way Chindi would: in meows, one for each syllable. */
+function lightVoice(): SpeechSynthesisVoice | null {
+  const voices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.startsWith('en'))
+  for (const name of VOICE_NAMES) {
+    const voice = voices.find((v) => v.name.includes(name))
+    if (voice) return voice
+  }
+  return voices[0] ?? null
+}
+
+/** The words, quiet and very high, at the same time as the meows. */
+function whisper(text: string): void {
+  if (!('speechSynthesis' in window)) return
+  window.speechSynthesis.cancel()
+  const words = new SpeechSynthesisUtterance(text)
+  words.voice = lightVoice()
+  words.pitch = 2
+  words.rate = 1
+  words.volume = WORDS_VOLUME
+  window.speechSynthesis.speak(words)
+}
+
+/** Say the text the way Chindi would: in meows, one for each syllable, with the words faint underneath. */
 export function speakAsCat(text: string): void {
+  whisper(text)
   const ctx = context()
   if (!ctx) return
   let at = ctx.currentTime + 0.03
