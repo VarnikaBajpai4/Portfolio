@@ -1,6 +1,6 @@
 # Portfolio
 
-![A retro Mac desktop with the windows of the site open](public/og.png)
+![Varnika Bajpai, Software Engineer, in a window on a retro Mac desktop](public/og.png)
 
 Varnika Bajpai's profile site, built as a retro desktop you can explore: windows you can drag, a dock, a terminal, and four colour palettes. A regular scrolling version lives at `/standard/`.
 
