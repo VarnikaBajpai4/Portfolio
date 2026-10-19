@@ -11,7 +11,7 @@ const MOST_SYLLABLES = 24
 const FORMANTS: Record<string, number> = { a: 1500, e: 2200, i: 2600, o: 1100, u: 900, y: 2400 }
 const BASE_HZ = 620
 /** how loud the words under the meows are, from 0 to 1: enough to follow, not enough to sound like a person */
-const WORDS_VOLUME = 0.45
+const WORDS_VOLUME = 0.3
 /** voices that sound light, in order of preference; the first one that the browser has is used */
 const VOICE_NAMES = ['Samantha', 'Karen', 'Moira', 'Tessa', 'Google UK English Female', 'Microsoft Zira', 'Victoria']
 

@@ -109,7 +109,7 @@ test('catsay makes Chindi speak, in meows with the words faint underneath', asyn
   // one meow for each syllable, He-llo The-re, and each meow is a tone and its wobble
   await expect.poll(() => page.evaluate(() => (window as unknown as { tones: () => number }).tones())).toBe(8)
   // the words: at the highest pitch and less than full volume
-  expect(await page.evaluate(() => (window as unknown as { said: string[] }).said)).toEqual(['Hello There 2 0.45'])
+  expect(await page.evaluate(() => (window as unknown as { said: string[] }).said)).toEqual(['Hello There 2 0.30'])
 })
 
 test('cat readme.txt prints the read me', async ({ page }) => {
