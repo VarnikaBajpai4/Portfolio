@@ -88,16 +88,11 @@ test('Tab completes commands and arguments', async ({ page }) => {
   await expect(terminal(page)).toContainText('contact  cat  catsay  clear')
 })
 
-test('catsay makes Chindi speak, out loud too', async ({ page }) => {
-  // record what would be spoken, and the meows, in place of real sound
+test('catsay makes Chindi speak, in meows', async ({ page }) => {
+  // count the meows in place of hearing them
   await page.evaluate(() => {
-    const said: string[] = []
     let tones = 0
-    Object.assign(window, { said, tones: () => tones })
-    window.speechSynthesis.speak = (words) => {
-      said.push(words.text)
-      words.onend?.(new Event('end') as SpeechSynthesisEvent)
-    }
+    Object.assign(window, { tones: () => tones })
     const start = OscillatorNode.prototype.start
     OscillatorNode.prototype.start = function (...args) {
       tones++
@@ -106,9 +101,8 @@ test('catsay makes Chindi speak, out loud too', async ({ page }) => {
   })
   await run(page, 'catsay Hello There')
   await expect(page.locator('.pet-bubble')).toHaveText('Hello There')
-  await expect.poll(() => page.evaluate(() => (window as unknown as { said: string[] }).said)).toEqual(['Hello There'])
-  // a meow before the words and a shorter one after: two tones and their wobbles
-  await expect.poll(() => page.evaluate(() => (window as unknown as { tones: () => number }).tones())).toBe(4)
+  // one meow for each syllable, He-llo The-re, and each meow is a tone and its wobble
+  await expect.poll(() => page.evaluate(() => (window as unknown as { tones: () => number }).tones())).toBe(8)
 })
 
 test('cat readme.txt prints the read me', async ({ page }) => {
