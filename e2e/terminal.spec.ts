@@ -88,9 +88,27 @@ test('Tab completes commands and arguments', async ({ page }) => {
   await expect(terminal(page)).toContainText('contact  cat  catsay  clear')
 })
 
-test('catsay makes Chindi speak', async ({ page }) => {
+test('catsay makes Chindi speak, out loud too', async ({ page }) => {
+  // record what would be spoken, and the meows, in place of real sound
+  await page.evaluate(() => {
+    const said: string[] = []
+    let tones = 0
+    Object.assign(window, { said, tones: () => tones })
+    window.speechSynthesis.speak = (words) => {
+      said.push(words.text)
+      words.onend?.(new Event('end') as SpeechSynthesisEvent)
+    }
+    const start = OscillatorNode.prototype.start
+    OscillatorNode.prototype.start = function (...args) {
+      tones++
+      return start.apply(this, args)
+    }
+  })
   await run(page, 'catsay Hello There')
   await expect(page.locator('.pet-bubble')).toHaveText('Hello There')
+  await expect.poll(() => page.evaluate(() => (window as unknown as { said: string[] }).said)).toEqual(['Hello There'])
+  // a meow before the words and a shorter one after: two tones and their wobbles
+  await expect.poll(() => page.evaluate(() => (window as unknown as { tones: () => number }).tones())).toBe(4)
 })
 
 test('cat readme.txt prints the read me', async ({ page }) => {

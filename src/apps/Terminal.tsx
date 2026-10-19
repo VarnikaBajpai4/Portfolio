@@ -3,6 +3,7 @@ import type { FormEvent, KeyboardEvent } from 'react'
 import { track } from '../analytics'
 import { Portrait } from '../icons/Portrait'
 import { askPet, dropEverything } from '../shell/events'
+import { speakAsCat } from '../shell/catVoice'
 import { useOpenApp } from '../shell/openApp'
 import { COMMANDS, complete, runCommand } from '../terminal/engine'
 import { loadPython } from '../terminal/python'
@@ -95,7 +96,10 @@ export function Terminal() {
     )
     if (action?.type === 'open') openApp(action.app, action.param)
     if (action?.type === 'theme') setPalette(action.palette)
-    if (action?.type === 'pet') askPet({ say: action.say, goto: action.goto })
+    if (action?.type === 'pet') {
+      askPet({ say: action.say, goto: action.goto })
+      if (action.voice && action.say) speakAsCat(action.say)
+    }
     if (action?.type === 'gravity') dropEverything()
     if (action?.type === 'python') void startPython()
   }

@@ -8,7 +8,7 @@ export type TermAction =
   | { type: 'open'; app: AppId; param?: string }
   | { type: 'theme'; palette: PaletteId }
   | { type: 'clear' }
-  | { type: 'pet'; say?: string; goto?: AppId }
+  | { type: 'pet'; say?: string; goto?: AppId; voice?: boolean }
   | { type: 'gravity' }
   | { type: 'python' }
 
@@ -187,7 +187,7 @@ export function runCommand(input: string): TermResult {
     case 'catsay': {
       const text = raw.slice(cmd.length).trim()
       if (!text) return { lines: ['usage: catsay <text>'] }
-      return { lines: [], action: { type: 'pet', goto: 'terminal', say: text.slice(0, 80) } }
+      return { lines: [], action: { type: 'pet', goto: 'terminal', say: text.slice(0, 80), voice: true } }
     }
     case 'open':
       return open(arg)

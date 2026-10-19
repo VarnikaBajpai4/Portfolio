@@ -1,6 +1,8 @@
 # Portfolio
 
-Varnika Bajpai's profile site, built as a retro desktop you can explore: windows you can drag, a dock, a terminal, and three colour palettes. A regular scrolling version lives at `/standard/`.
+![A retro Mac desktop with the windows of the site open](public/og.png)
+
+Varnika Bajpai's profile site, built as a retro desktop you can explore: windows you can drag, a dock, a terminal, and four colour palettes. A regular scrolling version lives at `/standard/`.
 
 ## Commands
 
