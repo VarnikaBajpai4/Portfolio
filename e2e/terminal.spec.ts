@@ -95,7 +95,8 @@ test('catsay makes Chindi speak, in meows with the words faint underneath', asyn
     const said: string[] = []
     Object.assign(window, { tones: () => tones, said })
     window.speechSynthesis.speak = (words) => {
-      said.push(`${words.text} ${words.pitch} ${words.volume}`)
+      // the browser keeps the volume as a 32-bit number, so round it
+      said.push(`${words.text} ${words.pitch} ${words.volume.toFixed(2)}`)
     }
     const start = OscillatorNode.prototype.start
     OscillatorNode.prototype.start = function (...args) {
